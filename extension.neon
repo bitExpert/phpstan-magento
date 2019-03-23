@@ -1,0 +1,5 @@
+services:
+	-
+		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
