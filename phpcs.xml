@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="PHPStan Magento Extension Coding Standard">
+    <!-- Standard to apply -->
+    <rule ref="PSR2"/>
+
+    <!-- Paths to check -->
+    <file>src</file>
+    <file>tests</file>
+</ruleset>

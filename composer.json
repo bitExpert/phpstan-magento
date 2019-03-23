@@ -27,6 +27,7 @@
   "require-dev": {
     "captainhook/captainhook": "^4.0",
     "captainhook/plugin-composer": "^4.0",
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^7.5",
+    "squizlabs/php_codesniffer": "^3.4"
   }
 }
