@@ -1,0 +1,27 @@
+{
+  "name": "bitexpert/phpstan-magento",
+  "description": "PHPStan Magento Extension",
+  "minimum-stability": "stable",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Stephan Hochdörfer",
+      "email": "S.Hochdoerfer@bitExpert.de",
+      "homepage": "http://www.bitExpert.de"
+    }
+  ],
+  "require": {
+    "php": "^7.1.0",
+    "phpstan/phpstan": "^0.11.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "bitExpert\\PHPStan\\": "src/bitExpert/PHPStan"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "bitExpert\\PHPStan\\": "tests/bitExpert/PHPStan"
+    }
+  }
+}
