@@ -13,13 +13,26 @@
     },
     "pre-push": {
         "enabled": false,
-        "actions": []
+        "actions": [
+            {
+                "action": "./vendor/bin/phing security:check",
+                "options": []
+            }
+        ]
     },
     "pre-commit": {
         "enabled": true,
         "actions": [
             {
-                "action": "\\CaptainHook\\App\\Hook\\PHP\\Action\\Linting",
+                "action": "./vendor/bin/phing lint",
+                "options": []
+            },
+            {
+                "action": "./vendor/bin/phing sniff",
+                "options": []
+            },
+            {
+                "action": "./vendor/bin/phing unit",
                 "options": []
             }
         ]
