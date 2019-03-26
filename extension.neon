@@ -3,3 +3,7 @@ services:
 		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: bitExpert\PHPStan\Magento\Reflection\SessionManagerMagicMethodReflectionExtension
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension
