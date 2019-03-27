@@ -30,4 +30,4 @@ Check out [the contributing guide](CONTRIBUTING.md) to find out how, as well as 
 
 ## License
 
-PHPStan Magento Extension is released under the Apache 2.0 license.
+PHPStan Magento Extension is released under the MIT License.
