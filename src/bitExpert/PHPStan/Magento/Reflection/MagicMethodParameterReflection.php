@@ -17,7 +17,7 @@ use PHPStan\Reflection\PassedByReference;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
-class SessionManagerMagicMethodParameterReflection implements ParameterReflection
+class MagicMethodParameterReflection implements ParameterReflection
 {
     public function getName(): string
     {
