@@ -17,7 +17,7 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptor;
 
-class SessionManagerMagicMethodReflection implements MethodReflection
+class MagicMethodReflection implements MethodReflection
 {
     /**
      * @var string
@@ -33,7 +33,7 @@ class SessionManagerMagicMethodReflection implements MethodReflection
     private $variants;
 
     /**
-     * SessionManagerMagicMethodReflection constructor.
+     * MagicMethodReflection constructor.
      *
      * @param string $name
      * @param ClassReflection $declaringClass
