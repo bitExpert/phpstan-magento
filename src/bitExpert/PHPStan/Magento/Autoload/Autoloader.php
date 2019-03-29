@@ -15,6 +15,10 @@ namespace bitExpert\PHPStan\Magento\Autoload;
 class Autoloader
 {
     /**
+     * @var MockAutoloader
+     */
+    private static $mockAutoloader = null;
+    /**
      * @var FactoryAutoloader
      */
     private static $factoryAutoloader = null;
@@ -30,14 +34,16 @@ class Autoloader
      */
     public static function register(bool $throw = true, bool $prepend = false): bool
     {
-        if (null !== self::$factoryAutoloader && null !== self::$proxyAutoloader) {
+        if (null !== self::$mockAutoloader && null !== self::$factoryAutoloader && null !== self::$proxyAutoloader) {
             return false;
         }
 
+        self::$mockAutoloader = new MockAutoloader();
         self::$factoryAutoloader = new FactoryAutoloader();
         self::$proxyAutoloader = new ProxyAutoloader();
 
-        return \spl_autoload_register([self::$factoryAutoloader, 'autoload'], $throw, $prepend) &&
+        return \spl_autoload_register([self::$mockAutoloader, 'autoload'], $throw, true) &&
+            \spl_autoload_register([self::$factoryAutoloader, 'autoload'], $throw, $prepend) &&
             \spl_autoload_register([self::$proxyAutoloader, 'autoload'], $throw, $prepend);
     }
 
@@ -46,13 +52,15 @@ class Autoloader
      */
     public static function unregister(): bool
     {
-        if (null === self::$factoryAutoloader && null === self::$proxyAutoloader) {
+        if (null === self::$mockAutoloader && null === self::$factoryAutoloader && null === self::$proxyAutoloader) {
             return false;
         }
 
-        $result = \spl_autoload_unregister([self::$factoryAutoloader, 'autoload']) &&
+        $result = \spl_autoload_unregister([self::$mockAutoloader, 'autoload']) &&
+            \spl_autoload_unregister([self::$factoryAutoloader, 'autoload']) &&
             \spl_autoload_unregister([self::$proxyAutoloader, 'autoload']);
 
+        self::$mockAutoloader = null;
         self::$factoryAutoloader = null;
         self::$proxyAutoloader = null;
         return $result;
