@@ -21,7 +21,7 @@ class MockAutoloader
     public function autoload(string $class): void
     {
         $filename = realpath(__DIR__ . '/../../../../' . str_replace('\\', '/', $class) . '.php');
-        if (file_exists($filename) && is_readable($filename)) {
+        if (!is_bool($filename) && file_exists($filename) && is_readable($filename)) {
             include($filename);
         }
     }
