@@ -1,0 +1,28 @@
+language: php
+
+matrix:
+  include:
+    - php: 7.2
+      env:
+        - TEST_COVERAGE=true
+    - php: 7.3
+      env:
+        - TEST_COVERAGE=true
+install:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev satooshi/php-coveralls ; fi
+  
+before_script:
+  - composer self-update
+  - composer install --prefer-source
+
+script:
+    - composer validate
+    - ./vendor/bin/phing security:check
+    - ./vendor/bin/phing sniff
+    - if [[ $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/phing unit-with-coverage ; fi
+    - if [[ $TEST_COVERAGE != 'true' ]]; then ./vendor/bin/phing unit ; fi
+    - composer analyze
+
+after_script:
+    - if [[ $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/coveralls -v ; fi
+
