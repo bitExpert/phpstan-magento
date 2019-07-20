@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace bitExpert\PHPStan\Magento\Reflection\Framework;
 
 use bitExpert\PHPStan\Magento\Reflection\AbstractMagicMethodReflectionExtension;
+use Magento\Framework\DataObject;
 use PHPStan\Reflection\ClassReflection;
 
 class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflectionExtension
@@ -24,7 +25,10 @@ class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflec
      */
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool
     {
-        return $classReflection->isSubclassOf('Magento\Framework\DataObject') &&
+        $isDataObject = $classReflection->getName() === DataObject::class ||
+                        $classReflection->isSubclassOf(DataObject::class);
+
+        return $isDataObject &&
             in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has']);
     }
 }
