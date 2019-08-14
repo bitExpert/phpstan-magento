@@ -22,16 +22,63 @@ class ProxyAutoloader
 
         $namespace = explode('\\', ltrim($class, '\\'));
         $proxyClassname = array_pop($namespace);
+        $proxyBaseClass = '';
         $originalClassname = implode('\\', $namespace);
         $namespace = implode('\\', $namespace);
-        $markerInterface = '\Magento\Framework\ObjectManager\NoninterceptableInterface';
+        $proxyInterface = ['\Magento\Framework\ObjectManager\NoninterceptableInterface'];
+        $methods = '';
+
+        $reflectionClass = new \ReflectionClass($originalClassname);
+        if ($reflectionClass->isInterface()) {
+            $proxyInterface[] = '\\' . $originalClassname;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                $returnType = $method->getReturnType() ?: '';
+                if ($returnType instanceof \ReflectionType) {
+                    $returnType = ': ' . $returnType->getName();
+                }
+
+                $params = [];
+                foreach ($method->getParameters() as $parameter) {
+                    $paramType = $parameter->getType() ?: '';
+                    if ($paramType instanceof \ReflectionType) {
+                        if ($paramType->isBuiltin()) {
+                            $paramType = $paramType->getName() . ' ';
+                        } else {
+                            $paramType = '\\' . $paramType->getName() . ' ';
+                        }
+                    }
+
+                    $defaultValue = '';
+                    if ($parameter->isDefaultValueAvailable()) {
+                        switch ($parameter->getDefaultValue()) {
+                            case null:
+                                $defaultValue = ' = NULL';
+                                break;
+                            case false:
+                                $defaultValue = ' = false';
+                                break;
+                            default:
+                                $defaultValue = ' = ' . $parameter->getDefaultValue();
+                                break;
+                        }
+                    }
+
+                    $params[] = $paramType . '$' . $parameter->getName() . $defaultValue;
+                }
+
+                $methods .= '    public function ' . $method->getName() . '(' . implode(', ', $params) . ')' .
+                    $returnType . " {}\n\n";
+            }
+        } else {
+            $proxyBaseClass = ' extends ' . $originalClassname;
+        }
 
         $template = "<?php\n";
         $template .= "namespace {NAMESPACE};\n";
         $template .= "/**\n";
         $template .= " * Proxy class for @see {CLASSNAME}\n";
         $template .= " */\n";
-        $template .= "class {PROXY_CLASSNAME} extends {CLASSNAME} implements {MARKER_INTERFACE}\n";
+        $template .= "class {PROXY_CLASSNAME}{PROXY_BASE_CLASSNAME} implements {PROXY_INTERFACE}\n";
         $template .= "{\n";
         $template .= "    /**\n";
         $template .= "     * @return array\n";
@@ -45,11 +92,26 @@ class ProxyAutoloader
         $template .= "     * Clone proxied instance\n";
         $template .= "     */\n";
         $template .= "    public function __clone() {}\n";
+        $template .= "{METHODS}";
         $template .= "}\n";
 
         $template = str_replace(
-            ['{NAMESPACE}', '{CLASSNAME}', '{PROXY_CLASSNAME}', '{MARKER_INTERFACE}'],
-            [$namespace, $originalClassname, $proxyClassname, $markerInterface],
+            [
+                '{NAMESPACE}',
+                '{CLASSNAME}',
+                '{PROXY_BASE_CLASSNAME}',
+                '{PROXY_CLASSNAME}',
+                '{PROXY_INTERFACE}',
+                '{METHODS}'
+            ],
+            [
+                $namespace,
+                $originalClassname,
+                $proxyBaseClass,
+                $proxyClassname,
+                implode(', ', $proxyInterface),
+                $methods
+            ],
             $template
         );
 
