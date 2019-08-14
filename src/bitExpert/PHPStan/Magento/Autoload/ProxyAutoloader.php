@@ -41,7 +41,11 @@ class ProxyAutoloader
                 foreach ($method->getParameters() as $parameter) {
                     $paramType = $parameter->getType() ?: '';
                     if ($paramType instanceof \ReflectionType) {
-                        $paramType = $paramType->getName() . ' ';
+                        if ($paramType->isBuiltin()) {
+                            $paramType = $paramType->getName() . ' ';
+                        } else {
+                            $paramType = '\\' . $paramType->getName() . ' ';
+                        }
                     }
 
                     $defaultValue = '';
