@@ -19,6 +19,29 @@ includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
 
+## Known Issues
+
+Below is a list of known issues when using this extension:
+
+### PHPStan shim does not generate factories, proxies, etc.
+
+This is because the PHPStan shim is included as a phar archive and does therefore not support overriding certain methods in it's namespace. The current known fix for this is to manually load the autoloader that comes with this extension.
+
+Create a file in your project (for example `phpstan.php`) with the following content:
+
+```php
+<?php
+\bitExpert\PHPStan\Magento\Autoload\Autoloader::register();
+```
+
+Include this to the `autoload_files`-section of your `phpstan.neon`:
+
+```neon
+parameters:
+    autoload_files:
+        - phpstan.php
+```
+
 ## Contribute
 
 Please feel free to fork and extend existing or add new features and send a pull request with your changes! To establish a consistent code quality, please provide unit tests for all your changes and adapt the documentation.
