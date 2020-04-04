@@ -43,4 +43,9 @@ class MagicMethodParameterReflection implements ParameterReflection
     {
         return false;
     }
+
+    public function getDefaultValue(): ?\PHPStan\Type\Type
+    {
+        return null;
+    }
 }
