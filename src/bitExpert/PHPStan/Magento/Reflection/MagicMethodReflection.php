@@ -83,4 +83,39 @@ class MagicMethodReflection implements MethodReflection
     {
         return $this->variants;
     }
+
+    public function getDocComment(): ?string
+    {
+        return null;
+    }
+
+    public function isDeprecated(): \PHPStan\TrinaryLogic
+    {
+        return \PHPStan\TrinaryLogic::createNo();
+    }
+
+    public function getDeprecatedDescription(): ?string
+    {
+        return '';
+    }
+
+    public function isFinal(): \PHPStan\TrinaryLogic
+    {
+        return \PHPStan\TrinaryLogic::createNo();
+    }
+
+    public function isInternal(): \PHPStan\TrinaryLogic
+    {
+        return \PHPStan\TrinaryLogic::createNo();
+    }
+
+    public function getThrowType(): ?\PHPStan\Type\Type
+    {
+        return null;
+    }
+
+    public function hasSideEffects(): \PHPStan\TrinaryLogic
+    {
+        return \PHPStan\TrinaryLogic::createNo();
+    }
 }

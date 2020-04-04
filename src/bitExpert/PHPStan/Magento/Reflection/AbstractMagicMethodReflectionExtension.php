@@ -66,6 +66,8 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
         $variants = new FunctionVariant(
             [new MagicMethodParameterReflection()],
             false,
+            new MixedType(),
+            false,
             new MixedType()
         );
 
