@@ -33,19 +33,12 @@ Below is a list of known issues when using this extension:
 
 This is because the PHPStan shim is included as a phar archive and does therefore not support overriding certain methods in it's namespace. The current known fix for this is to manually load the autoloader that comes with this extension.
 
-Create a file in your project (for example `phpstan.php`) with the following content:
-
-```php
-<?php
-\bitExpert\PHPStan\Magento\Autoload\Autoloader::register();
-```
-
-Include this to the `autoload_files`-section of your `phpstan.neon`:
+Include the autoload.php file in the `autoload_files`-section of your `phpstan.neon`:
 
 ```neon
 parameters:
     autoload_files:
-        - phpstan.php
+        - vendor/bitexpert/phpstan-magento/autoload.php
 ```
 
 ## Contribute
