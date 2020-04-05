@@ -6,9 +6,7 @@
         <exec executable="./vendor/bin/phpcs"
               passthru="true"
               checkreturn="true">
-            <arg value="--standard=PSR2"/>
-            <arg path="${phing.dir}/src"/>
-            <arg path="${phing.dir}/tests"/>
+            <arg value="--ignore=src/Magento/*"/>
         </exec>
     </target>
 
