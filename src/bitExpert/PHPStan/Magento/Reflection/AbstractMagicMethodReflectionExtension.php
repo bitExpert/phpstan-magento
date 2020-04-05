@@ -16,7 +16,9 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
+use PHPStan\Reflection\Php\DummyParameter;
 use PHPStan\Reflection\TrivialParametersAcceptor;
+use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPStan\Type\MixedType;
 
 abstract class AbstractMagicMethodReflectionExtension implements MethodsClassReflectionExtension
@@ -64,9 +66,9 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
         string $methodName
     ): MethodReflection {
         $variants = new FunctionVariant(
-            [new MagicMethodParameterReflection()],
-            false,
-            new MixedType(),
+            TemplateTypeMap::createEmpty(),
+            null,
+            [ new DummyParameter('name', new MixedType(), false, null, false, null),],
             false,
             new MixedType()
         );
