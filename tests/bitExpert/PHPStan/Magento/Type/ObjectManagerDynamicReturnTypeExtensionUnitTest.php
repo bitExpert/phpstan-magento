@@ -13,15 +13,11 @@ declare(strict_types=1);
 namespace PHPStan\Magento\Type;
 
 use bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension;
-use PhpParser\Node\Arg;
-use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Testing\TestCase;
 use PHPStan\Type\MixedType;
-use PHPStan\Type\ObjectType;
-use PHPUnit\Util\Type;
 
 class ObjectManagerDynamicReturnTypeExtensionUnitTest extends TestCase
 {
