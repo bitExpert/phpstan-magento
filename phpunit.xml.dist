@@ -20,7 +20,7 @@
 
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./src/</directory>
+			<directory suffix=".php">./src/bitExpert</directory>
 		</whitelist>
 	</filter>
 </phpunit>
