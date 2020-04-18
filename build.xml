@@ -39,4 +39,12 @@
             <arg value="clover.xml"/>
         </exec>
     </target>
+
+    <target name="static-analysis">
+        <exec executable="./vendor/bin/phpstan"
+              passthru="true"
+              checkreturn="true">
+            <arg value="analyse"/>
+        </exec>
+    </target>
 </project>

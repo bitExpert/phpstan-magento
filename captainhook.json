@@ -15,6 +15,10 @@
         "enabled": false,
         "actions": [
             {
+                "action": "./vendor/bin/phing static-analysis",
+                "options": []
+            },
+            {
                 "action": "./vendor/bin/phing security:check",
                 "options": []
             }

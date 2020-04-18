@@ -49,10 +49,10 @@ class FactoryAutoloader
     /**
      * Generate the factory file content as Magento would.
      *
-     * @param $class
+     * @param string $class
      * @return string
      */
-    protected function getFileContents($class): string
+    protected function getFileContents(string $class): string
     {
         $namespace = explode('\\', ltrim($class, '\\'));
         $factoryClassname = array_pop($namespace);
