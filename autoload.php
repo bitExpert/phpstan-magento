@@ -9,6 +9,21 @@
  * file that was distributed with this source code.
  */
 
-// Include this file if you are using the phar version of PHPStan. Since the phar version makes use of dynamic namespaces
-// the hack in registration.php to overload spl_autoload_register() and spl_autoload_unregister() does not work any more.
-\bitExpert\PHPStan\Magento\Autoload\Autoloader::register();
+use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
+use bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader;
+use bitExpert\PHPStan\Magento\Autoload\MockAutoloader;
+use bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader;
+use PHPStan\Cache\Cache;
+
+// This autoloader implementation supersedes the former \bitExpert\PHPStan\Magento\Autoload\Autoload implementation
+(function () {
+    $cache = new Cache(new FileCacheStorage(sys_get_temp_dir() . '/phpstan/cache/PHPStan'));
+
+    $mockAutoloader = new MockAutoloader();
+    $factoryAutoloader = new FactoryAutoloader($cache);
+    $proxyAutoloader = new ProxyAutoloader($cache);
+
+    \spl_autoload_register([$mockAutoloader, 'autoload'], true, true);
+    \spl_autoload_register([$factoryAutoloader, 'autoload'], true, false);
+    \spl_autoload_register([$proxyAutoloader, 'autoload'], true, false);
+})();

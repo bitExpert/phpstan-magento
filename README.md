@@ -12,9 +12,12 @@ You can add `bitexpert/phpstan-magento` as a dev dependency, as follows:
 composer.phar require --dev bitexpert/phpstan-magento
 ```
 
-Include extension.neon in your project's PHPStan config:
+Include extension.neon and the autoloader.php file in your project's PHPStan config:
 
-```
+```neon
+parameters:
+	autoload_files:
+		- vendor/bitexpert/phpstan-magento/autoload.php
 includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
@@ -24,22 +27,6 @@ includes:
 2. The extension adds an autoloader for "mocked" classes. These are classes that replace the Magento specific implementations to fix problems with type hints or missing methods in interfaces and such. The autoloader will check if a class, interface or trait exists locally in the extension. If so, it will load the local version instead of the one being shipped by Magento. Once those problems are fixed in Magento, those mocks can be removed again.
 3. A type extension was added so that `ObjectManager` calls return the correct return type.
 4. For some classes like the `DataObject` or the `SessionManager` logic was added to be able to support magic method calls.
-
-## Known Issues
-
-Below is a list of known issues when using this extension:
-
-### PHPStan shim does not generate factories, proxies, etc.
-
-This is because the PHPStan shim is included as a phar archive and does therefore not support overriding certain methods in it's namespace. The current known fix for this is to manually load the autoloader that comes with this extension.
-
-Include the autoload.php file in the `autoload_files`-section of your `phpstan.neon`:
-
-```neon
-parameters:
-    autoload_files:
-        - vendor/bitexpert/phpstan-magento/autoload.php
-```
 
 ## Contribute
 
