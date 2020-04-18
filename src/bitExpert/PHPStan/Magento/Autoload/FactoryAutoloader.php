@@ -12,14 +12,48 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use PHPStan\Cache\Cache;
+
 class FactoryAutoloader
 {
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * FactoryAutoloader constructor.
+     *
+     * @param Cache $cache
+     */
+    public function __construct(Cache $cache)
+    {
+        $this->cache = $cache;
+    }
+
     public function autoload(string $class): void
     {
         if (!preg_match('#Factory$#', $class)) {
             return;
         }
 
+        $cacheFilename = $this->cache->load($class, '');
+        if ($cacheFilename === null) {
+            $this->cache->save($class, '', $this->getFileContents($class));
+            $cacheFilename = $this->cache->load($class, '');
+        }
+
+        require_once($cacheFilename);
+    }
+
+    /**
+     * Generate the factory file content as Magento would.
+     *
+     * @param $class
+     * @return string
+     */
+    protected function getFileContents($class): string
+    {
         $namespace = explode('\\', ltrim($class, '\\'));
         $factoryClassname = array_pop($namespace);
         $originalClassname = str_replace('Factory', '', $factoryClassname);
@@ -41,16 +75,18 @@ class FactoryAutoloader
         $template .= "    public function create(array \$data = array()) {}\n";
         $template .= "}\n";
 
-        $template = str_replace(
-            ['{NAMESPACE}', '{CLASSNAME}', '{FACTORY_CLASSNAME}'],
-            [$namespace, $originalClassname, $factoryClassname],
+        return str_replace(
+            [
+                '{NAMESPACE}',
+                '{CLASSNAME}',
+                '{FACTORY_CLASSNAME}'
+            ],
+            [
+                $namespace,
+                $originalClassname,
+                $factoryClassname
+            ],
             $template
         );
-
-        // we need to store the generated file on disk as PHPStan will try to access the file in several ways. Just
-        // eval'ing the php code to make the class available won't work!
-        $tmpFilename = tempnam(sys_get_temp_dir(), 'PSMF');
-        file_put_contents($tmpFilename, $template, LOCK_EX);
-        include($tmpFilename);
     }
 }
