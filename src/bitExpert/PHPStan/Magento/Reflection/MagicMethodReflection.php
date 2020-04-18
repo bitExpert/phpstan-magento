@@ -28,7 +28,7 @@ class MagicMethodReflection implements MethodReflection
      */
     private $declaringClass;
     /**
-     * @var array
+     * @var ParametersAcceptor[]
      */
     private $variants;
 

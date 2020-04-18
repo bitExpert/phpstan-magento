@@ -36,7 +36,7 @@ class FactoryAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderIgnoresClassesWithoutFactoryPostfix()
+    public function autoloaderIgnoresClassesWithoutFactoryPostfix(): void
     {
         $this->storage->expects($this->never())
             ->method('load');
@@ -47,7 +47,7 @@ class FactoryAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderUsesCachedFileWhenFound()
+    public function autoloaderUsesCachedFileWhenFound(): void
     {
         $this->storage->expects($this->once())
             ->method('load')
@@ -61,7 +61,7 @@ class FactoryAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderGeneratesCacheFileWhenNotFoundInCache()
+    public function autoloaderGeneratesCacheFileWhenNotFoundInCache(): void
     {
         $this->storage->expects($this->atMost(2))
             ->method('load')

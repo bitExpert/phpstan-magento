@@ -36,7 +36,7 @@ class ProxyAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderIgnoresClassesWithoutProxyPostfix()
+    public function autoloaderIgnoresClassesWithoutProxyPostfix(): void
     {
         $this->storage->expects($this->never())
             ->method('load');
@@ -47,7 +47,7 @@ class ProxyAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderUsesCachedFileWhenFound()
+    public function autoloaderUsesCachedFileWhenFound(): void
     {
         $this->storage->expects($this->once())
             ->method('load')
@@ -61,7 +61,7 @@ class ProxyAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
-    public function autoloaderGeneratesCacheFileWhenNotFoundInCache()
+    public function autoloaderGeneratesCacheFileWhenNotFoundInCache(): void
     {
         // little hack: the proxy autoloader will use Reflection to look for a class without the \Proxy prefix,
         // to avoid having another stub class file, we define an class alias here

@@ -37,7 +37,7 @@ class FileCacheStorageUnitTest extends TestCase
     /**
      * @test
      */
-    public function nullReturnedWhenLookingUpNonExistentFileInCache()
+    public function nullReturnedWhenLookingUpNonExistentFileInCache(): void
     {
         $absFilename = $this->storage->load('test.txt', '');
 
@@ -47,7 +47,7 @@ class FileCacheStorageUnitTest extends TestCase
     /**
      * @test
      */
-    public function absoluteFilenameReturnedWhenLookingUpExistentFileInCache()
+    public function absoluteFilenameReturnedWhenLookingUpExistentFileInCache(): void
     {
         vfsStream::create(
             ['4b' => ['6f' => ['4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php' => 'Lorem ipsum']]],
@@ -62,7 +62,7 @@ class FileCacheStorageUnitTest extends TestCase
     /**
      * @test
      */
-    public function addingFileToCacheSucceeds()
+    public function addingFileToCacheSucceeds(): void
     {
         $this->storage->save('test.txt', '', 'Lorem ipsum');
         $absFilename = $this->storage->load('test.txt', '');
@@ -73,7 +73,7 @@ class FileCacheStorageUnitTest extends TestCase
     /**
      * @test
      */
-    public function addingFileToCacheFails()
+    public function addingFileToCacheFails(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

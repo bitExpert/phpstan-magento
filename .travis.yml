@@ -19,9 +19,9 @@ script:
     - composer validate
     - ./vendor/bin/phing security:check
     - ./vendor/bin/phing sniff
+    - ./vendor/bin/phing static-analysis
     - if [[ $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/phing unit-with-coverage ; fi
     - if [[ $TEST_COVERAGE != 'true' ]]; then ./vendor/bin/phing unit ; fi
 
 after_script:
     - if [[ $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/coveralls -v ; fi
-

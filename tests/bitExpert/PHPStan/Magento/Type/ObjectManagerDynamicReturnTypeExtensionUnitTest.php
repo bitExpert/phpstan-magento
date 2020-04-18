@@ -10,7 +10,7 @@
  */
 declare(strict_types=1);
 
-namespace PHPStan\Magento\Type;
+namespace bitExpert\PHPStan\Magento\Type;
 
 use bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension;
 use PhpParser\Node\Expr\MethodCall;

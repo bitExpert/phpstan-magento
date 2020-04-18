@@ -27,6 +27,8 @@
     "mikey179/vfsstream": "^1.6",
     "nikic/php-parser": "^4.3",
     "phing/phing": "^2.16",
+    "phpstan/extension-installer": "^1.0",
+    "phpstan/phpstan-phpunit": "^0.12.8",
     "phpunit/phpunit": "^8.5.3",
     "squizlabs/php_codesniffer": "^3.4"
   },

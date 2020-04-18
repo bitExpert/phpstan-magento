@@ -1,0 +1,18 @@
+parameters:
+    level: 7
+    inferPrivatePropertyTypeFromConstructor: true
+    fileExtensions:
+        - php
+    paths:
+        - src/bitExpert
+        - tests/bitExpert
+    ignoreErrors:
+        -
+            message: '~Call to an undefined method ReflectionType::getName~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
+        -
+            message: '~Parameter #1 \$argument of class ReflectionClass constructor expects~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
+        -
+            message: '~Class Magento\\Framework\\DataObject not found~'
+            path: src/bitExpert/PHPStan/Magento/Reflection/Framework/DataObjectMagicMethodReflectionExtension.php
