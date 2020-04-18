@@ -40,7 +40,7 @@
         </exec>
     </target>
 
-    <target name="static-analysis">
+    <target name="analyze">
         <exec executable="./vendor/bin/phpstan"
               passthru="true"
               checkreturn="true">
