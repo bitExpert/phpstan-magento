@@ -12,14 +12,49 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use PHPStan\Cache\Cache;
+
 class ProxyAutoloader
 {
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * ProxyAutoloader constructor.
+     *
+     * @param Cache $cache
+     */
+    public function __construct(Cache $cache)
+    {
+        $this->cache = $cache;
+    }
+
     public function autoload(string $class): void
     {
         if (!preg_match('#\\\Proxy#', $class)) {
             return;
         }
 
+        $cacheFilename = $this->cache->load($class, '');
+        if ($cacheFilename === null) {
+            $this->cache->save($class, '', $this->getFileContents($class));
+            $cacheFilename = $this->cache->load($class, '');
+        }
+
+        require_once($cacheFilename);
+    }
+
+    /**
+     * Generate the proxy file content as Magento would.
+     *
+     * @param string $class
+     * @return string
+     * @throws \ReflectionException
+     */
+    protected function getFileContents(string $class): string
+    {
         $namespace = explode('\\', ltrim($class, '\\'));
         $proxyClassname = array_pop($namespace);
         $proxyBaseClass = '';
@@ -95,7 +130,7 @@ class ProxyAutoloader
         $template .= "{METHODS}";
         $template .= "}\n";
 
-        $template = str_replace(
+        return str_replace(
             [
                 '{NAMESPACE}',
                 '{CLASSNAME}',
@@ -114,11 +149,5 @@ class ProxyAutoloader
             ],
             $template
         );
-
-        // we need to store the generated file on disk as PHPStan will try to access the file in several ways. Just
-        // eval'ing the php code to make the class available won't work!
-        $tmpFilename = tempnam(sys_get_temp_dir(), 'PSMP');
-        file_put_contents($tmpFilename, $template, LOCK_EX);
-        include($tmpFilename);
     }
 }
