@@ -13,6 +13,7 @@ use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
 use bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\MockAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader;
+use bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader;
 use Nette\Neon\Neon;
 use PHPStan\Cache\Cache;
 
@@ -52,10 +53,12 @@ use PHPStan\Cache\Cache;
     $cache = new Cache(new FileCacheStorage($tmpDir . '/cache/PHPStan'));
 
     $mockAutoloader = new MockAutoloader();
+    $testFrameworkAutoloader = new TestFrameworkAutoloader();
     $factoryAutoloader = new FactoryAutoloader($cache);
     $proxyAutoloader = new ProxyAutoloader($cache);
 
     \spl_autoload_register([$mockAutoloader, 'autoload'], true, true);
+    \spl_autoload_register([$testFrameworkAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$factoryAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$proxyAutoloader, 'autoload'], true, false);
 })($GLOBALS['argv'] ?? []);
