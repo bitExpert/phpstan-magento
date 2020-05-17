@@ -30,6 +30,7 @@ includes:
 2. The extension adds an autoloader for "mocked" classes. These are classes that replace the Magento specific implementations to fix problems with type hints or missing methods in interfaces and such. The autoloader will check if a class, interface or trait exists locally in the extension. If so, it will load the local version instead of the one being shipped by Magento. Once those problems are fixed in Magento, those mocks can be removed again.
 3. A type extension was added so that `ObjectManager` calls return the correct return type.
 4. For some classes like the `DataObject` or the `SessionManager` logic was added to be able to support magic method calls.
+5. The extension provides an autoloader for `Magento\TestFramework` classes to let you run PHPStan also against your test classes.
 
 ## Contribute
 
