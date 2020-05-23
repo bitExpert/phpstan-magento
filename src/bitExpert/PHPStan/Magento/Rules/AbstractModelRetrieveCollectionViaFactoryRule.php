@@ -18,9 +18,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ObjectType;
+use PHPStan\Type\VerbosityLevel;
 
 /**
  * Since 101.0.0 because collections should be used directly via factory
+ *
+ * @implements Rule<MethodCall>
  */
 class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
 {
@@ -35,7 +38,7 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
     /**
      * @param Node $node
      * @param Scope $scope
-     * @return array
+     * @return (string|\PHPStan\Rules\RuleError)[] errors
      * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope): array
@@ -61,7 +64,7 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
         return [
             sprintf(
                 'Collections should be used directly via factory, not via %s::%s() method',
-                $type->describe(VerbosityLevel::type()),
+                $type->describe(VerbosityLevel::typeOnly()),
                 $node->name->name
             )
         ];

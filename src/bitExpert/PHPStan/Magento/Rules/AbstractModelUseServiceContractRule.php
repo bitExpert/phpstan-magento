@@ -18,9 +18,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ObjectType;
+use PHPStan\Type\VerbosityLevel;
 
 /**
  * Since 100.1.0 entities must not be responsible for their own loading, service contracts should persist entities.
+ *
+ * @implements Rule<MethodCall>
  */
 class AbstractModelUseServiceContractRule implements Rule
 {
@@ -35,7 +38,7 @@ class AbstractModelUseServiceContractRule implements Rule
     /**
      * @param Node $node
      * @param Scope $scope
-     * @return array
+     * @return (string|\PHPStan\Rules\RuleError)[] errors
      * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope): array
@@ -61,7 +64,7 @@ class AbstractModelUseServiceContractRule implements Rule
         return [
             sprintf(
                 'Use service contracts to persist entities in favour of %s::%s() method',
-                $type->describe(VerbosityLevel::type()),
+                $type->describe(VerbosityLevel::typeOnly()),
                 $node->name->name
             )
         ];
