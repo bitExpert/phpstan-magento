@@ -11,3 +11,11 @@ services:
 		class: bitExpert\PHPStan\Magento\Reflection\Framework\DataObjectMagicMethodReflectionExtension
 		tags:
 			- phpstan.broker.methodsClassReflectionExtension
+	-
+		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
+		tags:
+			- phpstan.rules.rule
+	-
+		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
+		tags:
+			- phpstan.rules.rule
