@@ -15,7 +15,7 @@
         "enabled": false,
         "actions": [
             {
-                "action": "./vendor/bin/phing static-analysis",
+                "action": "./vendor/bin/phing analyse",
                 "options": []
             },
             {

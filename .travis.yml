@@ -25,7 +25,7 @@ jobs:
         - ./vendor/bin/phing security:check
         - ./vendor/bin/phing lint
         - ./vendor/bin/phing sniff
-        - ./vendor/bin/phing analyze
+        - ./vendor/bin/phing analyse
     - stage: coverage
       if: branch=master AND type=push
       php: 7.2
