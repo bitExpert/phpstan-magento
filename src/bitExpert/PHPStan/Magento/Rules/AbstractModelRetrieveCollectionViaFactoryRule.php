@@ -61,7 +61,7 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
         return [
             sprintf(
                 'Collections should be used directly via factory, not via %s::%s() method',
-                implode(' ', $type->getReferencedClasses()),
+                $type->describe(VerbosityLevel::type()),
                 $node->name->name
             )
         ];

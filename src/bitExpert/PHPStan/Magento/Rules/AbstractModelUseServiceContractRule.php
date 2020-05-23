@@ -61,7 +61,7 @@ class AbstractModelUseServiceContractRule implements Rule
         return [
             sprintf(
                 'Use service contracts to persist entities in favour of %s::%s() method',
-                implode(' ', $type->getReferencedClasses()),
+                $type->describe(VerbosityLevel::type()),
                 $node->name->name
             )
         ];
