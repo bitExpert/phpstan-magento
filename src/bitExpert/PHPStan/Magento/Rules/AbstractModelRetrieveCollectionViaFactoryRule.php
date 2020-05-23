@@ -54,7 +54,7 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
 
         $type = $scope->getType($node->var);
         $isAbstractModelType = (new ObjectType('Magento\Framework\Model\AbstractModel'))->isSuperTypeOf($type);
-        if (!$isAbstractModelType) {
+        if ($isAbstractModelType->no()) {
             return [];
         }
 
