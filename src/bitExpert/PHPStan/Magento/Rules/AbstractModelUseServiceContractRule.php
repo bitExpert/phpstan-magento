@@ -16,7 +16,6 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleLevelHelper;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ObjectType;
 
@@ -25,21 +24,6 @@ use PHPStan\Type\ObjectType;
  */
 class AbstractModelUseServiceContractRule implements Rule
 {
-    /**
-     * @var RuleLevelHelper
-     */
-    private $ruleLevelHelper;
-
-    /**
-     * AbstractModelUseServiceContractRule constructor.
-     *
-     * @param RuleLevelHelper $ruleLevelHelper
-     */
-    public function __construct(RuleLevelHelper $ruleLevelHelper)
-    {
-        $this->ruleLevelHelper = $ruleLevelHelper;
-    }
-
     /**
      * @return string
      */
