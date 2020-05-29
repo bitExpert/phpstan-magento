@@ -26,11 +26,9 @@ class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflec
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool
     {
         $parentClasses = $classReflection->getParentClassesNames();
+        $parentClasses[] = $classReflection->getName();
 
-        $isDataObject = $classReflection->getName() === DataObject::class ||
-                        in_array(DataObject::class, $parentClasses, true);
-
-        return $isDataObject &&
+        return in_array(DataObject::class, $parentClasses, true) &&
             in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has']);
     }
 }

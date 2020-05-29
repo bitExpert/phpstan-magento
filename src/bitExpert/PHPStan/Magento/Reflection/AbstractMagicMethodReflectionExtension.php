@@ -17,9 +17,15 @@ use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use PHPStan\Reflection\Php\DummyParameter;
-use PHPStan\Reflection\TrivialParametersAcceptor;
+use PHPStan\Type\ArrayType;
+use PHPStan\Type\BooleanType;
 use PHPStan\Type\Generic\TemplateTypeMap;
+use PHPStan\Type\IntegerType;
 use PHPStan\Type\MixedType;
+use PHPStan\Type\NullType;
+use PHPStan\Type\ObjectType;
+use PHPStan\Type\StringType;
+use PHPStan\Type\UnionType;
 
 abstract class AbstractMagicMethodReflectionExtension implements MethodsClassReflectionExtension
 {
@@ -30,47 +36,143 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
      */
     public function getMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
-        if (strpos($methodName, 'get') === 0) {
-            return $this->returnGetMagicMethodReflection($classReflection, $methodName);
+        $methodPrefix = substr($methodName, 0, 3);
+        switch ($methodPrefix) {
+            case 'get':
+                return $this->returnGetMagicMethod($classReflection, $methodName);
+            case 'set':
+                return $this->returnSetMagicMethod($classReflection, $methodName);
+            case 'uns':
+                return $this->returnUnsetMagicMethod($classReflection, $methodName);
+            case 'has':
+                return $this->returnHasMagicMethod($classReflection, $methodName);
+            default:
+                break;
         }
-
-        return $this->returnMagicMethodReflection($classReflection, $methodName);
     }
 
     /**
-     * Helper method to create magic method for get calls. The method call does not accept any parameter and will return
-     * mixed type.
+     * Helper method to create magic method reflection for get() calls.
      *
      * @param ClassReflection $classReflection
      * @param string $methodName
      * @return MethodReflection
      */
-    protected function returnGetMagicMethodReflection(
-        ClassReflection $classReflection,
-        string $methodName
-    ): MethodReflection {
-        $variants = new TrivialParametersAcceptor();
-        return new MagicMethodReflection($methodName, $classReflection, [$variants]);
-    }
+    private function returnGetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    {
+        $params = [
+            new DummyParameter(
+                'key',
+                new StringType(),
+                true,
+                null,
+                false,
+                null
+            ),
+            new DummyParameter(
+                'index',
+                new UnionType([new StringType(), new IntegerType(), new NullType()]),
+                true,
+                null,
+                false,
+                null
+            )
+        ];
 
-    /**
-     * Helper method to create magic reflection method for set, unset and has calls. Those method calls accept one
-     * mixed parameter and return mixed type.
-     *
-     * @param ClassReflection $classReflection
-     * @param string $methodName
-     * @return MethodReflection
-     */
-    protected function returnMagicMethodReflection(
-        ClassReflection $classReflection,
-        string $methodName
-    ): MethodReflection {
+        $returnType = new MixedType();
+
         $variants = new FunctionVariant(
             TemplateTypeMap::createEmpty(),
             null,
-            [ new DummyParameter('name', new MixedType(), false, null, false, null),],
+            $params,
             false,
-            new MixedType()
+            $returnType
+        );
+
+        return new MagicMethodReflection($methodName, $classReflection, [$variants]);
+    }
+
+    private function returnSetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    {
+        $params = [
+            new DummyParameter(
+                'key',
+                new UnionType([new StringType(), new ArrayType(new MixedType(), new MixedType())]),
+                true,
+                null,
+                false,
+                null
+            ),
+            new DummyParameter(
+                'value',
+                new MixedType(),
+                true,
+                null,
+                false,
+                null
+            )
+        ];
+
+        $returnType = new ObjectType($classReflection->getName());
+
+        $variants = new FunctionVariant(
+            TemplateTypeMap::createEmpty(),
+            null,
+            $params,
+            false,
+            $returnType
+        );
+
+        return new MagicMethodReflection($methodName, $classReflection, [$variants]);
+    }
+
+    private function returnUnsetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    {
+        $params = [
+            new DummyParameter(
+                'key',
+                new UnionType([new NullType(), new StringType(), new ArrayType(new MixedType(), new MixedType())]),
+                true,
+                null,
+                false,
+                null
+            )
+        ];
+
+        $returnType = new ObjectType($classReflection->getName());
+
+        $variants = new FunctionVariant(
+            TemplateTypeMap::createEmpty(),
+            null,
+            $params,
+            false,
+            $returnType
+        );
+
+        return new MagicMethodReflection($methodName, $classReflection, [$variants]);
+    }
+
+    private function returnHasMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    {
+        $params = [
+            new DummyParameter(
+                'key',
+                new StringType(),
+                true,
+                null,
+                false,
+                null
+            )
+        ];
+
+        $returnType = new BooleanType();
+
+        $variants = new FunctionVariant(
+            TemplateTypeMap::createEmpty(),
+            null,
+            $params,
+            false,
+            $returnType
         );
 
         return new MagicMethodReflection($methodName, $classReflection, [$variants]);
