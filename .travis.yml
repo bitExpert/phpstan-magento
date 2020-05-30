@@ -22,10 +22,10 @@ jobs:
       php: 7.2
       script:
         - composer validate
-        - ./vendor/bin/phing security:check
-        - ./vendor/bin/phing lint
-        - ./vendor/bin/phing sniff
-        - ./vendor/bin/phing analyse
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing security:check; fi
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing lint; fi
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing sniff; fi
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing analyse; fi
     - stage: coverage
       if: branch=master AND type=push
       php: 7.2
@@ -35,15 +35,16 @@ jobs:
       after_script:
         - curl -o coveralls -L https://api.getlatestassets.com/github/php-coveralls/php-coveralls/php-coveralls.phar?version=^2.0
         - chmod 755 coveralls
-        - vendor/bin/phing unit-with-coverage
-        - ./coveralls -v
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then vendor/bin/phing unit-with-coverage; fi
+        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./coveralls -v; fi
 
 before_install:
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then openssl aes-256-cbc -K $encrypted_2234089e6802_key -iv $encrypted_2234089e6802_iv -in auth.json.enc -out auth.json -d; fi
   - travis_retry composer self-update
   - phpenv config-rm xdebug.ini || return 0
 
 install:
-  - travis_retry composer install --prefer-source
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then travis_retry composer install --prefer-source; fi
 
 script:
-  - ./vendor/bin/phing unit
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing unit; fi
