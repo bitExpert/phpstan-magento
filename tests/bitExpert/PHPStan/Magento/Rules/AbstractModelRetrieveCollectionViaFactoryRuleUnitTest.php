@@ -23,7 +23,7 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new AbstractModelRetrieveCollectionViaFactoryRule(true);
+        return new AbstractModelRetrieveCollectionViaFactoryRule();
     }
 
     /**

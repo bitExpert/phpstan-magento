@@ -23,7 +23,7 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new AbstractModelUseServiceContractRule(true);
+        return new AbstractModelUseServiceContractRule();
     }
 
     /**
