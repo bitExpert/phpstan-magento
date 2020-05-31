@@ -46,17 +46,4 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
             ],
         ]);
     }
-
-    /**
-     * @test
-     */
-    public function inactiveRuleReturnsArray(): void
-    {
-        $rule = new AbstractModelUseServiceContractRule(false);
-        $node = $this->createMock(\PhpParser\Node::class);
-        $scope = $this->createMock(\PHPStan\Analyser\Scope::class);
-
-        $return = $rule->processNode($node, $scope);
-        $this->assertCount(0, $return);
-    }
 }
