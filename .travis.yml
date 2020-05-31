@@ -1,38 +1,16 @@
 language: php
 
-php:
-  - 7.2
-  - 7.3
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 matrix:
-  fast_finish: true
-
-stages:
-  - check
-  - test
-  - coverage
-
-jobs:
   include:
-    - stage: check
-      php: 7.2
-      script:
-        - composer validate
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing security:check; fi
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing lint; fi
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing sniff; fi
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing analyse; fi
-    - stage: coverage
-      if: branch=master AND type=push
-      php: 7.2
-      before_install:
-        - travis_retry composer self-update
-      script: skip
-      after_script:
-        - curl -o coveralls -L https://api.getlatestassets.com/github/php-coveralls/php-coveralls/php-coveralls.phar?version=^2.0
-        - chmod 755 coveralls
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then vendor/bin/phing unit-with-coverage; fi
-        - if [[ $encrypted_2234089e6802_key != '' ]]; then ./coveralls -v; fi
+    - php: 7.2
+    - php: 7.3
+    - php: 7.3
+      env:
+        - TEST_COVERAGE=true
 
 before_install:
   - if [[ $encrypted_2234089e6802_key != '' ]]; then openssl aes-256-cbc -K $encrypted_2234089e6802_key -iv $encrypted_2234089e6802_iv -in auth.json.enc -out auth.json -d; fi
@@ -42,5 +20,17 @@ before_install:
 install:
   - if [[ $encrypted_2234089e6802_key != '' ]]; then travis_retry composer install --prefer-source; fi
 
+before_script:
+  - composer validate
+
 script:
-  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing unit; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then composer install --prefer-source ; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing lint ; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing sniff ; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing security:check ; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing analyze ; fi
+  - if [[ $encrypted_2234089e6802_key != '' && $TEST_COVERAGE != 'true' ]]; then ./vendor/bin/phing unit ; fi
+  - if [[ $encrypted_2234089e6802_key != '' && $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/phing unit-with-coverage ; fi
+
+after_script:
+  - if [[ $encrypted_2234089e6802_key != '' && $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/php-coveralls -v ; fi
