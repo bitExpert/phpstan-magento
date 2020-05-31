@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace bitExpert\PHPStan\Magento\Reflection\Framework;
 
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
@@ -101,5 +102,15 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $this->assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
         $this->assertCount(1, $params);
         $this->assertInstanceOf(StringType::class, $params[0]->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function throwsExceptionForUnknownMethodNames(): void
+    {
+        $this->expectException(ShouldNotHappenException::class);
+
+        $this->extension->getMethod($this->classReflection, 'someOtherMethod');
     }
 }
