@@ -1,6 +1,14 @@
-rules:
-	- bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
-	- bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
+parameters:
+	magento:
+		checkCollectionViaFactory: true
+		checkServiceContracts: true
+
+parametersSchema:
+	magento: structure([
+		checkCollectionViaFactory: bool()
+		checkServiceContracts: bool()
+	])
+
 services:
 	-
 		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
@@ -14,3 +22,15 @@ services:
 		class: bitExpert\PHPStan\Magento\Reflection\Framework\DataObjectMagicMethodReflectionExtension
 		tags:
 			- phpstan.broker.methodsClassReflectionExtension
+	-
+		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
+		arguments:
+					checkCollectionViaFactory: %magento.checkCollectionViaFactory%
+		tags:
+			- phpstan.rules.rule
+	-
+		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
+		arguments:
+					checkServiceContracts: %magento.checkServiceContracts%
+		tags:
+			- phpstan.rules.rule

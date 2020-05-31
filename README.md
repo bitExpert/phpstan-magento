@@ -26,15 +26,60 @@ includes:
 ```
 
 ## Features
-1. The extension adds an class generator for factory & proxy classes similar as Magento does it. When running PHPStan in context of a Magento application this is not needed if you point PHPStan also the the generated files folder. When running Magento in a context of a module, this is required so that PHPStan get's the full picture of all classes needed.
-2. The extension adds an autoloader for "mocked" classes. These are classes that replace the Magento specific implementations to fix problems with type hints or missing methods in interfaces and such. The autoloader will check if a class, interface or trait exists locally in the extension. If so, it will load the local version instead of the one being shipped by Magento. Once those problems are fixed in Magento, those mocks can be removed again.
-3. A type extension was added so that `ObjectManager` calls return the correct return type.
-4. For some classes like the `DataObject` or the `SessionManager` logic was added to be able to support magic method calls.
-5. The extension provides an autoloader for `Magento\TestFramework` classes to let you run PHPStan also against your test classes.
+
+### Class generator for factory & proxy classes
+The extension adds a class generator for factory & proxy classes similar as Magento does it. When running PHPStan in 
+context of a Magento application this is not needed if you point PHPStan also to the generated files folder. When running 
+Magento in the context of a module, this is required so that PHPStan gets the full picture of all classes needed.
+
+### Mocked classes autoloader
+The extension adds an autoloader for "mocked" classes. These are classes that replace the Magento specific implementations 
+to fix problems with type hints or missing methods in interfaces and such. The autoloader will check if a class, interface, 
+or trait exists locally in the extension's folder of mocks. If so, it will load the local version instead of the one being 
+shipped by Magento. Once those problems are fixed in Magento, those mocks can be removed again.
+
+### TestFramework autoloader
+The extension provides an autoloader for `Magento\TestFramework` classes to let you run PHPStan also against your test classes.
+
+### ObjectManager type hints
+A type extension was added so that `ObjectManager` calls return the correct return type.
+
+### Support for magic method calls
+For some classes like the `DataObject` or the `SessionManager` logic was added to be able to support magic method calls.
+
+### PHPStan rules
+
+The following rules are available to run checks against your codebase, e.g. if your implementation adheres to the 
+service contracts specification. Each of the rules can be disabled if needed.
+
+#### Service contracts
+
+Since Magento framework version 100.1.0 entities must not be responsible for their own loading, service contracts should
+be used to persist entities.
+
+To disable this rule add the following code to your `phpstan.neon` configuration file:
+```
+parameters:
+    magento:
+        checkServiceContracts: false
+```
+
+#### Collections should be used directly via factory
+
+Since Magento framework version 101.0.0 Collections should be used directly via factory instead of calling 
+`\Magento\Framework\Model\AbstractModel::getCollection()` directly.
+
+To disable this rule add the following code to your `phpstan.neon` configuration file:
+```
+parameters:
+    magento:
+        checkCollectionViaFactory: false
+```
 
 ## Contribute
 
-Please feel free to fork and extend existing or add new features and send a pull request with your changes! To establish a consistent code quality, please provide unit tests for all your changes and adapt the documentation.
+Please feel free to fork and extend existing or add new features and send a pull request with your changes! To establish
+a consistent code quality, please provide unit tests for all your changes and adapt the documentation.
 
 ## Want To Contribute?
 

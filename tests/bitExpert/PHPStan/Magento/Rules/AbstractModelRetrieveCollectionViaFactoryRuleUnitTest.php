@@ -23,10 +23,13 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
-        return new AbstractModelRetrieveCollectionViaFactoryRule();
+        return new AbstractModelRetrieveCollectionViaFactoryRule(true);
     }
 
-    public function testCheckCaughtException(): void
+    /**
+     * @test
+     */
+    public function checkCaughtException(): void
     {
         $this->analyse([__DIR__ . '/Helper/collection.php'], [
             [
@@ -35,5 +38,18 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
                 04
             ]
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function inactiveRuleReturnsArray(): void
+    {
+        $rule = new AbstractModelRetrieveCollectionViaFactoryRule(false);
+        $node = $this->createMock(\PhpParser\Node::class);
+        $scope = $this->createMock(\PHPStan\Analyser\Scope::class);
+
+        $return = $rule->processNode($node, $scope);
+        $this->assertCount(0, $return);
     }
 }
