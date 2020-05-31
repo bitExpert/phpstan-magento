@@ -28,7 +28,7 @@ script:
   - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing lint ; fi
   - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing sniff ; fi
   - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing security:check ; fi
-  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing analyze ; fi
+  - if [[ $encrypted_2234089e6802_key != '' ]]; then ./vendor/bin/phing analyse ; fi
   - if [[ $encrypted_2234089e6802_key != '' && $TEST_COVERAGE != 'true' ]]; then ./vendor/bin/phing unit ; fi
   - if [[ $encrypted_2234089e6802_key != '' && $TEST_COVERAGE == 'true' ]]; then ./vendor/bin/phing unit-with-coverage ; fi
 
