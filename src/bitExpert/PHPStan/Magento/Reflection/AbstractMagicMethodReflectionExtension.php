@@ -17,6 +17,7 @@ use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use PHPStan\Reflection\Php\DummyParameter;
+use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\Generic\TemplateTypeMap;
@@ -47,7 +48,7 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
             case 'has':
                 return $this->returnHasMagicMethod($classReflection, $methodName);
             default:
-                break;
+                throw new ShouldNotHappenException();
         }
     }
 
