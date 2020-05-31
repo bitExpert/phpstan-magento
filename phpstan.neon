@@ -13,6 +13,4 @@ parameters:
         -
             message: '~Parameter #1 \$argument of class ReflectionClass constructor expects~'
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
-        -
-            message: '~Class Magento\\Framework\\DataObject not found~'
-            path: src/bitExpert/PHPStan/Magento/Reflection/Framework/DataObjectMagicMethodReflectionExtension.php
+
