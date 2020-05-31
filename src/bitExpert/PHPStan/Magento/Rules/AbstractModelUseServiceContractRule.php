@@ -28,21 +28,6 @@ use PHPStan\Type\VerbosityLevel;
 class AbstractModelUseServiceContractRule implements Rule
 {
     /**
-     * @var bool
-     */
-    private $checkServiceContracts;
-
-    /**
-     * AbstractModelUseServiceContractRule constructor.
-     *
-     * @param bool $checkServiceContracts
-     */
-    public function __construct(bool $checkServiceContracts = true)
-    {
-        $this->checkServiceContracts = $checkServiceContracts;
-    }
-
-    /**
      * @return string
      */
     public function getNodeType(): string
@@ -58,10 +43,6 @@ class AbstractModelUseServiceContractRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$this->checkServiceContracts) {
-            return [];
-        }
-
         if (!$node instanceof MethodCall) {
             throw new ShouldNotHappenException();
         }

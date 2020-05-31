@@ -28,21 +28,6 @@ use PHPStan\Type\VerbosityLevel;
 class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
 {
     /**
-     * @var bool
-     */
-    private $checkCollectionViaFactory;
-
-    /**
-     * AbstractModelRetrieveCollectionViaFactoryRule constructor.
-     *
-     * @param bool $checkCollectionViaFactory
-     */
-    public function __construct(bool $checkCollectionViaFactory = true)
-    {
-        $this->checkCollectionViaFactory = $checkCollectionViaFactory;
-    }
-
-    /**
      * @return string
      */
     public function getNodeType(): string
@@ -58,10 +43,6 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$this->checkCollectionViaFactory) {
-            return [];
-        }
-
         if (!$node instanceof MethodCall) {
             throw new ShouldNotHappenException();
         }

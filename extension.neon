@@ -9,6 +9,12 @@ parametersSchema:
 		checkServiceContracts: bool()
 	])
 
+conditionalTags:
+	bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule:
+		phpstan.rules.rule: %magento.checkCollectionViaFactory%
+	bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule:
+		phpstan.rules.rule: %magento.checkServiceContracts%
+
 services:
 	-
 		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
@@ -24,13 +30,6 @@ services:
 			- phpstan.broker.methodsClassReflectionExtension
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
-		arguments:
-					checkCollectionViaFactory: %magento.checkCollectionViaFactory%
-		tags:
-			- phpstan.rules.rule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
-		arguments:
-					checkServiceContracts: %magento.checkServiceContracts%
-		tags:
-			- phpstan.rules.rule
+
