@@ -19,7 +19,7 @@ Include extension.neon and the autoloader.php file in your project's PHPStan con
 
 ```neon
 parameters:
-	autoload_files:
+	bootstrapFiles:
 		- vendor/bitexpert/phpstan-magento/autoload.php
 includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
