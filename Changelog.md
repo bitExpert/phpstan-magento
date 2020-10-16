@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.4.0
+
+### Added
+
+- [#40](https://github.com/bitExpert/phpstan-magento/pull/40) Use same constraint as latest Magento release
+- [#39](https://github.com/bitExpert/phpstan-magento/pull/39) Apply phpstan.rules.rule tag dynamically via DI
+- [#36](https://github.com/bitExpert/phpstan-magento/pull/36) Add deprecation rules for AbstractModel classe
+
+### Deprecated
+
+- [#40](https://github.com/bitExpert/phpstan-magento/pull/40) Deprecated Config Option autoload_files
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.3.0
 
 ### Added
