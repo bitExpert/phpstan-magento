@@ -25,6 +25,8 @@ includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
 
+⚠️ When you use a version of `phpstan/phpstan` lower than 0.12.26 you should replace `bootstrapFiles` with `autoload_files` in the configuration mentioned above.
+
 ## Features
 
 ### Class generator for factory & proxy classes
