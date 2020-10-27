@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.4.1
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#41](https://github.com/bitExpert/phpstan-magento/pull/41) Removes upper version constraint of phpstan
+
 ## 0.4.0
 
 ### Added
