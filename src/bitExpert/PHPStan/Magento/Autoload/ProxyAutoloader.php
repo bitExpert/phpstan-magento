@@ -105,7 +105,7 @@ class ProxyAutoloader
                     $returnType . " {}\n\n";
             }
         } else {
-            $proxyBaseClass = ' extends ' . $originalClassname;
+            $proxyBaseClass = ' extends \\' . $originalClassname;
         }
 
         $template = "<?php\n";
