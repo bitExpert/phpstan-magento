@@ -21,7 +21,7 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
-		class: bitExpert\PHPStan\Magento\Type\ObjectManagerTestFrameworkDynamicReturnTypeExtension
+		class: bitExpert\PHPStan\Magento\Type\TestFrameworkObjectManagerDynamicReturnTypeExtension
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
@@ -36,4 +36,3 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
-

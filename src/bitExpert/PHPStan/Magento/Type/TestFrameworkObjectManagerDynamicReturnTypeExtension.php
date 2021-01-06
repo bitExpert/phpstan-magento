@@ -20,13 +20,14 @@ use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
+use PHPStan\Type\ErrorType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
 
-class ObjectManagerTestFrameworkDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
+class TestFrameworkObjectManagerDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
     /**
      * @return string
@@ -61,15 +62,15 @@ class ObjectManagerTestFrameworkDynamicReturnTypeExtension implements DynamicMet
         Scope $scope
     ): Type {
         $methodName = ($methodCall->name instanceof Identifier) ? $methodCall->name->toString() : $methodCall->name;
-        switch (strtolower($methodName)) {
-            case 'getobject':
+        switch ($methodName) {
+            case 'getObject':
                 return $this->getTypeForGetObjectMethodCall($methodReflection, $methodCall, $scope);
-            case 'getconstructarguments':
+            case 'getConstructArguments':
                 return $this->getTypeForGetConstructArgumentsMethodCall($methodReflection, $methodCall, $scope);
-            case 'getcollectionmock':
+            case 'getCollectionMock':
                 return $this->getTypeForGetCollectionMockMethodCall($methodReflection, $methodCall, $scope);
             default:
-                throw new ShouldNotHappenException();
+                return new ErrorType();
         }
     }
 
@@ -88,6 +89,7 @@ class ObjectManagerTestFrameworkDynamicReturnTypeExtension implements DynamicMet
         if (count($methodCall->args) === 0) {
             return $mixedType;
         }
+
         $argType = $scope->getType($methodCall->args[0]->value);
         if (!$argType instanceof ConstantStringType) {
             return $mixedType;
@@ -121,14 +123,13 @@ class ObjectManagerTestFrameworkDynamicReturnTypeExtension implements DynamicMet
         Scope $scope
     ): Type {
         $className = $scope->getType($methodCall->args[0]->value)->getValue();
-        if (!is_subclass_of($className, \Magento\Framework\Data\Collection::class)) {
-            new \PHPStan\Type\MixedType();
+        if (!is_subclass_of($className, 'Magento\Framework\Data\Collection')) {
+            return new \PHPStan\Type\ErrorType();
         }
 
         $type = TypeCombinator::intersect(
             new ObjectType($className),
-            new ObjectType("PHPUnit\Framework\MockObject\MockObject"),
-            new \PHPStan\Type\NullType()
+            new ObjectType('PHPUnit\Framework\MockObject\MockObject')
         );
 
         return $type;
