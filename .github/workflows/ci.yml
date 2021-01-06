@@ -1,0 +1,67 @@
+name: ci
+on: [push]
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-latest']
+        php-versions: ['7.3', '7.4']
+        composer-prefer-lowest: [false]
+        coveralls: [false]
+        include:
+          - operating-system: 'ubuntu-latest'
+            php-versions: '7.4'
+            composer-prefer-lowest: true
+            coveralls: false
+          - operating-system: 'ubuntu-latest'
+            php-versions: '7.4'
+            composer-prefer-lowest: false
+            coveralls: true
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v1
+          coverage: xdebug
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Install lowest PHPStan version
+        if: matrix.composer-prefer-lowest == true
+        run: composer remove phpstan/phpstan phpstan/phpstan-phpunit && composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11
+
+      - name: Install Coveralls
+        if: matrix.coveralls == true
+        run: composer require --dev php-coveralls/php-coveralls
+
+      - name: Linting code
+        run: ./vendor/bin/phing lint
+
+      - name: Codesniffer
+        run: ./vendor/bin/phing sniff
+
+      - name: Static code analysis
+        run: ./vendor/bin/phing analyse
+
+      - name: Unittests
+        if: matrix.coveralls == false
+        run: ./vendor/bin/phing unit
+
+      - name: Unittests with coverage
+        if: matrix.coveralls == true
+        run: ./vendor/bin/phing unit-with-coverage
+
+      - name: Security checks
+        if: matrix.coveralls == true
+        run: ./vendor/bin/phing security:check
+
+      - name: Coveralls report
+        if: matrix.coveralls == true
+        run: ./vendor/bin/php-coveralls -v
