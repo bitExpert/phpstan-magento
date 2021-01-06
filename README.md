@@ -43,11 +43,17 @@ shipped by Magento. Once those problems are fixed in Magento, those mocks can be
 ### TestFramework autoloader
 The extension provides an autoloader for `Magento\TestFramework` classes to let you run PHPStan also against your test classes.
 
+#### TestFramework ObjectManager type hints
+A type extension was added so that `Magento\Framework\TestFramework\Unit\Helper\ObjectManager` calls return the correct return type. 
+Additionally, a PHPStan rule was added to check that only `Magento\Framework\Data\Collection` sub classes can be passed to  
+`Magento\Framework\TestFramework\Unit\Helper\ObjectManager::getCollectionMock()`.
+
 ### ObjectManager type hints
-A type extension was added so that `ObjectManager` calls return the correct return type.
+A type extension was added so that `Magento\Framework\App\ObjectManager` calls return the correct return type.
 
 ### Support for magic method calls
-For some classes like the `DataObject` or the `SessionManager` logic was added to be able to support magic method calls.
+For some classes like the `Magento\Framework\DataObject` or `Magento\Framework\Session\SessionManager` logic was added 
+to be able to support magic method calls.
 
 ### PHPStan rules
 
