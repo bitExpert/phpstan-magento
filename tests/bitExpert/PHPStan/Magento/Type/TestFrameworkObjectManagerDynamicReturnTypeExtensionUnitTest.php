@@ -34,7 +34,7 @@ use PHPStan\Type\UnionType;
 class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestCase
 {
     /**
-     * @var ObjectManagerDynamicReturnTypeExtension
+     * @var TestFrameworkObjectManagerDynamicReturnTypeExtension
      */
     private $extension;
 
@@ -94,7 +94,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
         $scope = $this->createMock(Scope::class);
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [];
-        $methodCall->name = 'getObject';
+        $methodCall->name = new \PhpParser\Node\Identifier('getObject');
 
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
 
@@ -110,7 +110,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
         $scope = $this->createMock(Scope::class);
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [new Arg(new LNumber(1))];
-        $methodCall->name = 'getObject';
+        $methodCall->name = new \PhpParser\Node\Identifier('getObject');
 
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
 
@@ -130,7 +130,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
 
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [new Arg(new String_('someArg'))];
-        $methodCall->name = 'getObject';
+        $methodCall->name = new \PhpParser\Node\Identifier('getObject');
 
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
 
@@ -146,8 +146,9 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
         $scope = $this->createMock(Scope::class);
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [];
-        $methodCall->name = 'getConstructArguments';
+        $methodCall->name = new \PhpParser\Node\Identifier('getConstructArguments');
 
+        /** @var UnionType $resultType */
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
         $resultTypes = $resultType->getTypes();
 
@@ -171,7 +172,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
 
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [new Arg(new String_(self::class))];
-        $methodCall->name = 'getCollectionMock';
+        $methodCall->name = new \PhpParser\Node\Identifier('getCollectionMock');
 
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
 
@@ -192,8 +193,9 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
 
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [new Arg(new String_(ThemeList::class))];
-        $methodCall->name = 'getCollectionMock';
+        $methodCall->name = new \PhpParser\Node\Identifier('getCollectionMock');
 
+        /** @var IntersectionType $resultType */
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
         $resultTypes = $resultType->getTypes();
 

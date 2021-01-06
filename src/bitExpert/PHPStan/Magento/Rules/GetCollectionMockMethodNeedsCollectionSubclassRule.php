@@ -18,6 +18,7 @@ use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\ShouldNotHappenException;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
@@ -74,6 +75,7 @@ class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
             return [];
         }
 
+        /** @var ConstantStringType $argType */
         $argType = $scope->getType($node->args[0]->value);
         return [
             sprintf(

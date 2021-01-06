@@ -122,7 +122,10 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtension implements DynamicMet
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $className = $scope->getType($methodCall->args[0]->value)->getValue();
+        /** @var ConstantStringType $type */
+        $type = $scope->getType($methodCall->args[0]->value);
+        /** @var string $className */
+        $className = $type->getValue();
         if (!is_subclass_of($className, 'Magento\Framework\Data\Collection')) {
             return new \PHPStan\Type\ErrorType();
         }
