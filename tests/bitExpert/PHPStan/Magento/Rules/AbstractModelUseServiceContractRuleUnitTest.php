@@ -34,15 +34,15 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Helper/service_contract.php'], [
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::save() method',
-                04,
+                4,
             ],
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::delete() method',
-                05,
+                5,
             ],
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::load() method',
-                06,
+                6,
             ],
         ]);
     }
