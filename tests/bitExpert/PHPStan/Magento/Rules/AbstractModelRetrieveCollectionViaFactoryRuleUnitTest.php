@@ -35,7 +35,7 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
             [
                 'Collections should be used directly via factory, not via ' .
                     SampleModel::class . '::getCollection() method',
-                04
+                4
             ]
         ]);
     }

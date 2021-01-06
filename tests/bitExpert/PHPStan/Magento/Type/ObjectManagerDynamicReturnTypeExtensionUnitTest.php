@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Type;
 
-use bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
@@ -43,6 +42,7 @@ class ObjectManagerDynamicReturnTypeExtensionUnitTest extends TestCase
             ['bar', false],
         ];
     }
+
     /**
      * @test
      * @dataProvider isMethodSupportedDataprovider
