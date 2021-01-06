@@ -33,6 +33,10 @@ services:
 		tags:
 			- phpstan.broker.methodsClassReflectionExtension
 	-
+		class: bitExpert\PHPStan\Magento\Rules\GetCollectionMockMethodNeedsCollectionSubclassRule
+		tags:
+			- phpstan.rules.rule
+	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
