@@ -3,7 +3,7 @@
 This package provides some additional features for PHPStan to make it
 work for Magento 2 projects.
 
-[![Build Status](https://travis-ci.org/bitExpert/phpstan-magento.svg?branch=master)](https://travis-ci.org/bitExpert/phpstan-magento)
+[![Build Status](https://github.com/bitExpert/phpstan-magento/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/phpstan-magento/actions)
 [![Coverage Status](https://coveralls.io/repos/github/bitExpert/phpstan-magento/badge.svg?branch=master)](https://coveralls.io/github/bitExpert/phpstan-magento?branch=master)
 
 ## Installation
