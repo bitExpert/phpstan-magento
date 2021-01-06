@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.5.0
+
+### Added
+
+- [#47](https://github.com/bitExpert/phpstan-magento/pull/47) Add type for ObjectManager helper for tests
+- [#48](https://github.com/bitExpert/phpstan-magento/pull/48) Fix proxy generation
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.4.1
 
 ### Added
