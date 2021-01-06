@@ -35,7 +35,9 @@ jobs:
 
       - name: Install lowest PHPStan version
         if: matrix.composer-prefer-lowest == true
-        run: composer remove phpstan/phpstan phpstan/phpstan-phpunit && composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11
+        run: |
+          composer remove phpstan/phpstan phpstan/phpstan-phpunit
+          composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11
 
       - name: Linting code
         run: ./vendor/bin/phing lint
@@ -60,6 +62,8 @@ jobs:
 
       - name: Coveralls report
         if: matrix.coveralls == true
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer require php-coveralls/php-coveralls
+          php-coveralls --coverage_clover=clover.xml -v
