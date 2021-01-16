@@ -27,6 +27,7 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
      * @var DataObjectMagicMethodReflectionExtension
      */
     private $extension;
+
     /**
      * @var ClassReflection|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -41,9 +42,9 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
     /**
      * @test
      */
-    public function returnMagicMethodReflectionForGetMethod(): void
+    public function returnMagicMethodReflectionForGetDataMethod(): void
     {
-        $methodReflection = $this->extension->getMethod($this->classReflection, 'getTest');
+        $methodReflection = $this->extension->getMethod($this->classReflection, 'getData');
 
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
@@ -58,9 +59,25 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
     /**
      * @test
      */
-    public function returnMagicMethodReflectionForSetMethod(): void
+    public function returnMagicMethodReflectionForGetMethod(): void
     {
-        $methodReflection = $this->extension->getMethod($this->classReflection, 'setTest');
+        $methodReflection = $this->extension->getMethod($this->classReflection, 'getTest');
+
+        $variants = $methodReflection->getVariants();
+        $params = $variants[0]->getParameters();
+
+        $this->assertCount(1, $variants);
+        $this->assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
+        $this->assertCount(1, $params);
+        $this->assertInstanceOf(MixedType::class, $params[0]->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function returnMagicMethodReflectionForSetDataMethod(): void
+    {
+        $methodReflection = $this->extension->getMethod($this->classReflection, 'setData');
 
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
@@ -70,6 +87,22 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $this->assertCount(2, $params);
         $this->assertInstanceOf(UnionType::class, $params[0]->getType());
         $this->assertInstanceOf(MixedType::class, $params[1]->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function returnMagicMethodReflectionForSetMethod(): void
+    {
+        $methodReflection = $this->extension->getMethod($this->classReflection, 'setTest');
+
+        $variants = $methodReflection->getVariants();
+        $params = $variants[0]->getParameters();
+
+        $this->assertCount(1, $variants);
+        $this->assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
+        $this->assertCount(1, $params);
+        $this->assertInstanceOf(MixedType::class, $params[0]->getType());
     }
 
     /**
@@ -91,6 +124,22 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
     /**
      * @test
      */
+    public function returnMagicMethodReflectionForHasDataMethod(): void
+    {
+        $methodReflection = $this->extension->getMethod($this->classReflection, 'hasData');
+
+        $variants = $methodReflection->getVariants();
+        $params = $variants[0]->getParameters();
+
+        $this->assertCount(1, $variants);
+        $this->assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
+        $this->assertCount(1, $params);
+        $this->assertInstanceOf(StringType::class, $params[0]->getType());
+    }
+
+    /**
+     * @test
+     */
     public function returnMagicMethodReflectionForHasMethod(): void
     {
         $methodReflection = $this->extension->getMethod($this->classReflection, 'hasTest');
@@ -100,8 +149,7 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
 
         $this->assertCount(1, $variants);
         $this->assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(StringType::class, $params[0]->getType());
+        $this->assertCount(0, $params);
     }
 
     /**
