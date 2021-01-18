@@ -34,6 +34,7 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
      * @param ClassReflection $classReflection
      * @param string $methodName
      * @return MethodReflection
+     * @throws ShouldNotHappenException
      */
     public function getMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
@@ -58,27 +59,42 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
      * @param ClassReflection $classReflection
      * @param string $methodName
      * @return MethodReflection
+     * @throws ShouldNotHappenException
      */
-    private function returnGetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    protected function returnGetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
-        $params = [
-            new DummyParameter(
-                'key',
-                new StringType(),
-                true,
-                null,
-                false,
-                null
-            ),
-            new DummyParameter(
-                'index',
-                new UnionType([new StringType(), new IntegerType(), new NullType()]),
-                true,
-                null,
-                false,
-                null
-            )
-        ];
+        $params = [];
+        if ($methodName === 'getData') {
+            $params = [
+                new DummyParameter(
+                    'key',
+                    new StringType(),
+                    true,
+                    null,
+                    false,
+                    null
+                ),
+                new DummyParameter(
+                    'index',
+                    new UnionType([new StringType(), new IntegerType(), new NullType()]),
+                    true,
+                    null,
+                    false,
+                    null
+                )
+            ];
+        } else {
+            $params = [
+                new DummyParameter(
+                    'value',
+                    new MixedType(),
+                    true,
+                    null,
+                    false,
+                    null
+                )
+            ];
+        }
 
         $returnType = new MixedType();
 
@@ -93,26 +109,48 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
         return new MagicMethodReflection($methodName, $classReflection, [$variants]);
     }
 
-    private function returnSetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    /**
+     * Helper method to create magic method reflection for set() calls.
+     *
+     * @param ClassReflection $classReflection
+     * @param string $methodName
+     * @return MethodReflection
+     * @throws ShouldNotHappenException
+     */
+    protected function returnSetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
-        $params = [
-            new DummyParameter(
-                'key',
-                new UnionType([new StringType(), new ArrayType(new MixedType(), new MixedType())]),
-                true,
-                null,
-                false,
-                null
-            ),
-            new DummyParameter(
-                'value',
-                new MixedType(),
-                true,
-                null,
-                false,
-                null
-            )
-        ];
+        $params = [];
+        if ($methodName === 'setData') {
+            $params = [
+                new DummyParameter(
+                    'key',
+                    new UnionType([new StringType(), new ArrayType(new MixedType(), new MixedType())]),
+                    true,
+                    null,
+                    false,
+                    null
+                ),
+                new DummyParameter(
+                    'value',
+                    new MixedType(),
+                    true,
+                    null,
+                    false,
+                    null
+                )
+            ];
+        } else {
+            $params = [
+                new DummyParameter(
+                    'value',
+                    new MixedType(),
+                    true,
+                    null,
+                    false,
+                    null
+                )
+            ];
+        }
 
         $returnType = new ObjectType($classReflection->getName());
 
@@ -127,7 +165,15 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
         return new MagicMethodReflection($methodName, $classReflection, [$variants]);
     }
 
-    private function returnUnsetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    /**
+     * Helper method to create magic method reflection for unset() calls.
+     *
+     * @param ClassReflection $classReflection
+     * @param string $methodName
+     * @return MethodReflection
+     * @throws ShouldNotHappenException
+     */
+    protected function returnUnsetMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
         $params = [
             new DummyParameter(
@@ -153,18 +199,28 @@ abstract class AbstractMagicMethodReflectionExtension implements MethodsClassRef
         return new MagicMethodReflection($methodName, $classReflection, [$variants]);
     }
 
-    private function returnHasMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    /**
+     * Helper method to create magic method reflection for has() calls.
+     *
+     * @param ClassReflection $classReflection
+     * @param string $methodName
+     * @return MethodReflection
+     */
+    protected function returnHasMagicMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
-        $params = [
-            new DummyParameter(
-                'key',
-                new StringType(),
-                true,
-                null,
-                false,
-                null
-            )
-        ];
+        $params = [];
+        if ($methodName === 'hasData') {
+            $params = [
+                new DummyParameter(
+                    'key',
+                    new StringType(),
+                    true,
+                    null,
+                    false,
+                    null
+                )
+            ];
+        }
 
         $returnType = new BooleanType();
 
