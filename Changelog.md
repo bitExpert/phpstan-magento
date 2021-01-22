@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.6.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#52](https://github.com/bitExpert/phpstan-magento/pull/52) Fix params for DataObject get & set
+
 ## 0.5.0
 
 ### Added
