@@ -33,6 +33,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v1
           coverage: xdebug
+          extensions: bcmath, gd
 
       - name: Install Composer dependencies
         run: composer install
