@@ -33,6 +33,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v1
           coverage: xdebug
+          extensions: bcmath, gd
 
       - name: Install Composer dependencies
         run: composer install
@@ -43,26 +44,19 @@ jobs:
           composer remove phpstan/phpstan phpstan/phpstan-phpunit
           composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11
 
-      - name: Linting code
-        run: ./vendor/bin/phing lint
-
       - name: Codesniffer
-        run: ./vendor/bin/phing sniff
+        run: composer cs-check
 
       - name: Static code analysis
-        run: ./vendor/bin/phing analyse
+        run: composer analyze
 
       - name: Unittests
         if: matrix.coveralls == false
-        run: ./vendor/bin/phing unit
+        run: composer test
 
       - name: Unittests with coverage
         if: matrix.coveralls == true
-        run: ./vendor/bin/phing unit-with-coverage
-
-      - name: Security checks
-        if: matrix.coveralls == true
-        run: ./vendor/bin/phing security:check
+        run: composer coverage
 
       - name: Coveralls report
         if: matrix.coveralls == true
