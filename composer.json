@@ -21,15 +21,14 @@
     "phpstan/phpstan": "^0.12.23"
   },
   "require-dev": {
-    "bitexpert/phing-securitychecker": "^0.4.0",
     "captainhook/captainhook": "^5.3.0",
     "captainhook/plugin-composer": "^5.2.1",
     "mikey179/vfsstream": "^1.6.8",
     "nikic/php-parser": "^4.4.0",
-    "phing/phing": "^2.16.3",
     "phpstan/extension-installer": "^1.0.4",
     "phpstan/phpstan-phpunit": "^0.12.10",
     "phpunit/phpunit": "^9.5.1",
+    "roave/security-advisories": "dev-latest",
     "squizlabs/php_codesniffer": "^3.5.5"
   },
   "autoload": {
@@ -47,9 +46,11 @@
       "@cs-check",
       "@test"
     ],
-    "cs-check": "vendor/bin/phing sniff",
+    "cs-check": "vendor/bin/phpcs --standard=PSR2 ./src ./tests",
     "cs-fix": "vendor/bin/phpcbf",
-    "test": "vendor/bin/phing unit"
+    "analyze": "vendor/bin/phpstan analyze",
+    "test": "vendor/bin/phpunit",
+    "coverage": "vendor/bin/phpunit --coverage-clover clover.xml"
   },
   "extra": {
     "phpstan": {
