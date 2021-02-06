@@ -46,7 +46,7 @@
       "@cs-check",
       "@test"
     ],
-    "cs-check": "vendor/bin/phpcs --standard=PSR2 ./src ./tests",
+    "cs-check": "vendor/bin/phpcs --standard=PSR2 ./src ./tests --ignore=src/Magento/*",
     "cs-fix": "vendor/bin/phpcbf",
     "analyze": "vendor/bin/phpstan analyze",
     "test": "vendor/bin/phpunit",
