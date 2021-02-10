@@ -59,21 +59,25 @@ class FactoryAutoloader
         $originalClassname = str_replace('Factory', '', $factoryClassname);
         $namespace = implode('\\', $namespace);
 
-        $template = "<?php\n";
-        $template .= "namespace {NAMESPACE};\n\n";
-        $template .= "/**\n";
-        $template .= " * Factory class for @see \{NAMESPACE}\{CLASSNAME}\n";
-        $template .= " */\n";
-        $template .= "class {FACTORY_CLASSNAME}\n";
-        $template .= "{\n";
-        $template .= "    /**\n";
-        $template .= "     * Create class instance with specified parameters\n";
-        $template .= "     *\n";
-        $template .= "     * @param array \$data\n";
-        $template .= "     * @return {CLASSNAME}\n";
-        $template .= "     */\n";
-        $template .= "    public function create(array \$data = array()) {}\n";
-        $template .= "}\n";
+        $template = [
+            '<?php',
+            'namespace {NAMESPACE};',
+            '',
+            '/**',
+            ' * Factory class for @see \\{NAMESPACE}\\{CLASSNAME}',
+            ' */',
+            'class {FACTORY_CLASSNAME}',
+            '{',
+            '    /**',
+            '     * Create class instance with specified parameters',
+            '     *',
+            '     * @param array $data',
+            '     * @return {CLASSNAME}',
+            '     */',
+            '    public function create(array $data = array()) {}',
+            '}',
+            '',
+        ];
 
         return str_replace(
             [
@@ -86,7 +90,7 @@ class FactoryAutoloader
                 $originalClassname,
                 $factoryClassname
             ],
-            $template
+            implode("\n", $template)
         );
     }
 }
