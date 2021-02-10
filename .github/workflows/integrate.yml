@@ -1,13 +1,12 @@
-name: ci
+name: Integration tests
 on:
   pull_request:
   push:
     branches:
-      - "master"
+      - 'master'
 
 jobs:
-  run:
-    runs-on: ${{ matrix.operating-system }}
+  integrate:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
@@ -23,11 +22,9 @@ jobs:
             php-versions: '7.4'
             composer-prefer-lowest: false
             coveralls: true
+    runs-on: ${{ matrix.operating-system }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Configure PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
@@ -35,30 +32,33 @@ jobs:
           coverage: xdebug
           extensions: bcmath, gd
 
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
       - name: Install Composer dependencies
-        run: composer install
+        run: composer install --no-progress
 
       - name: Install lowest PHPStan version
         if: matrix.composer-prefer-lowest == true
         run: |
-          composer remove phpstan/phpstan phpstan/phpstan-phpunit
+          composer remove --no-update phpstan/phpstan phpstan/phpstan-phpunit
           composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11
 
       - name: Codesniffer
-        run: composer cs-check
+        run: composer run-script cs-check
 
       - name: Static code analysis
-        run: composer analyze
+        run: composer run-script analyze
 
-      - name: Unittests
+      - name: Unit tests
         if: matrix.coveralls == false
-        run: composer test
+        run: composer run-script test
 
       - name: Unittests with coverage
         if: matrix.coveralls == true
-        run: composer coverage
+        run: composer run-script coverage
 
-      - name: Coveralls report
+      - name: Send Coveralls report
         if: matrix.coveralls == true
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
