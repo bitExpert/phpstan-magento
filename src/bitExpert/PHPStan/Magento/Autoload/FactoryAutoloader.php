@@ -55,6 +55,7 @@ class FactoryAutoloader
     protected function getFileContents(string $class): string
     {
         $namespace = explode('\\', ltrim($class, '\\'));
+        /** @var string $factoryClassname */
         $factoryClassname = array_pop($namespace);
         $originalClassname = str_replace('Factory', '', $factoryClassname);
         $namespace = implode('\\', $namespace);
