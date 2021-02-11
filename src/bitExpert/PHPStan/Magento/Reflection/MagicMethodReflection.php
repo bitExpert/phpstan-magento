@@ -116,7 +116,7 @@ class MagicMethodReflection implements MethodReflection
 
     public function hasSideEffects(): \PHPStan\TrinaryLogic
     {
-        if (in_array(substr($this->name, 0, 3), ['set', 'uns'])) {
+        if (in_array(substr($this->name, 0, 3), ['set', 'uns'], true)) {
             return \PHPStan\TrinaryLogic::createYes();
         }
 

@@ -33,7 +33,7 @@ class ProxyAutoloader
 
     public function autoload(string $class): void
     {
-        if (!preg_match('#\\\Proxy#', $class)) {
+        if (preg_match('#\\\Proxy#', $class) === false) {
             return;
         }
 

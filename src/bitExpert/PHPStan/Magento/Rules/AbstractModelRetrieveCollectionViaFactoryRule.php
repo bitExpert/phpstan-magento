@@ -28,6 +28,7 @@ use PHPStan\Type\VerbosityLevel;
 class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
 {
     /**
+     * @phpstan-return class-string<MethodCall>
      * @return string
      */
     public function getNodeType(): string

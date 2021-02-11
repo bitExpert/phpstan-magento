@@ -29,6 +29,6 @@ class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflec
         $parentClasses[] = $classReflection->getName();
 
         return in_array(DataObject::class, $parentClasses, true) &&
-            in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has']);
+            in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'], true);
     }
 }

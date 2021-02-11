@@ -37,7 +37,7 @@ class SessionManagerMagicMethodReflectionExtension extends AbstractMagicMethodRe
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool
     {
         return $classReflection->isSubclassOf('Magento\Framework\Session\SessionManager') &&
-            in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has']);
+            in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'], true);
     }
 
     /**
