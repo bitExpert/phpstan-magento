@@ -34,11 +34,11 @@ class FileCacheStorage implements CacheStorage
     /**
      * @param string $key
      * @param string $variableKey
-     * @return mixed|string|null
+     * @return mixed
      */
     public function load(string $key, string $variableKey)
     {
-        return (function (string $key) {
+        return (function (string $key): ?string {
             $cacheDir = $this->getCacheDir($key);
             $cacheFile = $this->getCacheFile($key);
             if (!is_file($cacheDir . '/' . $cacheFile)) {

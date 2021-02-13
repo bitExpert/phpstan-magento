@@ -49,11 +49,11 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
-        $this->assertCount(2, $params);
-        $this->assertInstanceOf(StringType::class, $params[0]->getType());
-        $this->assertInstanceOf(UnionType::class, $params[1]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
+        self::assertCount(2, $params);
+        self::assertInstanceOf(StringType::class, $params[0]->getType());
+        self::assertInstanceOf(UnionType::class, $params[1]->getType());
     }
 
     /**
@@ -66,10 +66,10 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(MixedType::class, $params[0]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
+        self::assertCount(1, $params);
+        self::assertInstanceOf(MixedType::class, $params[0]->getType());
     }
 
     /**
@@ -82,11 +82,11 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
-        $this->assertCount(2, $params);
-        $this->assertInstanceOf(UnionType::class, $params[0]->getType());
-        $this->assertInstanceOf(MixedType::class, $params[1]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
+        self::assertCount(2, $params);
+        self::assertInstanceOf(UnionType::class, $params[0]->getType());
+        self::assertInstanceOf(MixedType::class, $params[1]->getType());
     }
 
     /**
@@ -99,10 +99,10 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(MixedType::class, $params[0]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
+        self::assertCount(1, $params);
+        self::assertInstanceOf(MixedType::class, $params[0]->getType());
     }
 
     /**
@@ -115,10 +115,10 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(UnionType::class, $params[0]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(ObjectType::class, $variants[0]->getReturnType());
+        self::assertCount(1, $params);
+        self::assertInstanceOf(UnionType::class, $params[0]->getType());
     }
 
     /**
@@ -131,10 +131,10 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(StringType::class, $params[0]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
+        self::assertCount(1, $params);
+        self::assertInstanceOf(StringType::class, $params[0]->getType());
     }
 
     /**
@@ -147,9 +147,9 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
-        $this->assertCount(0, $params);
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(BooleanType::class, $variants[0]->getReturnType());
+        self::assertCount(0, $params);
     }
 
     /**

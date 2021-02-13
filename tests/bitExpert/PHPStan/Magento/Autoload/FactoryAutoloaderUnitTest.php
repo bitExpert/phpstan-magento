@@ -38,7 +38,7 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutFactoryPostfix(): void
     {
-        $this->storage->expects($this->never())
+        $this->storage->expects(self::never())
             ->method('load');
 
         $this->autoloader->autoload('SomeClass');
@@ -49,7 +49,7 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
-        $this->storage->expects($this->once())
+        $this->storage->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperFactory.php');
 
@@ -63,10 +63,10 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderGeneratesCacheFileWhenNotFoundInCache(): void
     {
-        $this->storage->expects($this->atMost(2))
+        $this->storage->expects(self::atMost(2))
             ->method('load')
             ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperFactory.php');
-        $this->storage->expects($this->once())
+        $this->storage->expects(self::once())
             ->method('save');
 
         $this->autoloader->autoload(HelperFactory::class);

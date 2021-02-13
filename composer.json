@@ -27,6 +27,7 @@
     "nikic/php-parser": "^4.4.0",
     "phpstan/extension-installer": "^1.0.4",
     "phpstan/phpstan-phpunit": "^0.12.10",
+    "phpstan/phpstan-strict-rules": "^0.12.9",
     "phpunit/phpunit": "^9.5.1",
     "roave/security-advisories": "dev-latest",
     "squizlabs/php_codesniffer": "^3.5.5"

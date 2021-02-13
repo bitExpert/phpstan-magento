@@ -47,11 +47,11 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
-        $this->assertCount(2, $params);
-        $this->assertInstanceOf(StringType::class, $params[0]->getType());
-        $this->assertInstanceOf(BooleanType::class, $params[1]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
+        self::assertCount(2, $params);
+        self::assertInstanceOf(StringType::class, $params[0]->getType());
+        self::assertInstanceOf(BooleanType::class, $params[1]->getType());
     }
 
     /**
@@ -64,9 +64,9 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
         $variants = $methodReflection->getVariants();
         $params = $variants[0]->getParameters();
 
-        $this->assertCount(1, $variants);
-        $this->assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
-        $this->assertCount(1, $params);
-        $this->assertInstanceOf(MixedType::class, $params[0]->getType());
+        self::assertCount(1, $variants);
+        self::assertInstanceOf(MixedType::class, $variants[0]->getReturnType());
+        self::assertCount(1, $params);
+        self::assertInstanceOf(MixedType::class, $params[0]->getType());
     }
 }

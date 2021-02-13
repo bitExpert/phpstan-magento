@@ -28,6 +28,7 @@ use PHPStan\Type\VerbosityLevel;
 class AbstractModelUseServiceContractRule implements Rule
 {
     /**
+     * @phpstan-return class-string<MethodCall>
      * @return string
      */
     public function getNodeType(): string
@@ -51,7 +52,7 @@ class AbstractModelUseServiceContractRule implements Rule
             return [];
         }
 
-        if (!in_array($node->name->name, ['save', 'load', 'delete'])) {
+        if (!in_array($node->name->name, ['save', 'load', 'delete'], true)) {
             return [];
         }
 

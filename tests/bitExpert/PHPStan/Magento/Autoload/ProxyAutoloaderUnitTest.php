@@ -38,7 +38,7 @@ class ProxyAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutProxyPostfix(): void
     {
-        $this->storage->expects($this->never())
+        $this->storage->expects(self::never())
             ->method('load');
 
         $this->autoloader->autoload('SomeClass');
@@ -49,7 +49,7 @@ class ProxyAutoloaderUnitTest extends TestCase
      */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
-        $this->storage->expects($this->once())
+        $this->storage->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperProxy.php');
 
@@ -67,10 +67,10 @@ class ProxyAutoloaderUnitTest extends TestCase
         // to avoid having another stub class file, we define an class alias here
         class_alias('\bitExpert\PHPStan\Magento\Autoload\HelperProxy', '\bitExpert\PHPStan\Magento\Autoload\Helper');
 
-        $this->storage->expects($this->atMost(2))
+        $this->storage->expects(self::atMost(2))
             ->method('load')
             ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperProxy.php');
-        $this->storage->expects($this->once())
+        $this->storage->expects(self::once())
             ->method('save');
 
         $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');

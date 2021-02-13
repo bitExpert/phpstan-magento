@@ -124,7 +124,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
     {
         $methodReflection = $this->createMock(MethodReflection::class);
         $scope = $this->createMock(Scope::class);
-        $scope->expects($this->once())
+        $scope->expects(self::once())
             ->method('getType')
             ->willReturn(new ConstantStringType('someType'));
 
@@ -166,7 +166,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
     {
         $methodReflection = $this->createMock(MethodReflection::class);
         $scope = $this->createMock(Scope::class);
-        $scope->expects($this->once())
+        $scope->expects(self::once())
             ->method('getType')
             ->willReturn(new ConstantStringType(self::class));
 
@@ -187,7 +187,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
     {
         $methodReflection = $this->createMock(MethodReflection::class);
         $scope = $this->createMock(Scope::class);
-        $scope->expects($this->once())
+        $scope->expects(self::once())
             ->method('getType')
             ->willReturn(new ConstantStringType(ThemeList::class));
 
@@ -201,8 +201,8 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestC
 
         self::assertInstanceOf(IntersectionType::class, $resultType);
         self::assertInstanceOf(ObjectType::class, $resultTypes[0]);
-        self::assertEquals(ThemeList::class, $resultTypes[0]->getClassname());
+        self::assertEquals(ThemeList::class, $resultTypes[0]->getClassName());
         self::assertInstanceOf(ObjectType::class, $resultTypes[1]);
-        self::assertEquals(\PHPUnit\Framework\MockObject\MockObject::class, $resultTypes[1]->getClassname());
+        self::assertEquals(\PHPUnit\Framework\MockObject\MockObject::class, $resultTypes[1]->getClassName());
     }
 }

@@ -32,7 +32,7 @@ use PHPStan\Type\VerbosityLevel;
 class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
 {
     /**
-     * @return string
+     * @return class-string<\PhpParser\Node\Expr\MethodCall>
      */
     public function getNodeType(): string
     {
