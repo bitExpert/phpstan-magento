@@ -33,7 +33,7 @@ class ProxyAutoloader
 
     public function autoload(string $class): void
     {
-        if (preg_match('#\\\Proxy#', $class) === false) {
+        if (preg_match('#\\\Proxy#', $class) !== 1) {
             return;
         }
 
@@ -67,20 +67,24 @@ class ProxyAutoloader
         if ($reflectionClass->isInterface()) {
             $proxyInterface[] = '\\' . $originalClassname;
             foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                $returnType = $method->getReturnType() ?: '';
+                $returnType = $method->getReturnType();
                 if ($returnType instanceof \ReflectionType) {
                     $returnType = ': ' . $returnType->getName();
+                } else {
+                    $returnType = '';
                 }
 
                 $params = [];
                 foreach ($method->getParameters() as $parameter) {
-                    $paramType = $parameter->getType() ?: '';
+                    $paramType = $parameter->getType();
                     if ($paramType instanceof \ReflectionType) {
                         if ($paramType->isBuiltin()) {
                             $paramType = $paramType->getName() . ' ';
                         } else {
                             $paramType = '\\' . $paramType->getName() . ' ';
                         }
+                    } else {
+                        $paramType = '';
                     }
 
                     $defaultValue = '';

@@ -18,5 +18,7 @@ class SampleModel extends AbstractModel
 {
     public function __construct()
     {
+        // We do not call the parent constructor here on purpose as we do not want do to deal with creating
+        // not needed dependencies just for the testcase!
     }
 }

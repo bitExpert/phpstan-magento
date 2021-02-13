@@ -33,7 +33,7 @@ class FactoryAutoloader
 
     public function autoload(string $class): void
     {
-        if (preg_match('#Factory$#', $class) === false) {
+        if (preg_match('#Factory$#', $class) !== 1) {
             return;
         }
 

@@ -13,4 +13,9 @@ parameters:
         -
             message: '~Parameter #1 \$argument of class ReflectionClass constructor expects~'
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
-
+        -
+            message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php
+        -
+            message: '~Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf~'
+            path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
