@@ -4357,16 +4357,16 @@
         },
         {
             "name": "captainhook/plugin-composer",
-            "version": "5.2.3",
+            "version": "5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/plugin-composer.git",
-                "reference": "7c0c809011c24c1517d3896c5a7318268cea70ee"
+                "reference": "835cb6619bc209a1f55a2d51c6b112328968b405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/plugin-composer/zipball/7c0c809011c24c1517d3896c5a7318268cea70ee",
-                "reference": "7c0c809011c24c1517d3896c5a7318268cea70ee",
+                "url": "https://api.github.com/repos/captainhookphp/plugin-composer/zipball/835cb6619bc209a1f55a2d51c6b112328968b405",
+                "reference": "835cb6619bc209a1f55a2d51c6b112328968b405",
                 "shasum": ""
             },
             "require": {
@@ -4406,9 +4406,9 @@
             "description": "Composer-Plugin handling your git-hooks",
             "support": {
                 "issues": "https://github.com/captainhookphp/plugin-composer/issues",
-                "source": "https://github.com/captainhookphp/plugin-composer/tree/5.2.3"
+                "source": "https://github.com/captainhookphp/plugin-composer/tree/5.2.4"
             },
-            "time": "2020-12-07T19:27:49+00:00"
+            "time": "2021-03-05T09:21:40+00:00"
         },
         {
             "name": "doctrine/instantiator",
