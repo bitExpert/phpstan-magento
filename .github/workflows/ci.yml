@@ -44,6 +44,9 @@ jobs:
           composer remove --no-update phpstan/phpstan phpstan/phpstan-phpunit phpstan/phpstan-strict-rules
           composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11 phpstan/phpstan-strict-rules:0.12.3
 
+      - name: Composer license check
+        run: composer check-license
+
       - name: Codesniffer
         run: composer cs-check
 
