@@ -31,7 +31,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: composer:v1
+          tools: composer:v2
           coverage: xdebug
           extensions: bcmath, gd
 
