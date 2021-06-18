@@ -23,6 +23,7 @@
   "require-dev": {
     "captainhook/captainhook": "^5.10.1",
     "captainhook/plugin-composer": "^5.3.1",
+    "madewithlove/license-checker": "^0.10.0",
     "mikey179/vfsstream": "^1.6.8",
     "nikic/php-parser": "^4.10.5",
     "phpstan/extension-installer": "^1.1.0",
@@ -49,6 +50,7 @@
     ],
     "cs-check": "vendor/bin/phpcs --standard=PSR2 ./src ./tests --ignore=src/Magento/*",
     "cs-fix": "vendor/bin/phpcbf",
+    "check-license": "vendor/bin/license-checker check",
     "analyze": "vendor/bin/phpstan analyze",
     "test": "vendor/bin/phpunit",
     "coverage": "vendor/bin/phpunit --coverage-clover clover.xml"
