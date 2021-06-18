@@ -6,10 +6,4 @@ updates:
     interval: daily
     time: "04:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: captainhook/plugin-composer
-    versions:
-    - 5.2.4
-  - dependency-name: phing/phing
-    versions:
-    - 2.16.4
+
