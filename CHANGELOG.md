@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.8.0
+
+### Added
+
+- [#116](https://github.com/bitExpert/phpstan-magento/pull/116) Add license checker to CI workflow
+- [#115](https://github.com/bitExpert/phpstan-magento/pull/115) Upgrade Composer dependencies
+- [#114](https://github.com/bitExpert/phpstan-magento/pull/114) Bump phpstan/phpstan-phpunit to 0.12.20
+- [#111](https://github.com/bitExpert/phpstan-magento/pull/111) Bump phpstan/phpstan to 0.12.89
+- [#110](https://github.com/bitExpert/phpstan-magento/pull/110) Bump phpunit/phpunit to 9.5.5
+- [#109](https://github.com/bitExpert/phpstan-magento/pull/109) Bump captainhook/captainhook to 5.10.1
+- [#108](https://github.com/bitExpert/phpstan-magento/pull/108) Bump captainhook/plugin-composer to 5.3.1
+- [#100](https://github.com/bitExpert/phpstan-magento/pull/100) Bump nikic/php-parser to 4.10.5
+- [#98](https://github.com/bitExpert/phpstan-magento/pull/98) Upgrade to GitHub-native Dependabot
+- [#96](https://github.com/bitExpert/phpstan-magento/pull/96) Bump composer/composer to 2.0.13
+- [#90](https://github.com/bitExpert/phpstan-magento/pull/90) Bump squizlabs/php_codesniffer to 3.6.0
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.7.0
 
 ### Added
