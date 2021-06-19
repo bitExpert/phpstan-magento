@@ -21,11 +21,8 @@ use PHPStan\Reflection\Php\DummyParameter;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\Generic\TemplateTypeMap;
-use PHPStan\Type\IntegerType;
 use PHPStan\Type\MixedType;
-use PHPStan\Type\NullType;
 use PHPStan\Type\StringType;
-use PHPStan\Type\UnionType;
 
 class SessionManagerMagicMethodReflectionExtension extends AbstractMagicMethodReflectionExtension
 {

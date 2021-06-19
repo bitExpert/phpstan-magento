@@ -21,7 +21,6 @@ use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\ObjectType;
-use PHPStan\Type\VerbosityLevel;
 
 /**
  * \Magento\Framework\TestFramework\Unit\Helper\ObjectManager::getCollectionMock() needs first parameter to extend
