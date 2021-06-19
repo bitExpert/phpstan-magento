@@ -14,7 +14,11 @@ namespace bitExpert\PHPStan\Magento\Rules;
 
 use bitExpert\PHPStan\Magento\Rules\Helper\SampleModel;
 use bitExpert\PHPStan\Magento\Type\TestFrameworkObjectManagerDynamicReturnTypeExtension;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\Variable;
+use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\ShouldNotHappenException;
 use PHPStan\Testing\RuleTestCase;
 
 /**
@@ -48,5 +52,58 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
                 7,
             ],
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function getNodeTypeMethodReturnsMethodCall(): void
+    {
+        $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
+
+        self::assertSame(MethodCall::class, $rule->getNodeType());
+    }
+    /**
+     * @test
+     */
+    public function processNodeThrowsExceptionForNonMethodCallNodes(): void
+    {
+        $this->expectException(ShouldNotHappenException::class);
+
+        $node = new Variable('var');
+        $scope = $this->createMock(Scope::class);
+
+        $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
+        $rule->processNode($node, $scope);
+    }
+
+    /**
+     * @test
+     */
+    public function processNodeReturnsEarlyWhenNodeNameIsWrongType(): void
+    {
+        $node = new MethodCall(new Variable('var'), new Variable('wrong_node'));
+        $scope = $this->createMock(Scope::class);
+
+        $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
+        $return = $rule->processNode($node, $scope);
+
+        self::assertIsArray($return);
+        self::assertCount(0, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function processNodeReturnsEarlyWhenNodeNameIsNotGetCollectionMock(): void
+    {
+        $node = new MethodCall(new Variable('var'), 'wrong_node_name');
+        $scope = $this->createMock(Scope::class);
+
+        $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
+        $return = $rule->processNode($node, $scope);
+
+        self::assertIsArray($return);
+        self::assertCount(0, $return);
     }
 }
