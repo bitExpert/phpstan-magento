@@ -79,7 +79,6 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
         $rule = new AbstractModelRetrieveCollectionViaFactoryRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 
@@ -94,7 +93,6 @@ class AbstractModelRetrieveCollectionViaFactoryRuleUnitTest extends RuleTestCase
         $rule = new AbstractModelRetrieveCollectionViaFactoryRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 }

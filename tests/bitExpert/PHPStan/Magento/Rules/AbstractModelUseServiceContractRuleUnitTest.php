@@ -86,7 +86,6 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
         $rule = new AbstractModelUseServiceContractRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 
@@ -101,7 +100,6 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
         $rule = new AbstractModelUseServiceContractRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 }

@@ -88,7 +88,6 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
         $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 
@@ -103,7 +102,6 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
         $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
         $return = $rule->processNode($node, $scope);
 
-        self::assertIsArray($return);
         self::assertCount(0, $return);
     }
 }
