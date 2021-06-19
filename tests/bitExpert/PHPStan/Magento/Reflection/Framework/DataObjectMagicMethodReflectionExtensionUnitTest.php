@@ -161,4 +161,54 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
 
         $this->extension->getMethod($this->classReflection, 'someOtherMethod');
     }
+
+    /**
+     * @test
+     * @dataProvider isMethodSupportedDataprovider
+     * @param string $method
+     * @param bool $expectedResult
+     */
+    public function hasMethodDetectsDataObjectClass(string $method, bool $expectedResult): void
+    {
+        $this->classReflection->expects(self::once())
+            ->method('getParentClassesNames')
+            ->willReturn([]);
+        $this->classReflection->expects(self::once())
+            ->method('getName')
+            ->willReturn('Magento\Framework\DataObject');
+
+        self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
+    }
+
+    /**
+     * @test
+     * @dataProvider isMethodSupportedDataprovider
+     * @param string $method
+     * @param bool $expectedResult
+     */
+    public function hasMethodDetectsDataObjectParentClass(string $method, bool $expectedResult): void
+    {
+        $this->classReflection->expects(self::once())
+            ->method('getParentClassesNames')
+            ->willReturn(['Magento\Framework\DataObject']);
+        $this->classReflection->expects(self::once())
+            ->method('getName')
+            ->willReturn('Magento\Framework\Shell\Response');
+
+        self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function isMethodSupportedDataprovider(): array
+    {
+        return [
+            ['getTest', true],
+            ['setTest', true],
+            ['unsetTest', true],
+            ['hasText', true],
+            ['someOtherMethod', false],
+        ];
+    }
 }
