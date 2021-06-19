@@ -69,4 +69,33 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
         self::assertCount(1, $params);
         self::assertInstanceOf(MixedType::class, $params[0]->getType());
     }
+
+    /**
+     * @test
+     * @dataProvider isMethodSupportedDataprovider
+     * @param string $method
+     * @param bool $expectedResult
+     */
+    public function hasMethodDetectSessionManager(string $method, bool $expectedResult): void
+    {
+        $this->classReflection->expects(self::once())
+            ->method('isSubclassOf')
+            ->willReturn(true);
+
+        self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function isMethodSupportedDataprovider(): array
+    {
+        return [
+            ['getTest', true],
+            ['setTest', true],
+            ['unsetTest', true],
+            ['hasText', true],
+            ['someOtherMethod', false],
+        ];
+    }
 }
