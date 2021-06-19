@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace bitExpert\PHPStan\Magento\Reflection\Framework;
 
 use bitExpert\PHPStan\Magento\Reflection\AbstractMagicMethodReflectionExtension;
-use Magento\Framework\DataObject;
 use PHPStan\Reflection\ClassReflection;
 
 class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflectionExtension
@@ -28,7 +27,7 @@ class DataObjectMagicMethodReflectionExtension extends AbstractMagicMethodReflec
         $parentClasses = $classReflection->getParentClassesNames();
         $parentClasses[] = $classReflection->getName();
 
-        return in_array(DataObject::class, $parentClasses, true) &&
+        return in_array('Magento\Framework\DataObject', $parentClasses, true) &&
             in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'], true);
     }
 }
