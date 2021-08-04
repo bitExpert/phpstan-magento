@@ -61,7 +61,11 @@ class FactoryAutoloader
         $namespace = implode('\\', $namespace);
 
         $template = "<?php\n";
-        $template .= "namespace {NAMESPACE};\n\n";
+
+        if ($namespace !== '') {
+            $template .= "namespace {NAMESPACE};\n\n";
+        }
+
         $template .= "/**\n";
         $template .= " * Factory class for @see \{NAMESPACE}\{CLASSNAME}\n";
         $template .= " */\n";
