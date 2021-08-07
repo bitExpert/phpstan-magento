@@ -113,7 +113,11 @@ class ProxyAutoloader
         }
 
         $template = "<?php\n";
-        $template .= "namespace {NAMESPACE};\n";
+
+        if ($namespace !== '') {
+            $template .= "namespace {NAMESPACE};\n\n";
+        }
+
         $template .= "/**\n";
         $template .= " * Proxy class for @see {CLASSNAME}\n";
         $template .= " */\n";
