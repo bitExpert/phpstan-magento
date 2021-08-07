@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.9.0
+
+### Added
+
+- [#131](https://github.com/bitExpert/phpstan-magento/pull/131) Bump phpstan/phpstan to 0.12.94
+- [#130](https://github.com/bitExpert/phpstan-magento/pull/130) Bump phpunit/phpunit to 9.5.8
+- [#129](https://github.com/bitExpert/phpstan-magento/pull/129) Bump nikic/php-parser to 4.12.0
+- [#126](https://github.com/bitExpert/phpstan-magento/pull/126) Bump mikey179/vfsstream to 1.6.9
+- [#125](https://github.com/bitExpert/phpstan-magento/pull/125) Bump phpstan/phpstan-phpunit to 0.12.21
+- [#123](https://github.com/bitExpert/phpstan-magento/pull/123) Bump phpstan/phpstan-strict-rules to 0.12.10
+- [#119](https://github.com/bitExpert/phpstan-magento/pull/119) Add more unit tests
+- [#118](https://github.com/bitExpert/phpstan-magento/pull/118) Turn magento/framework into dev dependency
+- [#117](https://github.com/bitExpert/phpstan-magento/pull/117) Switch to Composer 2 for CI workflow
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#133](https://github.com/bitExpert/phpstan-magento/pull/133) Omit namespace for non-namespace Proxy
+- [#132](https://github.com/bitExpert/phpstan-magento/pull/132) Omit namespace for non-namespace Factory
+
 ## 0.8.0
 
 ### Added
