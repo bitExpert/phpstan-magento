@@ -20,7 +20,7 @@ use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\ShouldNotHappenException;
-use PHPStan\Testing\TestCase;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ErrorType;
@@ -31,7 +31,7 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\UnionType;
 
-class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends TestCase
+class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends PHPStanTestCase
 {
     /**
      * @var TestFrameworkObjectManagerDynamicReturnTypeExtension

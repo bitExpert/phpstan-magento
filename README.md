@@ -6,6 +6,11 @@ work for Magento 2 projects.
 [![Build Status](https://github.com/bitExpert/phpstan-magento/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/phpstan-magento/actions)
 [![Coverage Status](https://coveralls.io/repos/github/bitExpert/phpstan-magento/badge.svg?branch=master)](https://coveralls.io/github/bitExpert/phpstan-magento?branch=master)
 
+## Requirements
+
+This PHPStan extension requires PHPStan 1.1. If you are using a Magento version that requires an older version of PHPStan,
+you need to manually upgrade before installing this extension.
+
 ## Installation
 
 The preferred way of installing `bitexpert/phpstan-magento` is through Composer.
@@ -24,8 +29,6 @@ parameters:
 includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
-
-⚠️ When you use a version of `phpstan/phpstan` lower than 0.12.26 you should replace `bootstrapFiles` with `autoload_files` in the configuration mentioned above.
 
 ## Features
 

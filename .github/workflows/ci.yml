@@ -11,18 +11,8 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.3', '7.4']
-        composer-prefer-lowest: [false]
-        coveralls: [false]
-        include:
-          - operating-system: 'ubuntu-latest'
-            php-versions: '7.4'
-            composer-prefer-lowest: true
-            coveralls: false
-          - operating-system: 'ubuntu-latest'
-            php-versions: '7.4'
-            composer-prefer-lowest: false
-            coveralls: true
+        php-versions: ['7.4', '7.4']
+        coveralls: [false, true]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -37,12 +27,6 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install
-
-      - name: Install lowest PHPStan version
-        if: matrix.composer-prefer-lowest == true
-        run: |
-          composer remove --no-update phpstan/phpstan phpstan/phpstan-phpunit phpstan/phpstan-strict-rules
-          composer require --prefer-lowest phpstan/phpstan:0.12.23 phpstan/phpstan-phpunit:0.12.11 phpstan/phpstan-strict-rules:0.12.3
 
       - name: Composer license check
         run: composer check-license

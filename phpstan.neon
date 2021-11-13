@@ -8,11 +8,32 @@ parameters:
         - tests/bitExpert
     ignoreErrors:
         -
+            message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/Cache/FileCacheStorage.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/FactoryAutoloader.php
+        -
             message: '~Call to an undefined method ReflectionType::getName~'
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
         -
             message: '~Parameter #1 \$argument of class ReflectionClass constructor expects~'
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Reflection/Framework/Session/SessionManagerMagicMethodReflectionExtension.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Reflection/AbstractMagicMethodReflectionExtension.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: tests/bitExpert/PHPStan/Magento/Autoload/FactoryAutoloaderUnitTest.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
+            path: tests/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloaderUnitTest.php
         -
             message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php

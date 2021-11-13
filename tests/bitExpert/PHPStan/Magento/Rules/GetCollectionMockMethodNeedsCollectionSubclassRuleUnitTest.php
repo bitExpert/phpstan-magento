@@ -31,14 +31,14 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
         return new GetCollectionMockMethodNeedsCollectionSubclassRule();
     }
 
-    /**
-     * @return \PHPStan\Type\DynamicMethodReturnTypeExtension[]
-     */
-    public function getDynamicMethodReturnTypeExtensions() : array
+    public static function getAdditionalConfigFiles(): array
     {
-        return [
-            new TestFrameworkObjectManagerDynamicReturnTypeExtension(),
-        ];
+        // make sure to load \bitExpert\PHPStan\Magento\Type\TestFrameworkObjectManagerDynamicReturnTypeExtension
+        // which is needed for the integration test
+        return array_merge(
+            parent::getAdditionalConfigFiles(),
+            [__DIR__ . '/Helper/dynamic_method_returntype_extension.neon']
+        );
     }
 
     /**
