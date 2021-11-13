@@ -15,10 +15,10 @@ namespace bitExpert\PHPStan\Magento\Type;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Testing\TestCase;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\MixedType;
 
-class ObjectManagerDynamicReturnTypeExtensionUnitTest extends TestCase
+class ObjectManagerDynamicReturnTypeExtensionUnitTest extends PHPStanTestCase
 {
     /**
      * @var ObjectManagerDynamicReturnTypeExtension

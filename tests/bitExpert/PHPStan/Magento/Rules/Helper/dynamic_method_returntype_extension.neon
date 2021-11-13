@@ -1,0 +1,5 @@
+services:
+	-
+		class: bitExpert\PHPStan\Magento\Type\TestFrameworkObjectManagerDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
