@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.10.0
+
+### Added
+
+- [#155](https://github.com/bitExpert/phpstan-magento/pull/155) Composer dependency upgrade
+- [#154](https://github.com/bitExpert/phpstan-magento/pull/154) Bump nette/neon to 3.3.1
+- [#153](https://github.com/bitExpert/phpstan-magento/pull/153) Bump nikic/php-parser to 4.13.1
+- [#150](https://github.com/bitExpert/phpstan-magento/pull/150) Bump captainhook/plugin-composer to 5.3.2
+- [#149](https://github.com/bitExpert/phpstan-magento/pull/149) Bump composer/composer to 2.1.9
+- [#148](https://github.com/bitExpert/phpstan-magento/pull/148) Bump squizlabs/php_codesniffer to 3.6.1
+- [#146](https://github.com/bitExpert/phpstan-magento/pull/146) Bump mikey179/vfsstream to 1.6.10
+- [#145](https://github.com/bitExpert/phpstan-magento/pull/145) Bump phpunit/phpunit to 9.5.10
+- [#141](https://github.com/bitExpert/phpstan-magento/pull/141) Bump phpstan/phpstan to 0.12.99
+- [#140](https://github.com/bitExpert/phpstan-magento/pull/140) Bump captainhook/captainhook to 5.10.2
+- [#135](https://github.com/bitExpert/phpstan-magento/pull/135) Bump phpstan/phpstan-strict-rules to 0.12.11
+- [#134](https://github.com/bitExpert/phpstan-magento/pull/134) Bump phpstan/phpstan-phpunit to 0.12.22
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.9.0
 
 ### Added
