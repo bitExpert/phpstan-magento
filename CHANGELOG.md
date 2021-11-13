@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.11.0
+
+### Added
+
+- [#157](https://github.com/bitExpert/phpstan-magento/pull/157) Allow PHP 8.0 as PHP runtime
+
+### Deprecated
+
+- [#156](https://github.com/bitExpert/phpstan-magento/pull/156) Drop support for PHPStan 0.12.x
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.10.0
 
 ### Added
