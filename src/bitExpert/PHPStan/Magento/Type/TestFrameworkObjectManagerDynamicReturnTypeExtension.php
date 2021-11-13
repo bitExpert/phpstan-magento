@@ -89,7 +89,9 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtension implements DynamicMet
             return $mixedType;
         }
 
-        $argType = $scope->getType($methodCall->args[0]->value);
+        /** @var \PhpParser\Node\Arg[] $args */
+        $args = $methodCall->args;
+        $argType = $scope->getType($args[0]->value);
         if (!$argType instanceof ConstantStringType) {
             return $mixedType;
         }
@@ -121,8 +123,10 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtension implements DynamicMet
         MethodCall $methodCall,
         Scope $scope
     ): Type {
+        /** @var \PhpParser\Node\Arg[] $args */
+        $args = $methodCall->args;
         /** @var ConstantStringType $type */
-        $type = $scope->getType($methodCall->args[0]->value);
+        $type = $scope->getType($args[0]->value);
         /** @var string $className */
         $className = $type->getValue();
         if (!is_subclass_of($className, 'Magento\Framework\Data\Collection')) {

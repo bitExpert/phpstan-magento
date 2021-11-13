@@ -74,8 +74,10 @@ class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
             return [];
         }
 
+        /** @var \PhpParser\Node\Arg[] $args */
+        $args = $node->args;
         /** @var ConstantStringType $argType */
-        $argType = $scope->getType($node->args[0]->value);
+        $argType = $scope->getType($args[0]->value);
         return [
             sprintf(
                 '%s does not extend \Magento\Framework\Data\Collection as required!',
