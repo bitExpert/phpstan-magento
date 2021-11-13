@@ -28,7 +28,7 @@
     "madewithlove/license-checker": "^0.10.0",
     "magento/framework": ">=101.0.0",
     "mikey179/vfsstream": "^1.6.8",
-    "nikic/php-parser": "^4.10.5",
+    "nikic/php-parser": "^4.13.1",
     "phpstan/extension-installer": "^1.1.0",
     "phpstan/phpstan-phpunit": "^0.12.20",
     "phpstan/phpstan-strict-rules": "^0.12.9",

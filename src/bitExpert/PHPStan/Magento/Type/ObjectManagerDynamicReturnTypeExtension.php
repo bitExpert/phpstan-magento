@@ -60,7 +60,10 @@ class ObjectManagerDynamicReturnTypeExtension implements DynamicMethodReturnType
         if (count($methodCall->args) === 0) {
             return $mixedType;
         }
-        $argType = $scope->getType($methodCall->args[0]->value);
+
+        /** @var \PhpParser\Node\Arg[] $args */
+        $args = $methodCall->args;
+        $argType = $scope->getType($args[0]->value);
         if (!$argType instanceof ConstantStringType) {
             return $mixedType;
         }
