@@ -56,9 +56,11 @@ use PHPStan\Cache\Cache;
     $testFrameworkAutoloader = new TestFrameworkAutoloader();
     $factoryAutoloader = new FactoryAutoloader($cache);
     $proxyAutoloader = new ProxyAutoloader($cache);
+    $extensionInterfacAutoloader = \bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader::create($cache);
 
     \spl_autoload_register([$mockAutoloader, 'autoload'], true, true);
     \spl_autoload_register([$testFrameworkAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$factoryAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$proxyAutoloader, 'autoload'], true, false);
+    \spl_autoload_register([$extensionInterfacAutoloader, 'autoload'], true, false);
 })($GLOBALS['argv'] ?? []);
