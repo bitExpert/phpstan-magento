@@ -120,8 +120,7 @@ class ExtensionInterfaceAutoloader
                                 new ParamTag(
                                     $propertyName,
                                     [
-                                        $type,
-                                        'null'
+                                        $type
                                     ]
                                 ),
                                 new ReturnTag(
