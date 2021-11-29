@@ -91,6 +91,11 @@ class ExtensionInterfaceAutoloader
                 "//extension_attributes[@for=\"${sourceInterface}\"]/attribute",
                 $doc->documentElement
             );
+
+            if ($attrs === false) {
+                continue;
+            }
+
             /** @var \DOMElement $attr */
             foreach ($attrs as $attr) {
                 /**
