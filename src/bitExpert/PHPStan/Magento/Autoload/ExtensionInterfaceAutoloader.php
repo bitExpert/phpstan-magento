@@ -99,7 +99,7 @@ class ExtensionInterfaceAutoloader
                  * @see \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator::_getClassMethods
                  */
                 $propertyName = SimpleDataObjectConverter::snakeCaseToCamelCase($attr->getAttribute('code'));
-                $type = '\\' . $attr->getAttribute('type');
+                $type = $this->getAttrType($attr);
 
                 $generator->addMethodFromGenerator(
                     MethodGenerator::fromArray([
@@ -194,5 +194,18 @@ class ExtensionInterfaceAutoloader
             $componentRegistrar,
             $cache
         );
+    }
+
+    /**
+     * @param \DOMElement $attr
+     *
+     * @return string
+     */
+    protected function getAttrType(\DOMElement $attr): string
+    {
+        $type = $attr->getAttribute('type');
+        $cleanType = str_replace('[]', '', $type);
+        return class_exists($cleanType) || interface_exists($cleanType) || trait_exists($cleanType)
+            ? '\\' . $type : $type;
     }
 }
