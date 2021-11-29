@@ -177,14 +177,14 @@ class ExtensionInterfaceAutoloader
         return $this->xmlDocs;
     }
 
-    public static function create(Cache $cache): ExtensionInterfaceAutoloader
+    public static function create(Cache $cache, string $magentoRoot): ExtensionInterfaceAutoloader
     {
         $componentRegistrar = new ComponentRegistrar();
         return new ExtensionInterfaceAutoloader(
             new ModuleList(
                 new DeploymentConfig(
                     new DeploymentConfigReader(
-                        new DirectoryList('.'), // todo: the path passed to directory list should be app's base dir
+                        new DirectoryList($magentoRoot),
                         new Filesystem\DriverPool(),
                         new ConfigFilePool()
                     )

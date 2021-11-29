@@ -10,6 +10,7 @@
  */
 
 use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
+use bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\MockAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader;
@@ -43,10 +44,16 @@ use PHPStan\Cache\Cache;
     }
 
     $tmpDir = sys_get_temp_dir() . '/phpstan';
+    $magentoRoot = getcwd();
     if (!empty($configFile)) {
         $neonConfig = Neon::decode(file_get_contents($configFile));
-        if(is_array($neonConfig) && isset($neonConfig['parameters']) && isset($neonConfig['parameters']['tmpDir'])) {
+        $paramsExist = is_array($neonConfig) && isset($neonConfig['parameters']);
+        if ($paramsExist && isset($neonConfig['parameters']['tmpDir'])) {
             $tmpDir = $neonConfig['parameters']['tmpDir'];
+        }
+
+        if ($paramsExist && isset($neonConfig['parameters']['magento']['magentoRoot'])) {
+            $magentoRoot = $neonConfig['parameters']['magento']['magentoRoot'];
         }
     }
 
@@ -56,7 +63,7 @@ use PHPStan\Cache\Cache;
     $testFrameworkAutoloader = new TestFrameworkAutoloader();
     $factoryAutoloader = new FactoryAutoloader($cache);
     $proxyAutoloader = new ProxyAutoloader($cache);
-    $extensionInterfacAutoloader = \bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader::create($cache);
+    $extensionInterfacAutoloader = ExtensionInterfaceAutoloader::create($cache, $magentoRoot);
 
     \spl_autoload_register([$mockAutoloader, 'autoload'], true, true);
     \spl_autoload_register([$testFrameworkAutoloader, 'autoload'], true, false);
