@@ -46,7 +46,11 @@ use PHPStan\Cache\Cache;
     if (!empty($configFile)) {
         $neonConfig = Neon::decode(file_get_contents($configFile));
         if(is_array($neonConfig) && isset($neonConfig['parameters']) && isset($neonConfig['parameters']['tmpDir'])) {
-            $tmpDir = $neonConfig['parameters']['tmpDir'];
+            // If the tmpDir is configured as an absolute path, use it directly
+            // otherwise, treat the tmpDir as a path relative to the directory of the config file
+            $tmpDir = strpos($neonConfig['parameters']['tmpDir'], '/') === 0
+                ? $neonConfig['parameters']['tmpDir']
+                : dirname($configFile) . '/' . $neonConfig['parameters']['tmpDir'];
         }
     }
 
