@@ -9,21 +9,19 @@
  * file that was distributed with this source code.
  */
 
-use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
 use bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\MockAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader;
 use bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader;
-use Nette\Neon\Neon;
 use PHPStan\Cache\Cache;
+use PHPStan\DependencyInjection\Container;
 
-if (!isset($container)) {
+if (!isset($container) || !$container instanceof Container) {
     return;
 }
 
 // This autoloader implementation supersedes the former \bitExpert\PHPStan\Magento\Autoload\Autoload implementation
-/** @var \PHPStan\DependencyInjection\Container $container */
-(function () use ($container) {
+(function (Container $container) {
 
     // Get the cache from PHPStan's container
     // see https://github.com/bitExpert/phpstan-magento/pull/163#issuecomment-990926534
@@ -51,4 +49,4 @@ if (!isset($container)) {
     \spl_autoload_register([$testFrameworkAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$factoryAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$proxyAutoloader, 'autoload'], true, false);
-})();
+})($container);
