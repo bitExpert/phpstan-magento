@@ -14,7 +14,7 @@ namespace bitExpert\PHPStan\Magento\Autoload;
 
 use PHPStan\Cache\Cache;
 
-class FactoryAutoloader
+class FactoryAutoloader implements Autoloader
 {
     /**
      * @var Cache
@@ -93,5 +93,15 @@ class FactoryAutoloader
             ],
             $template
         );
+    }
+
+    public function register(): void
+    {
+        \spl_autoload_register([$this, 'autoload'], true, false);
+    }
+
+    public function unregister(): void
+    {
+        spl_autoload_unregister([$this, 'autoload']);
     }
 }

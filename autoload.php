@@ -11,6 +11,7 @@
 
 // This autoloader implementation supersedes the former \bitExpert\PHPStan\Magento\Autoload\Autoload implementation
 
+use bitExpert\PHPStan\Magento\Autoload\Autoloader;
 use PHPStan\DependencyInjection\Container;
 
 if (!isset($container) || !$container instanceof Container) {
@@ -18,16 +19,7 @@ if (!isset($container) || !$container instanceof Container) {
     return;
 }
 
-foreach ($container->getParameter('magento')['autoloaders'] as $autoloaderConfig) {
-    // see structure for magento.autoloaders in extension.neon
-    ['serviceName' => $serviceName, 'method' => $method, 'throw' => $throw, 'prepend' => $prepend] = $autoloaderConfig;
-
-    if (!$container->hasService($serviceName)) {
-        // warn about this
-        echo "cannot find autoloader {$serviceName}, please ensure it's configured as a service" . PHP_EOL;
-        continue;
-    }
-
-    $autoloader = $container->getService($serviceName);
-    \spl_autoload_register([$autoloader, $method], $throw, $prepend);
+foreach ($container->getServicesByTag('phpstan.magento.autoloader') as $autoloader) {
+    /** @var Autoloader $autoloader */
+    $autoloader->register();
 }
