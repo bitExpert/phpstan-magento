@@ -2,11 +2,38 @@ parameters:
 	magento:
 		checkCollectionViaFactory: true
 		checkServiceContracts: true
+		autoloaders:
+			-
+				serviceName: mockAutoloader
+				method: autoload
+				throw: true
+				prepend: true
+			-
+				serviceName: testFrameworkAutoloader
+				method: autoload
+				throw: true
+				prepend: false
+			-
+				serviceName: factoryAutoloader
+				method: autoload
+				throw: true
+				prepend: false
+			-
+				serviceName: proxyAutoloader
+				method: autoload
+				throw: true
+				prepend: false
 
 parametersSchema:
 	magento: structure([
 		checkCollectionViaFactory: bool()
 		checkServiceContracts: bool()
+		autoloaders: arrayOf(structure([
+			serviceName: string()
+			method: string()
+			throw: bool()
+			prepend: bool()
+		]))
 	])
 
 conditionalTags:
@@ -40,3 +67,24 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
+	fileCacheStorage:
+		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
+		arguments:
+			directory: %tmpDir%
+	autoloaderCache:
+		autowired: false
+		class: PHPStan\Cache\Cache
+		arguments:
+			storage: @fileCacheStorage
+	mockAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\MockAutoloader
+	testFrameworkAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader
+	factoryAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader
+		arguments:
+			cache: @autoloaderCache
+	proxyAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader
+		arguments:
+			cache: @autoloaderCache
