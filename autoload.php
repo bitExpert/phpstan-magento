@@ -17,44 +17,30 @@ use bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader;
 use Nette\Neon\Neon;
 use PHPStan\Cache\Cache;
 
+if (!isset($container)) {
+    return;
+}
+
 // This autoloader implementation supersedes the former \bitExpert\PHPStan\Magento\Autoload\Autoload implementation
-(function (array $argv = []) {
-    // Sadly we don't have access to the parsed phpstan.neon configuration at this point we need to look up the
-    // location of the config file and parse it with the Neon parser to be able to extract the tmpDir definition!
-    $configFile = '';
-    if (count($argv) > 0) {
-        foreach($argv as $idx => $value) {
-            if ((strtolower($value) === '-c') && isset($argv[$idx + 1])) {
-                $configFile = $argv[$idx + 1];
-                break;
-            }
+/** @var \PHPStan\DependencyInjection\Container $container */
+(function () use ($container) {
+
+    // Get the cache from PHPStan's container
+    // see https://github.com/bitExpert/phpstan-magento/pull/163#issuecomment-990926534
+    foreach ($container->findServiceNamesByType(Cache::class) as $cacheServiceName) {
+        if (!$container->hasService($cacheServiceName)) {
+            continue;
         }
+
+        /** @var Cache|null $cache */
+        $cache = $container->getService($cacheServiceName);
+        break;
     }
 
-    if (empty($configFile)) {
-        $currentWorkingDirectory = getcwd();
-        foreach (['phpstan.neon', 'phpstan.neon.dist'] as $discoverableConfigName) {
-            $discoverableConfigFile = $currentWorkingDirectory . DIRECTORY_SEPARATOR . $discoverableConfigName;
-            if (file_exists($discoverableConfigFile) && is_readable(($discoverableConfigFile))) {
-                $configFile = $discoverableConfigFile;
-                break;
-            }
-        }
+    if (!isset($cache)) {
+        // TODO: throw, create our own cache?
+        return;
     }
-
-    $tmpDir = sys_get_temp_dir() . '/phpstan';
-    if (!empty($configFile)) {
-        $neonConfig = Neon::decode(file_get_contents($configFile));
-        if(is_array($neonConfig) && isset($neonConfig['parameters']) && isset($neonConfig['parameters']['tmpDir'])) {
-            // If the tmpDir is configured as an absolute path, use it directly
-            // otherwise, treat the tmpDir as a path relative to the directory of the config file
-            $tmpDir = strpos($neonConfig['parameters']['tmpDir'], '/') === 0
-                ? $neonConfig['parameters']['tmpDir']
-                : dirname($configFile) . '/' . $neonConfig['parameters']['tmpDir'];
-        }
-    }
-
-    $cache = new Cache(new FileCacheStorage($tmpDir . '/cache/PHPStan'));
 
     $mockAutoloader = new MockAutoloader();
     $testFrameworkAutoloader = new TestFrameworkAutoloader();
@@ -65,4 +51,4 @@ use PHPStan\Cache\Cache;
     \spl_autoload_register([$testFrameworkAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$factoryAutoloader, 'autoload'], true, false);
     \spl_autoload_register([$proxyAutoloader, 'autoload'], true, false);
-})($GLOBALS['argv'] ?? []);
+})();
