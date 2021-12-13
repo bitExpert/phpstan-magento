@@ -70,7 +70,7 @@ services:
 	fileCacheStorage:
 		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
 		arguments:
-			directory: %tmpDir%
+			directory: %tmpDir%/cache/PHPStan
 	autoloaderCache:
 		autowired: false
 		class: PHPStan\Cache\Cache
