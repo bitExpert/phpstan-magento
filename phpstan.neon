@@ -35,6 +35,9 @@ parameters:
             message: '~is not covered by backward compatibility promise.~'
             path: tests/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloaderUnitTest.php
         -
+            message: '~is not covered by backward compatibility promise.~'
+            path: tests/bitExpert/PHPStan/Magento/Autoload/RegistrationUnitTest.php
+        -
             message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php
         -
