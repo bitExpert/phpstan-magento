@@ -21,15 +21,25 @@ class RegistrationUnitTest extends TestCase
      * @test
      * @dataProvider provideAutoloaders()
      */
-    public function autoloadersCanRegisterAndUnregister(Autoloader $autoloader)
+    public function autoloadersCanRegisterAndUnregister(Autoloader $autoloader): void
     {
-        $autoloadFunctions = spl_autoload_functions();
+        /** @var array<callable> $initialAutoloadFunctions */
+        $initialAutoloadFunctions = spl_autoload_functions();
+
         $autoloader->register();
-        static::assertCount(count($autoloadFunctions) + 1, spl_autoload_functions());
+        /** @var array<callable> $registerAutoloadFunctions */
+        $registerAutoloadFunctions = spl_autoload_functions();
+        static::assertCount(count($initialAutoloadFunctions) + 1, $registerAutoloadFunctions);
+
         $autoloader->unregister();
-        static::assertCount(count($autoloadFunctions), spl_autoload_functions());
+        /** @var array<callable> $unregisterAutoloadFunctions */
+        $unregisterAutoloadFunctions = spl_autoload_functions();
+        static::assertCount(count($initialAutoloadFunctions), $unregisterAutoloadFunctions);
     }
 
+    /**
+     * @return array<array<Autoloader>>
+     */
     public function provideAutoloaders(): array
     {
         $cache = new Cache($this->getMockBuilder(\PHPStan\Cache\CacheStorage::class)->getMock());
