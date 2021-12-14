@@ -16,10 +16,17 @@ use PHPStan\DependencyInjection\Container;
 
 if (!isset($container) || !$container instanceof Container) {
     echo 'No container found, or container not of expected type' . PHP_EOL;
-    return;
+    die(-1);
 }
 
 foreach ($container->getServicesByTag('phpstan.magento.autoloader') as $autoloader) {
-    /** @var Autoloader $autoloader */
+    /** @var Autoloader|object $autoloader */
+    if (!$autoloader instanceof Autoloader) {
+        echo 'Services tagged with \'phpstan.magento.autoloader\' must extend ' .
+            'bitExpert\PHPStan\Magento\Autoload\Autoloader!' . PHP_EOL .
+            get_class($autoloader) . ' does not.' . PHP_EOL;
+        die(-1);
+    }
+
     $autoloader->register();
 }
