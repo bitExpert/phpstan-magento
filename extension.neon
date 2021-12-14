@@ -40,3 +40,32 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
+	fileCacheStorage:
+		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
+		arguments:
+			directory: %tmpDir%/cache/PHPStan
+	autoloaderCache:
+		autowired: false
+		class: PHPStan\Cache\Cache
+		arguments:
+			storage: @fileCacheStorage
+	mockAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\MockAutoloader
+		tags:
+			- phpstan.magento.autoloader
+	testFrameworkAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader
+		tags:
+			- phpstan.magento.autoloader
+	factoryAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader
+		arguments:
+			cache: @autoloaderCache
+		tags:
+			- phpstan.magento.autoloader
+	proxyAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader
+		arguments:
+			cache: @autoloaderCache
+		tags:
+			- phpstan.magento.autoloader
