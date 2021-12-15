@@ -24,6 +24,9 @@ parameters:
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
         -
             message: '~is not covered by backward compatibility promise.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ExtensionInterfaceAutoloader.php
+        -
+            message: '~is not covered by backward compatibility promise.~'
             path: src/bitExpert/PHPStan/Magento/Reflection/Framework/Session/SessionManagerMagicMethodReflectionExtension.php
         -
             message: '~is not covered by backward compatibility promise.~'
