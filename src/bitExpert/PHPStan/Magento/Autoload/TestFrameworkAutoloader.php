@@ -16,7 +16,7 @@ namespace bitExpert\PHPStan\Magento\Autoload;
  * Autoloader for Magento\TestFramework classes as those are not loaded by Composer by default which makes PHPStan
  * not know about them.
  */
-class TestFrameworkAutoloader
+class TestFrameworkAutoloader implements Autoloader
 {
     public function autoload(string $class): void
     {
@@ -41,5 +41,15 @@ class TestFrameworkAutoloader
                 break;
             }
         }
+    }
+
+    public function register(): void
+    {
+        \spl_autoload_register([$this, 'autoload'], true, false);
+    }
+
+    public function unregister(): void
+    {
+        \spl_autoload_unregister([$this, 'autoload']);
     }
 }

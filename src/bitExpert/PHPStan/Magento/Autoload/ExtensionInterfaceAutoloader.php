@@ -22,7 +22,7 @@ use Magento\Framework\Xml\Parser as XmlParser;
 use PHPStan\Cache\Cache;
 use Symfony\Component\Finder\Finder;
 
-class ExtensionInterfaceAutoloader
+class ExtensionInterfaceAutoloader implements Autoloader
 {
     private $moduleList;
 
@@ -32,14 +32,26 @@ class ExtensionInterfaceAutoloader
 
     private $xmlDocs;
 
-    public function __construct(
-        ModuleList $moduleList,
-        ComponentRegistrar $componentRegistrar,
-        Cache $cache
-    ) {
-        $this->moduleList = $moduleList;
-        $this->componentRegistrar = $componentRegistrar;
+    public function __construct(Cache $cache, string $magentoRoot)
+    {
         $this->cache = $cache;
+        $componentRegistrar = new ComponentRegistrar();
+        $this->moduleList = new ModuleList(
+            new DeploymentConfig(
+                new DeploymentConfigReader(
+                    new DirectoryList($magentoRoot),
+                    new Filesystem\DriverPool(),
+                    new ConfigFilePool()
+                )
+            ),
+            new Loader(
+                new ModuleDeclarationDom(),
+                new XmlParser(),
+                $componentRegistrar,
+                new FileDriver()
+            )
+        );
+        $this->componentRegistrar = $componentRegistrar;
     }
 
     public function autoload(string $class): void
@@ -177,30 +189,6 @@ class ExtensionInterfaceAutoloader
         return $this->xmlDocs;
     }
 
-    public static function create(Cache $cache, string $magentoRoot): ExtensionInterfaceAutoloader
-    {
-        $componentRegistrar = new ComponentRegistrar();
-        return new ExtensionInterfaceAutoloader(
-            new ModuleList(
-                new DeploymentConfig(
-                    new DeploymentConfigReader(
-                        new DirectoryList($magentoRoot),
-                        new Filesystem\DriverPool(),
-                        new ConfigFilePool()
-                    )
-                ),
-                new Loader(
-                    new ModuleDeclarationDom(),
-                    new XmlParser(),
-                    $componentRegistrar,
-                    new FileDriver()
-                )
-            ),
-            $componentRegistrar,
-            $cache
-        );
-    }
-
     /**
      * @param \DOMElement $attr
      *
@@ -212,5 +200,15 @@ class ExtensionInterfaceAutoloader
         $cleanType = str_replace('[]', '', $type);
         return class_exists($cleanType) || interface_exists($cleanType) || trait_exists($cleanType)
             ? '\\' . $type : $type;
+    }
+
+    public function register(): void
+    {
+        \spl_autoload_register([$this, 'autoload'], true, false);
+    }
+
+    public function unregister(): void
+    {
+        \spl_autoload_unregister([$this, 'autoload']);
     }
 }

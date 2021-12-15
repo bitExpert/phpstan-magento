@@ -14,7 +14,7 @@ namespace bitExpert\PHPStan\Magento\Autoload;
 
 use PHPStan\Cache\Cache;
 
-class ProxyAutoloader
+class ProxyAutoloader implements Autoloader
 {
     /**
      * @var Cache
@@ -157,5 +157,15 @@ class ProxyAutoloader
             ],
             $template
         );
+    }
+
+    public function register(): void
+    {
+        \spl_autoload_register([$this, 'autoload'], true, false);
+    }
+
+    public function unregister(): void
+    {
+        \spl_autoload_unregister([$this, 'autoload']);
     }
 }
