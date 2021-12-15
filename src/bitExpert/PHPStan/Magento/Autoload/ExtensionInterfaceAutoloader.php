@@ -30,12 +30,13 @@ class ExtensionInterfaceAutoloader implements Autoloader
 
     private $cache;
 
+    /** @var \DOMDocument[]|null */
     private $xmlDocs;
 
     public function __construct(Cache $cache, string $magentoRoot)
     {
         $this->cache = $cache;
-        $componentRegistrar = new ComponentRegistrar();
+        $this->componentRegistrar = new ComponentRegistrar();
         $this->moduleList = new ModuleList(
             new DeploymentConfig(
                 new DeploymentConfigReader(
@@ -47,11 +48,10 @@ class ExtensionInterfaceAutoloader implements Autoloader
             new Loader(
                 new ModuleDeclarationDom(),
                 new XmlParser(),
-                $componentRegistrar,
+                $this->componentRegistrar,
                 new FileDriver()
             )
         );
-        $this->componentRegistrar = $componentRegistrar;
     }
 
     public function autoload(string $class): void
