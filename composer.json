@@ -22,7 +22,7 @@
     "phpstan/phpstan": "^1.1.0"
   },
   "conflict": {
-    "magento/framework": "<101.0.0"
+    "magento/framework": "<102.0.0"
   },
   "require-dev": {
     "captainhook/captainhook": "^5.10.4",
