@@ -2,11 +2,13 @@ parameters:
 	magento:
 		checkCollectionViaFactory: true
 		checkServiceContracts: true
+		magentoRoot: %currentWorkingDirectory%
 
 parametersSchema:
 	magento: structure([
 		checkCollectionViaFactory: bool()
 		checkServiceContracts: bool()
+		magentoRoot: string()
 	])
 
 conditionalTags:
@@ -67,5 +69,12 @@ services:
 		class: bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader
 		arguments:
 			cache: @autoloaderCache
+		tags:
+			- phpstan.magento.autoloader
+	extensionInterfaceAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
+		arguments:
+			cache: @autoloaderCache
+			magentoRoot: %magento.magentoRoot%
 		tags:
 			- phpstan.magento.autoloader

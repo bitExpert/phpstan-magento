@@ -48,7 +48,8 @@ class RegistrationUnitTest extends TestCase
             [new FactoryAutoloader($cache)],
             [new MockAutoloader()],
             [new ProxyAutoloader($cache)],
-            [new TestFrameworkAutoloader()]
+            [new TestFrameworkAutoloader()],
+            [new ExtensionInterfaceAutoloader($cache, '.')]
         ];
     }
 }

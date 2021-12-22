@@ -8,8 +8,18 @@ work for Magento 2 projects.
 
 ## Requirements
 
-This PHPStan extension requires PHPStan 1.1. If you are using a Magento version that requires an older version of PHPStan,
-you need to manually upgrade before installing this extension.
+PHP: PHP 7.2 or higher
+
+Magento: Magento 2.3 or higher
+
+PHPStan: PHPStan 1.1
+
+If you are using a Magento version that requires an older version of PHPStan,  you need to manually upgrade it before 
+installing this extension. Change the PHPStan version to 1.1 in your composer.json and run:
+
+```
+composer update phpstan/phpstan --with-all-dependencies
+```
 
 ## Installation
 
