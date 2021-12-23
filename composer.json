@@ -26,9 +26,11 @@
   "require-dev": {
     "captainhook/captainhook": "^5.10.4",
     "captainhook/plugin-composer": "^5.3.2",
+    "league/commonmark": "^1.4",
     "madewithlove/license-checker": "^0.10.0",
     "magento/framework": ">=102.0.0",
     "mikey179/vfsstream": "^1.6.10",
+    "nette/neon": "^3.3.1",
     "nikic/php-parser": "^4.13.1",
     "phpstan/extension-installer": "^1.1.0",
     "phpstan/phpstan-phpunit": "^1.0.0",

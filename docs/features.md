@@ -42,7 +42,7 @@ Since Magento framework version 100.1.0 entities must not be responsible for the
 be used to persist entities.
 
 To disable this rule add the following code to your `phpstan.neon` configuration file:
-```
+```neon
 parameters:
     magento:
         checkServiceContracts: false
@@ -54,7 +54,7 @@ Since Magento framework version 101.0.0 Collections should be used directly via 
 `\Magento\Framework\Model\AbstractModel::getCollection()` directly.
 
 To disable this rule add the following code to your `phpstan.neon` configuration file:
-```
+```neon
 parameters:
     magento:
         checkCollectionViaFactory: false

@@ -34,6 +34,11 @@ jobs:
       - name: Codesniffer
         run: composer cs-check
 
+      - name: Neon linting
+        run: |
+          ./bin/ci_neon_lint
+          ./bin/ci_markdown_neon_lint
+
       - name: Static code analysis
         run: composer analyze
 
