@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the phpstan-magento package.
+ *
+ * (c) bitExpert AG
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// inspired by https://github.com/mathiasverraes/uptodocs this CLI script will lint
+// the Neon snippets in the Markdown files like README.md
+
+$path = realpath(__DIR__ . '/../');
+$it = new RecursiveDirectoryIterator($path);
+$it = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::LEAVES_ONLY);
+$it = new RegexIterator($it, '~\.md$~');
+
+$environment = new \League\CommonMark\Environment();
+$environment->addExtension(new \League\CommonMark\Extension\CommonMarkCoreExtension());
+$parser = new \League\CommonMark\DocParser($environment);
+
+$success = true;
+foreach ($it as $file) {
+    /** @var SplFileInfo $file */
+    if (strpos($file->getRealPath(), '/vendor/') !== false) {
+        continue;
+    }
+
+    $nodeCount = 0;
+    $content = file_get_contents($file->getRealPath());
+    $document = $parser->parse($content);
+    $walker = $document->walker();
+    while ($event = $walker->next()) {
+        if ($event->getNode() instanceof \League\CommonMark\Block\Element\FencedCode
+            && $event->isEntering()
+            && $event->getNode()->getInfo() === 'neon') {
+
+            try {
+                $nodeCount++;
+                $node = $event->getNode();
+                Nette\Neon\Neon::decode($codeBlock = $node->getStringContent());
+            } catch (Nette\Neon\Exception $e) {
+                $success = false;
+                $relPath = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getRealPath());
+                echo "Failed parsing node ".$nodeCount." of file ".$relPath."\n";
+            }
+        }
+    }
+}
+
+exit($success ? 0 : 1);
