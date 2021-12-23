@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.12.0
+
+### Added
+
+- [#171](https://github.com/bitExpert/phpstan-magento/pull/171) Improve docs
+- [#170](https://github.com/bitExpert/phpstan-magento/pull/170) Throw exception in autoloader
+- [#169](https://github.com/bitExpert/phpstan-magento/pull/169) Bump captainhook/captainhook to 5.10.5
+- [#168](https://github.com/bitExpert/phpstan-magento/pull/168) Bump squizlabs/php_codesniffer to 3.6.2
+- [#164](https://github.com/bitExpert/phpstan-magento/pull/164) Bump nikic/php-parser to 4.13.2
+- [#163](https://github.com/bitExpert/phpstan-magento/pull/163) Determine tmpDir path relative to config file when appropriate
+- [#162](https://github.com/bitExpert/phpstan-magento/pull/162) Support for extension attributes
+- [#159](https://github.com/bitExpert/phpstan-magento/pull/159) Bump phpstan/phpstan-strict-rules to 1.1.0
+- [#158](https://github.com/bitExpert/phpstan-magento/pull/158) Bump phpstan/phpstan to 1.2.0
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#171](https://github.com/bitExpert/phpstan-magento/pull/171) Remove nette/neon dependency
+
+### Fixed
+
+- Nothing.
+
 ## 0.11.0
 
 ### Added
