@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use PHPStan\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 
@@ -49,7 +50,7 @@ class RegistrationUnitTest extends TestCase
             [new MockAutoloader()],
             [new ProxyAutoloader($cache)],
             [new TestFrameworkAutoloader()],
-            [new ExtensionInterfaceAutoloader($cache, '.')]
+            [new ExtensionInterfaceAutoloader($cache, new ExtensionAttributeDataProvider('.'))]
         ];
     }
 }
