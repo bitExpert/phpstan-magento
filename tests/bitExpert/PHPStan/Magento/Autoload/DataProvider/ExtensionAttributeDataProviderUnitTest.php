@@ -47,7 +47,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Magento\Sales\Api\Data\OrderInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(1, $attrs);
         static::assertSame('string', $attrs['attr']);
     }
@@ -73,7 +72,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Some\Random\Api\Data\SampleInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(0, $attrs);
     }
 
@@ -114,7 +112,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Magento\Sales\Api\Data\OrderInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(2, $attrs);
         static::assertSame('string', $attrs['attr']);
         static::assertSame('string', $attrs['attr2']);
@@ -145,7 +142,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Magento\Sales\Api\Data\OrderInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(0, $attrs);
     }
 
@@ -174,7 +170,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Magento\Sales\Api\Data\OrderInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(5, $attrs);
         static::assertSame('float', $attrs['attr']);
         static::assertSame('int', $attrs['attr2']);
@@ -204,7 +199,6 @@ XML
         $dataprovider = new ExtensionAttributeDataProvider($this->root->url());
         $attrs = $dataprovider->getAttributesForInterface('Magento\Sales\Api\Data\OrderInterface');
 
-        static::assertIsArray($attrs);
         static::assertCount(1, $attrs);
         static::assertSame('\Magento\Quote\Api\Data\CartInterface', $attrs['attr']);
     }

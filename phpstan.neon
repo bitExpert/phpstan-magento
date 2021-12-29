@@ -44,9 +44,6 @@ parameters:
             message: '~is not covered by backward compatibility promise.~'
             path: tests/bitExpert/PHPStan/Magento/Autoload/ExtensionInterfaceAutoloaderUnitTest.php
         -
-            message: '~Parameter #1 $argument of class ReflectionClass constructor expects class-string<UncachedExtensionInterface>|UncachedExtensionInterface, string given~'
-            path: tests/bitExpert/PHPStan/Magento/Autoload/ExtensionInterfaceAutoloaderUnitTest.php
-        -
             message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php
         -
