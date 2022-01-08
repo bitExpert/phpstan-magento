@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.15.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#187](https://github.com/bitExpert/phpstan-magento/pull/187) Bump phpstan/phpstan to 1.3.3
+
+### Fixed
+
+- Nothing.
+
+
 ## 0.14.0
 
 ### Added
