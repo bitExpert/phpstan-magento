@@ -21,9 +21,9 @@ $it = new RecursiveDirectoryIterator($path);
 $it = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::LEAVES_ONLY);
 $it = new RegexIterator($it, '~\.md$~');
 
-$environment = new \League\CommonMark\Environment();
-$environment->addExtension(new \League\CommonMark\Extension\CommonMarkCoreExtension());
-$parser = new \League\CommonMark\DocParser($environment);
+$environment = new \League\CommonMark\Environment\Environment();
+$environment->addExtension(new \League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension());
+$parser = new \League\CommonMark\Parser\MarkdownParser($environment);
 
 $success = true;
 foreach ($it as $file) {
@@ -37,14 +37,14 @@ foreach ($it as $file) {
     $document = $parser->parse($content);
     $walker = $document->walker();
     while ($event = $walker->next()) {
-        if ($event->getNode() instanceof \League\CommonMark\Block\Element\FencedCode
+        if ($event->getNode() instanceof \League\CommonMark\Extension\CommonMark\Node\Block\FencedCode
             && $event->isEntering()
             && $event->getNode()->getInfo() === 'neon') {
 
             try {
                 $nodeCount++;
                 $node = $event->getNode();
-                Nette\Neon\Neon::decode($codeBlock = $node->getStringContent());
+                Nette\Neon\Neon::decode($node->getLiteral());
             } catch (Nette\Neon\Exception $e) {
                 $success = false;
                 $relPath = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getRealPath());
