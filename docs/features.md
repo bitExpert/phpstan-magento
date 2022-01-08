@@ -31,7 +31,7 @@ to be able to let the magic method calls return proper types.
 ## Extension attributes
 This PHPStan extension supports [extension attributes](https://devdocs.magento.com/guides/v2.4/extension-dev-guide/extension_attributes/adding-attributes.html) by parsing the `extension_attributes.xml` files.
 
-By default, all `extension_attributes.xml` recursively  found in the current working directory will be taken into account.
+By default, all `extension_attributes.xml` found recursively in the current working directory will be taken into account.
 Current working directory means the directory in which your `phpstan.neon` file resides. If you need to change this behavior,
 you can define a custom path by pointing the `magentoRoot` parameter to a different directory.
 
@@ -41,6 +41,8 @@ parameters:
     magento:
         magentoRoot: /tmp/my/other/dir
 ```
+
+Currently, all Magento modules found in your project are taken into account. Disabled modules are not yet ignored!
 
 ## PHPStan rules
 
