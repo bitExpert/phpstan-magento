@@ -3,7 +3,8 @@ parameters:
 		checkCollectionViaFactory: true
 		checkServiceContracts: true
 		magentoRoot: %currentWorkingDirectory%
-
+	bootstrapFiles:
+		- magento-autoloader.php
 parametersSchema:
 	magento: structure([
 		checkCollectionViaFactory: bool()

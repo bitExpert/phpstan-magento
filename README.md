@@ -41,22 +41,16 @@ The easiest way to do this is to install the `phpstan/extension-installer` packa
 composer.phar require --dev phpstan/extension-installer
 ```
 
-As an alternative, you can manually include the extension configuration `vendor/bitexpert/phpstan-magento/extension.neon` in
-your `phpstan.neon` file:
+<details>
+  <summary>Manual installation</summary>
+
+If you don't want to use `phpstan/extension-installer`, include extension.neon in your project's PHPStan config:
 
 ```neon
 includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
-
-For the final step, you need to register the custom autoloader that comes with this extension by adding `vendor/bitexpert/phpstan-magento/autoload.php`
-as a bootstrap file:
-
-```neon
-parameters:
-	bootstrapFiles:
-		- vendor/bitexpert/phpstan-magento/autoload.php
-```
+</details>
 
 ## Feature overview
 
