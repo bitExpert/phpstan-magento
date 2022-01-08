@@ -2,21 +2,27 @@
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
+use org\bovigo\vfs\vfsStream;
 use PHPStan\Cache\Cache;
-use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
 
 class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 {
     /**
-     * @var CacheStorage|\PHPUnit\Framework\MockObject\MockObject
+     * @var Cache|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $storage;
+    private $cache;
     /**
      * @var ExtensionAttributeDataProvider|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $dataProvider;
+    private $extAttrDataProvider;
+    /**
+     * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $classyDataProvider;
     /**
      * @var ExtensionInterfaceAutoloader
      */
@@ -24,9 +30,14 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->storage = $this->createMock(CacheStorage::class);
-        $this->dataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
-        $this->autoloader = new ExtensionInterfaceAutoloader(new Cache($this->storage), $this->dataProvider);
+        $this->cache = $this->createMock(Cache::class);
+        $this->extAttrDataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
+        $this->classyDataProvider = $this->createMock(ClassLoaderProvider::class);
+        $this->autoloader = new ExtensionInterfaceAutoloader(
+            $this->cache,
+            $this->extAttrDataProvider,
+            $this->classyDataProvider
+        );
     }
 
     /**
@@ -34,7 +45,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutExtensionInterfacePostfix(): void
     {
-        $this->storage->expects(self::never())
+        $this->cache->expects(self::never())
             ->method('load');
 
         $this->autoloader->autoload('SomeClass');
@@ -45,12 +56,79 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
-        $this->storage->expects(self::once())
+        $this->cache->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperExtensionInterface.php');
+
+        $this->cache->expects(self::never())
+            ->method('save');
 
         $this->autoloader->autoload(HelperExtensionInterface::class);
 
         self::assertTrue(interface_exists(HelperExtensionInterface::class, false));
+    }
+
+    /**
+     * @test
+     */
+    public function autoloadDoesNotGenerateInterfaceWhenNoAttributesExist(): void
+    {
+        $interfaceName = 'NonExistentExtensionInterface';
+
+        $this->cache->expects(self::once())
+            ->method('load')
+            ->willReturn(null);
+
+        $this->classyDataProvider->expects(self::once())
+            ->method('exists')
+            ->willReturn(false);
+
+        $this->autoloader->autoload($interfaceName);
+        static::assertFalse(interface_exists($interfaceName));
+    }
+
+    /**
+     * @test
+     */
+    public function autoloadGeneratesInterfaceWhenNotCached(): void
+    {
+        $interfaceName = 'UncachedExtensionInterface';
+
+        $root = vfsStream::setup('test');
+        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
+        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->extAttrDataProvider, $this->classyDataProvider);
+
+        $this->classyDataProvider->expects(self::once())
+            ->method('exists')
+            ->willReturn(true);
+
+        $this->extAttrDataProvider->expects(self::once())
+            ->method('getAttributesForInterface')
+            ->willReturn(['attr' => 'string']);
+
+        $autoloader->autoload($interfaceName);
+        static::assertTrue(interface_exists($interfaceName));
+        $interfaceReflection = new \ReflectionClass($interfaceName);
+        try {
+            $getAttrReflection = $interfaceReflection->getMethod('getAttr');
+            $docComment = $getAttrReflection->getDocComment();
+            if (!is_string($docComment)) {
+                throw new \ReflectionException();
+            }
+            static::assertStringContainsString('@return string|null', $docComment);
+        } catch (\ReflectionException $e) {
+            static::fail('Could not find expected method getAttr on generated interface');
+        }
+
+        try {
+            $setAttrReflection = $interfaceReflection->getMethod('setAttr');
+            $docComment = $setAttrReflection->getDocComment();
+            if (!is_string($docComment)) {
+                throw new \ReflectionException();
+            }
+            static::assertStringContainsString('@param string $attr', $docComment);
+        } catch (\ReflectionException $e) {
+            static::fail('Could not find expected generated method setAttr on generated interface');
+        }
     }
 }

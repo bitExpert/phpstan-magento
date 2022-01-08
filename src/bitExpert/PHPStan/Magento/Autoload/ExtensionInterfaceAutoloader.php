@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use Laminas\Code\Generator\DocBlock\Tag\ParamTag;
 use Laminas\Code\Generator\DocBlock\Tag\ReturnTag;
@@ -30,17 +31,26 @@ class ExtensionInterfaceAutoloader implements Autoloader
      * @var ExtensionAttributeDataProvider
      */
     private $attributeDataProvider;
+    /**
+     * @var ClassLoaderProvider
+     */
+    private $classLoaderProvider;
 
     /**
      * ExtensionInterfaceAutoloader constructor.
      *
      * @param Cache $cache
      * @param ExtensionAttributeDataProvider $attributeDataProvider
+     * @param ClassLoaderProvider $classLoaderProvider
      */
-    public function __construct(Cache $cache, ExtensionAttributeDataProvider $attributeDataProvider)
-    {
+    public function __construct(
+        Cache $cache,
+        ExtensionAttributeDataProvider $attributeDataProvider,
+        ClassLoaderProvider $classLoaderProvider
+    ) {
         $this->cache = $cache;
         $this->attributeDataProvider = $attributeDataProvider;
+        $this->classLoaderProvider = $classLoaderProvider;
     }
 
     public function autoload(string $class): void
@@ -75,6 +85,11 @@ class ExtensionInterfaceAutoloader implements Autoloader
          * @see \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator::__construct
          */
         $sourceInterface = rtrim(substr($interfaceName, 0, -1 * strlen('ExtensionInterface')), '\\') . 'Interface';
+
+        // Magento only creates extension attribute interfaces for existing interfaces; retain that logic
+        if (!$this->classLoaderProvider->exists($sourceInterface)) {
+            throw new \InvalidArgumentException("${sourceInterface} does not exist and has no extension interface");
+        }
 
         $generator = new InterfaceGenerator();
         $generator
