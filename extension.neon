@@ -71,10 +71,19 @@ services:
 			cache: @autoloaderCache
 		tags:
 			- phpstan.magento.autoloader
+	extensionAttributeDataProvider:
+		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider
+		arguments:
+			magentoRoot: %magento.magentoRoot%
+	classLoaderProvider:
+		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider
+		arguments:
+			magentoRoot: %magento.magentoRoot%
 	extensionInterfaceAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
 		arguments:
 			cache: @autoloaderCache
-			magentoRoot: %magento.magentoRoot%
+			attributeDataProvider: @extensionAttributeDataProvider
+			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader

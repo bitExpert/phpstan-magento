@@ -3,49 +3,69 @@
 namespace bitExpert\PHPStan\Magento\Autoload;
 
 use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
-use Magento\Framework\Component\ComponentRegistrar;
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use org\bovigo\vfs\vfsStream;
 use PHPStan\Cache\Cache;
-use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
 
 class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 {
-    /** @var \org\bovigo\vfs\vfsStreamDirectory */
-    private $root;
+    /**
+     * @var Cache|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $cache;
+    /**
+     * @var ExtensionAttributeDataProvider|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $extAttrDataProvider;
+    /**
+     * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $classyDataProvider;
+    /**
+     * @var ExtensionInterfaceAutoloader
+     */
+    private $autoloader;
 
     protected function setUp(): void
     {
-        $this->root = vfsStream::setup('test');
-    }
-
-    /**
-     * @test
-     */
-    public function autoloadIgnoresClassesWithoutExtensionInterface(): void
-    {
-        $cacheStorage = $this->getMockBuilder(CacheStorage::class)->getMock();
-        $autoloader = new ExtensionInterfaceAutoloader(
-            new Cache($cacheStorage),
-            $this->root->url()
+        $this->cache = $this->createMock(Cache::class);
+        $this->extAttrDataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
+        $this->classyDataProvider = $this->createMock(ClassLoaderProvider::class);
+        $this->autoloader = new ExtensionInterfaceAutoloader(
+            $this->cache,
+            $this->extAttrDataProvider,
+            $this->classyDataProvider
         );
-        $cacheStorage->expects(self::never())->method('load');
-        $autoloader->autoload('ExtensionInterfaceNotAtEnd');
     }
 
     /**
      * @test
      */
-    public function autoloadUsesCachedFileWhenFound(): void
+    public function autoloaderIgnoresClassesWithoutExtensionInterfacePostfix(): void
     {
-        $interfaceName = 'CachedExtensionInterface';
-        $cache = new Cache(new FileCacheStorage($this->root->url() . '/tmp/cache/PHPStan'));
-        $cache->save($interfaceName, '', "<?php interface ${interfaceName} {}");
-        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->root->url());
+        $this->cache->expects(self::never())
+            ->method('load');
 
-        static::assertFalse(interface_exists($interfaceName));
-        $autoloader->autoload($interfaceName);
-        static::assertTrue(interface_exists($interfaceName));
+        $this->autoloader->autoload('SomeClass');
+    }
+
+    /**
+     * @test
+     */
+    public function autoloaderUsesCachedFileWhenFound(): void
+    {
+        $this->cache->expects(self::once())
+            ->method('load')
+            ->willReturn(__DIR__ . '/HelperExtensionInterface.php');
+
+        $this->cache->expects(self::never())
+            ->method('save');
+
+        $this->autoloader->autoload(HelperExtensionInterface::class);
+
+        self::assertTrue(interface_exists(HelperExtensionInterface::class, false));
     }
 
     /**
@@ -54,10 +74,16 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     public function autoloadDoesNotGenerateInterfaceWhenNoAttributesExist(): void
     {
         $interfaceName = 'NonExistentExtensionInterface';
-        $cache = new Cache(new FileCacheStorage($this->root->url() . '/tmp/cache/PHPStan'));
-        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->root->url());
 
-        $autoloader->autoload($interfaceName);
+        $this->cache->expects(self::once())
+            ->method('load')
+            ->willReturn(null);
+
+        $this->classyDataProvider->expects(self::once())
+            ->method('exists')
+            ->willReturn(false);
+
+        $this->autoloader->autoload($interfaceName);
         static::assertFalse(interface_exists($interfaceName));
     }
 
@@ -67,47 +93,18 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     public function autoloadGeneratesInterfaceWhenNotCached(): void
     {
         $interfaceName = 'UncachedExtensionInterface';
-        vfsStream::create([
-            'interface.php' => '<?php interface UncachedInterface {}',
-            'app' => [
-                'etc' => [
-                    'config.php' => <<<PHP
-<?php return [
-    'modules' => [
-        'Module_Name' => 1
-    ]
-];
-PHP
-                ],
-                'code' => [
-                    'Module_Name' => [
-                        'etc' => [
-                            'extension_attributes.xml' => <<<'XML'
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
-    <extension_attributes for="UncachedInterface">
-        <attribute code="attr" type="string"/>
-    </extension_attributes>
-</config>
-XML
-                        ]
-                    ]
-                ]
-            ],
-        ], $this->root);
 
-        ComponentRegistrar::register(
-            ComponentRegistrar::MODULE,
-            'Module_Name',
-            $this->root->url() . '/app/code/Module_Name'
-        );
+        $root = vfsStream::setup('test');
+        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
+        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->extAttrDataProvider, $this->classyDataProvider);
 
-        $autoloader = new ExtensionInterfaceAutoloader(
-            new Cache(new FileCacheStorage($this->root->url() . '/tmp/cache/PHPStan')),
-            $this->root->url()
-        );
+        $this->classyDataProvider->expects(self::once())
+            ->method('exists')
+            ->willReturn(true);
 
-        require $this->root->url() . '/interface.php';
+        $this->extAttrDataProvider->expects(self::once())
+            ->method('getAttributesForInterface')
+            ->willReturn(['attr' => 'string']);
 
         $autoloader->autoload($interfaceName);
         static::assertTrue(interface_exists($interfaceName));
