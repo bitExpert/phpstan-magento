@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.14.0
+
+### Added
+
+- [#186](https://github.com/bitExpert/phpstan-magento/pull/186) Bump captainhook/captainhook to 5.10.6
+- [#181](https://github.com/bitExpert/phpstan-magento/pull/181) Bump league/commonmark to 2.1.1
+- [#178](https://github.com/bitExpert/phpstan-magento/pull/178) Bump phpunit/phpunit to 9.5.11
+- [#175](https://github.com/bitExpert/phpstan-magento/pull/175) Lint neon files in CI pipeline
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#179](https://github.com/bitExpert/phpstan-magento/pull/179) Rework extension attribute handling for standalone modules
+
 ## 0.13.0
 
 ### Added
