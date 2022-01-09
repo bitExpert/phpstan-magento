@@ -12,10 +12,10 @@ PHP: PHP 7.2 or higher
 
 Magento: Magento 2.3.0 or higher
 
-PHPStan: PHPStan 1.2
+PHPStan: PHPStan 1.3
 
 If you are using a Magento version that requires an older version of PHPStan (e.g. 0.12.77),  you need to manually upgrade it before 
-installing this extension. in your composer.json Change the PHPStan version to `~1.2` and run:
+installing this extension. in your composer.json Change the PHPStan version to `~1.3` and run:
 
 ```
 composer update phpstan/phpstan --with-all-dependencies
