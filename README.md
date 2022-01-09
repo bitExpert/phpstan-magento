@@ -12,10 +12,10 @@ PHP: PHP 7.2 or higher
 
 Magento: Magento 2.3.0 or higher
 
-PHPStan: PHPStan 1.2
+PHPStan: PHPStan 1.3
 
 If you are using a Magento version that requires an older version of PHPStan (e.g. 0.12.77),  you need to manually upgrade it before 
-installing this extension. in your composer.json Change the PHPStan version to `~1.2` and run:
+installing this extension. in your composer.json Change the PHPStan version to `~1.3` and run:
 
 ```
 composer update phpstan/phpstan --with-all-dependencies
@@ -51,6 +51,15 @@ includes:
 	- vendor/bitexpert/phpstan-magento/extension.neon
 ```
 </details>
+
+If you are using phpstan-magento 0.15.0 and earlier, you need to register the custom autoloader that comes with this extension by adding `vendor/bitexpert/phpstan-magento/autoload.php`
+as a bootstrap file. If you are using phpstan-magento > 0.15.0 this step is done automatically by the extension itself.
+
+```neon
+parameters:
+	bootstrapFiles:
+		- vendor/bitexpert/phpstan-magento/autoload.php
+```
 
 ## Feature overview
 
