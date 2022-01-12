@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// inspired by https://github.com/mathiasverraes/uptodocs this CLI script will lint
+// inspired by https://github.com/mathiasverraes/uptodocs this CLI script lints
 // the Neon snippets in the Markdown files like README.md
 
 $path = realpath(__DIR__ . '/../');
@@ -48,7 +48,7 @@ foreach ($it as $file) {
             } catch (Nette\Neon\Exception $e) {
                 $success = false;
                 $relPath = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getRealPath());
-                echo "Failed parsing node ".$nodeCount." of file ".$relPath."\n";
+                echo sprintf('Failed parsing node "%s" of file "%s"', $nodeCount, $relPath)."\n";
             }
         }
     }

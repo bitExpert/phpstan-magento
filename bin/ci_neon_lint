@@ -28,12 +28,19 @@ foreach ($it as $file) {
     }
 
     try {
-        $content = file_get_contents($file->getRealPath());
-        Nette\Neon\Neon::decode($content);
+        $neon = Nette\Neon\Neon::decodeFile($file->getRealPath());
+        array_walk_recursive($neon, function($value, $key) use($success) {
+            if (($key === 'class') && !class_exists($value)) {
+                throw new \RuntimeException(sprintf('Class "%s" does not exist', $value));
+            }
+        });
     } catch (Nette\Neon\Exception $e) {
         $success = false;
         $relPath = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getRealPath());
-        echo "Failed parsing ".$relPath."\n";
+        echo sprintf('Failed parsing file "%s"', $relPath)."\n";
+    } catch (\RuntimeException $e) {
+        $success = false;
+        echo $e->getMessage()."\n";
     }
 }
 
