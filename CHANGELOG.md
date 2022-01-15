@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.17.0
+
+### Added
+
+- Nothing
+
+### Deprecated
+
+- [#192](https://github.com/bitExpert/phpstan-magento/pull/192) Deprecate PHPStan 1.3 and make extension compatible with PHPStan 1.4
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.16.0
 
 ### Added
