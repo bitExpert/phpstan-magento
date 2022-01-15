@@ -4,7 +4,11 @@
   "type": "phpstan-extension",
   "minimum-stability": "stable",
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "captainhook/plugin-composer": true
+    }
   },
   "license": "MIT",
   "authors": [
