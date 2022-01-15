@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.16.0
+
+### Added
+
+- [#191](https://github.com/bitExpert/phpstan-magento/pull/191) Add autoloader for extension classes
+- [#190](https://github.com/bitExpert/phpstan-magento/pull/190) Check if classes referenced in neon config exist
+- [#188](https://github.com/bitExpert/phpstan-magento/pull/188) Automatically register the autoloader file
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.15.0
 
 ### Added
@@ -19,7 +39,6 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - Nothing.
-
 
 ## 0.14.0
 
