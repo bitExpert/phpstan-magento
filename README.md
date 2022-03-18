@@ -41,6 +41,14 @@ The easiest way to do this is to install the `phpstan/extension-installer` packa
 composer.phar require --dev phpstan/extension-installer
 ```
 
+If you're using composer >= 2.2.0 you have to allow the execution of composer plugins ([see allow-plugins section](https://getcomposer.org/doc/06-config.md#allow-plugins)) as follows:
+
+```
+  - Installing phpstan/extension-installer (1.1.0): Extracting archive
+phpstan/extension-installer contains a Composer plugin which is currently not in your allow-plugins config. See https://getcomposer.org/allow-plugins
+Do you trust "phpstan/extension-installer" to execute code and wish to enable it now? (writes "allow-plugins" to composer.json) [y,n,d,?] y
+```
+
 <details>
   <summary>Manual installation</summary>
 
