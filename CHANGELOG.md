@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.18.0
+
+### Added
+
+- [#221](https://github.com/bitExpert/phpstan-magento/pull/221) Feature/packagist downloads
+- [#220](https://github.com/bitExpert/phpstan-magento/pull/220) Add documenation for composer plugins
+- [#219](https://github.com/bitExpert/phpstan-magento/pull/219) Bump phpunit/phpunit to 9.5.19
+- [#218](https://github.com/bitExpert/phpstan-magento/pull/218) Bump phpstan/phpstan to 1.4.10
+- [#216](https://github.com/bitExpert/phpstan-magento/pull/216) Bump nette/neon to 3.3.3
+- [#212](https://github.com/bitExpert/phpstan-magento/pull/212) Bump captainhook/captainhook to 5.10.8
+- [#210](https://github.com/bitExpert/phpstan-magento/pull/210) Bump league/commonmark to 2.2.3
+- [#201](https://github.com/bitExpert/phpstan-magento/pull/201) Bump captainhook/plugin-composer to 5.3.3
+- [#202](https://github.com/bitExpert/phpstan-magento/pull/202) Bump symfony/finder to 5.4.3
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.17.0
 
 ### Added
