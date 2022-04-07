@@ -11,8 +11,12 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4', '7.4']
-        coveralls: [false, true]
+        php-versions: ['7.4']
+        magento: ['2.3.7-p2', '2.4.0', '2.4.1', '2.4.2', '2.4.2-p1', '2.4.2-p2', '2.4.3', '2.4.3-p1']
+        coveralls: [ false ]
+        include:
+          - php-versions: ['8.0', '8.1']
+            magento: '2.4.4'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -27,6 +31,30 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install
+
+      - name: Install Magento 2.3.7-p2
+        if: matrix.magento == '2.3.7-p2'
+        run: composer update --with-dependencies magento/framework:102.0.7-p2 magento/module-webapi:100.3.6-p2 infection/infection:0.22.0 n98/magerun2:4.5.0
+
+      - name: Install Magento 2.4.0
+        if: matrix.magento == '2.4.0'
+        run: composer update --with-dependencies magento/framework:103.0.0
+
+      - name: Install Magento 2.4.1
+        if: matrix.magento == '2.4.1'
+        run: composer update --with-dependencies magento/framework:103.0.1
+
+      - name: Install Magento 2.4.2
+        if: matrix.magento == '2.4.2'
+        run: composer update --with-dependencies magento/framework:103.0.2
+
+      - name: Install Magento 2.4.3
+        if: matrix.magento == '2.4.3'
+        run: composer update --with-dependencies magento/framework:103.0.3
+
+      - name: Install Magento 2.4.4
+        if: matrix.magento == '2.4.4'
+        run: composer update --with-dependencies magento/framework:103.0.4
 
       - name: Composer license check
         run: composer check-license
