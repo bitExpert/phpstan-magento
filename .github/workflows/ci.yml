@@ -44,35 +44,35 @@ jobs:
 
       - name: Install Magento 2.3.7-p2
         if: matrix.magento == '2.3.7-p2'
-        run: composer update --with-dependencies magento/framework:102.0.7-p2
+        run: composer update --with-dependencies magento/framework:102.0.7-p2 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.0
         if: matrix.magento == '2.4.0'
-        run: composer update --with-dependencies magento/framework:103.0.0
+        run: composer update --with-dependencies magento/framework:103.0.0 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.1
         if: matrix.magento == '2.4.1'
-        run: composer update --with-dependencies magento/framework:103.0.1
+        run: composer update --with-dependencies magento/framework:103.0.1 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.2
         if: matrix.magento == '2.4.2'
-        run: composer update --with-dependencies magento/framework:103.0.2
+        run: composer update --with-dependencies magento/framework:103.0.2 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.2-p1
         if: matrix.magento == '2.4.2-p1'
-        run: composer update --with-dependencies magento/framework:103.0.2-p1
+        run: composer update --with-dependencies magento/framework:103.0.2-p1 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.2-p2
         if: matrix.magento == '2.4.2-p2'
-        run: composer update --with-dependencies magento/framework:103.0.2-p1
+        run: composer update --with-dependencies magento/framework:103.0.2-p1 laminas/laminas-code:3.4.1
 
       - name: Install Magento 2.4.3
         if: matrix.magento == '2.4.3'
-        run: composer update --with-dependencies magento/framework:103.0.3
+        run: composer update --with-dependencies magento/framework:103.0.3 laminas/laminas-code:3.5.1
 
       - name: Install Magento 2.4.3-p1
         if: matrix.magento == '2.4.3-p1'
-        run: composer update --with-dependencies magento/framework:103.0.3-p1
+        run: composer update --with-dependencies magento/framework:103.0.3-p1 laminas/laminas-code:3.5.1
 
       - name: Composer license check
         run: composer check-license
