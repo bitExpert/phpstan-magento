@@ -15,8 +15,12 @@ jobs:
         magento: ['2.3.7-p2', '2.4.0', '2.4.1', '2.4.2', '2.4.2-p1', '2.4.2-p2', '2.4.3', '2.4.3-p1']
         coveralls: [ false ]
         include:
-          - php-versions: ['8.0', '8.1']
+          - php-versions: '8.0'
             magento: '2.4.4'
+            operating-system: 'ubuntu-latest'
+          - php-versions: '8.1'
+            magento: '2.4.4'
+            operating-system: 'ubuntu-latest'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
