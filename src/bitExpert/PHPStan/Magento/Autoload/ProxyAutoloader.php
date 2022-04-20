@@ -63,12 +63,13 @@ class ProxyAutoloader implements Autoloader
         $proxyInterface = ['\Magento\Framework\ObjectManager\NoninterceptableInterface'];
         $methods = '';
 
+        /** @var class-string $originalClassname */
         $reflectionClass = new \ReflectionClass($originalClassname);
         if ($reflectionClass->isInterface()) {
             $proxyInterface[] = '\\' . $originalClassname;
             foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 $returnType = $method->getReturnType();
-                if ($returnType instanceof \ReflectionType) {
+                if ($returnType instanceof \ReflectionNamedType) {
                     $returnType = ': ' . $returnType->getName();
                 } else {
                     $returnType = '';
@@ -77,7 +78,7 @@ class ProxyAutoloader implements Autoloader
                 $params = [];
                 foreach ($method->getParameters() as $parameter) {
                     $paramType = $parameter->getType();
-                    if ($paramType instanceof \ReflectionType) {
+                    if ($paramType instanceof \ReflectionNamedType) {
                         if ($paramType->isBuiltin()) {
                             $paramType = $paramType->getName() . ' ';
                         } else {

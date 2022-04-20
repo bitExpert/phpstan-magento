@@ -14,12 +14,6 @@ parameters:
             message: '~is not covered by backward compatibility promise.~'
             path: src/bitExpert/PHPStan/Magento/Autoload/FactoryAutoloader.php
         -
-            message: '~Call to an undefined method ReflectionType::getName~'
-            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
-        -
-            message: '~Parameter #1 \$argument of class ReflectionClass constructor expects~'
-            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
-        -
             message: '~is not covered by backward compatibility promise.~'
             path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
         -

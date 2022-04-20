@@ -69,7 +69,9 @@ class ExtensionAutoloader implements Autoloader
      */
     public function getFileContents(string $className): string
     {
+        /** @var class-string $sourceInterface */
         $sourceInterface = rtrim(substr($className, 0, -1 * strlen('Extension')), '\\') . 'ExtensionInterface';
+        /** @var class-string $attrInterface */
         $attrInterface = rtrim(substr($sourceInterface, 0, -1 * strlen('ExtensionInterface')), '\\') . 'Interface';
 
         $generator = new ClassGenerator();
