@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.20.0
+
+### Added
+
+- [#238](https://github.com/bitExpert/phpstan-magento/pull/238) Bump phpstan/phpstan to 1.5.7
+- [#232](https://github.com/bitExpert/phpstan-magento/pull/232) Bump league/commonmark to 2.3.0
+- [#231](https://github.com/bitExpert/phpstan-magento/pull/231) Support for 2.4.4
+- [#230](https://github.com/bitExpert/phpstan-magento/pull/230) Bump phpunit/phpunit to 9.5.20
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.19.0
 
 ### Added
