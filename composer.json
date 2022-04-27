@@ -32,7 +32,7 @@
     "captainhook/captainhook": "^5.10.8",
     "captainhook/plugin-composer": "^5.3.3",
     "league/commonmark": "^2.2.3",
-    "madewithlove/license-checker": "^1.2",
+    "madewithlove/license-checker": "^0.10.0 || ^1.2",
     "magento/framework": ">=102.0.0",
     "mikey179/vfsstream": "^1.6.10",
     "nette/neon": "^3.3.3",
