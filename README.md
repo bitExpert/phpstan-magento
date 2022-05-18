@@ -31,6 +31,8 @@ You can add `bitexpert/phpstan-magento` as a dev dependency, as follows:
 composer.phar require --dev bitexpert/phpstan-magento
 ```
 
+> Want a full walk-through of the installation & configuration process? Read the blog post at M.academy about [Static Analysis in Magento with PHPStan](https://m.academy/blog/static-analysis-magento-phpstan/).
+
 ### PHPStan configuration
 
 If you have not already a PHPStan configuration file `phpstan.neon` in your project, create a new empty file next to your `composer.json` file.
