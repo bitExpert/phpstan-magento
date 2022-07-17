@@ -1,0 +1,106 @@
+name: "Integrate"
+on:
+  pull_request: null
+  push:
+    branches:
+      - "master"
+
+jobs:
+  unit_tests:
+    strategy:
+      matrix:
+        operating-system: [ "ubuntu-latest" ]
+        php-version: [ "7.4" ]
+        magento-version: [ "2.3.7-p2", "2.4.0", "2.4.1", "2.4.2", "2.4.2-p1", "2.4.2-p2", "2.4.3", "2.4.3-p1" ]
+        roave-security-advisories: [ false ]
+        coveralls: [ false ]
+        include:
+          - magento-version: "2.3.7-p2"
+            framework-version: "102.0.7-p2"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.0"
+            framework-version: "103.0.0"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.1"
+            framework-version: "103.0.1"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.2"
+            framework-version: "103.0.2"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.2-p1"
+            framework-version: "103.0.2-p1"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.2-p2"
+            framework-version: "103.0.2-p1"
+            laminas-code-version: "3.4.1"
+          - magento-version: "2.4.3"
+            framework-version: "103.0.3"
+            laminas-code-version: "3.5.1"
+          - magento-version: "2.4.3-p1"
+            framework-version: "103.0.3-p1"
+            laminas-code-version: "3.5.1"
+          # Magento latest on PHP 8.1
+          - operating-system: "ubuntu-latest"
+            php-version: "8.1"
+            magento-version: "2.4.4"
+            framework-version: "103.0.4"
+            laminas-code-version: "4.5.1"
+            roave-security-advisories: true
+            coveralls: true
+    name: "PHP ${{ matrix.php-version }} Magento ${{ matrix.magento-version }} ${{ matrix.roave-security-advisories && '🔐' || '' }}"
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: bcmath, gd
+          coverage: xdebug
+
+      - name: Install dependencies for Magento version ${{ matrix.magento-version }}
+        run: |
+          composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}"
+
+      - name: Install roave/security-advisories
+        if: ${{ matrix.roave-security-advisories }}
+        run: |
+          composer require --no-interaction --no-progress --with-dependencies --dev "roave/security-advisories:dev-latest"
+          
+      - name: Check license
+        run: |
+          composer run --no-interaction check-license
+
+      - name: Run Codesniffer
+        run: |
+          composer run --no-interaction cs-check
+
+      - name: Lint Neon files
+        run: |
+          ./bin/ci_neon_lint
+          ./bin/ci_markdown_neon_lint
+
+      - name: Perform static code analysis
+        if: ${{ matrix.magento-version != '2.4.0' && matrix.magento-version != '2.4.1' }}
+        run: |
+          composer run --no-interaction analyze
+
+      - name: Execute unit tests
+        if: ${{ ! matrix.coveralls }}
+        run: |
+          composer run --no-interaction test
+
+      - name: Execute unit tests with coverage
+        if: ${{ matrix.coveralls }}
+        run: |
+          composer run --no-interaction coverage
+
+      - name: Send coverage report to Coveralls
+        if: ${{ matrix.coveralls }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer require php-coveralls/php-coveralls
+          ./vendor/bin/php-coveralls --coverage_clover=clover.xml -v
