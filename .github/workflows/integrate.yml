@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ "ubuntu-latest" ]
-        php-versions: [ "7.4" ]
+        php-version: [ "7.4" ]
         magento-version: [ "2.3.7-p2" ]
         framework-version: [ "102.0.7-p2" ]
         laminas-code-version: [ "3.4.1" ]
@@ -19,20 +19,27 @@ jobs:
         include:
           - magento-version: "2.4.0"
             framework-version: "103.0.0"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.1"
             framework-version: "103.0.1"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.2"
             framework-version: "103.0.2"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.2-p1"
             framework-version: "103.0.2-p1"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.2-p2"
             framework-version: "103.0.2-p1"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.3"
             framework-version: "103.0.3"
             laminas-code-version: "3.5.1"
+            operating-system: "ubuntu-latest"
           - magento-version: "2.4.3-p1"
             framework-version: "103.0.3-p1"
             laminas-code-version: "3.5.1"
+            operating-system: "ubuntu-latest"
           # Magento latest on PHP 8.1
           - php-versions: "8.1"
             magento-version: "2.4.4"
@@ -40,6 +47,7 @@ jobs:
             laminas-code-version: "4.5.1"
             roave-security-advisories: true
             coveralls: true
+            operating-system: "ubuntu-latest"
     runs-on: ${{ matrix.operating-system }}
     steps:
       - name: Checkout repo
@@ -48,7 +56,7 @@ jobs:
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           extensions: bcmath, gd
           coverage: xdebug
 
