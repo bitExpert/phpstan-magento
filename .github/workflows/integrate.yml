@@ -42,6 +42,7 @@ jobs:
             laminas-code-version: "4.5.1"
             roave-security-advisories: true
             coveralls: true
+    name: "PHP ${{ matrix.php-version }} Magento ${{ matrix.magento-version }} ${{ matrix.roave-security-advisories && '🔐' || '' }}"
     runs-on: ${{ matrix.operating-system }}
     steps:
       - name: Checkout repo
@@ -56,17 +57,20 @@ jobs:
 
       - name: Require roave/security-advisories
         if: ${{ matrix.roave-security-advisories }}
-        run: composer require --no-interaction --no-progress --with-dependencies --no-update --dev roave/security-advisories
+        run: |
+          composer require --no-interaction --no-progress --with-dependencies --no-update --dev "roave/security-advisories:*"
 
       - name: Install dependencies for Magento version ${{ matrix.magento-version }}
         run: |
           composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}"
 
       - name: Check license
-        run: composer run --no-interaction check-license
+        run: |
+          composer run --no-interaction check-license
 
       - name: Run Codesniffer
-        run: composer run --no-interaction cs-check
+        run: |
+          composer run --no-interaction cs-check
 
       - name: Lint Neon files
         run: |
@@ -75,15 +79,18 @@ jobs:
 
       - name: Perform static code analysis
         if: ${{ matrix.magento-version != '2.4.0' && matrix.magento-version != '2.4.1' }}
-        run: composer run --no-interaction analyze
+        run: |
+          composer run --no-interaction analyze
 
       - name: Execute unit tests
         if: ${{ ! matrix.coveralls }}
-        run: composer run --no-interaction test
+        run: |
+          composer run --no-interaction test
 
       - name: Execute unit tests with coverage
         if: ${{ matrix.coveralls }}
-        run: composer run --no-interaction coverage
+        run: |
+          composer run --no-interaction coverage
 
       - name: Send coverage report to Coveralls
         if: ${{ matrix.coveralls }}
