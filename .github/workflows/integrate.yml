@@ -57,7 +57,7 @@ jobs:
 
       - name: Install dependencies for Magento version ${{ matrix.magento-version }}
         run: |
-          composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}" ${{ matrix.roave-security-advisories && '"roave/security-advisories:dev-latest"' || '' }}
+          composer update --no-interaction --no-progress --with-dependencies ${{ matrix.roave-security-advisories && '"roave/security-advisories:dev-latest"' || '' }} --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}"
 
       - name: Check license
         run: |
