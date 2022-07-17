@@ -55,14 +55,9 @@ jobs:
           extensions: bcmath, gd
           coverage: xdebug
 
-      - name: Require roave/security-advisories
-        if: ${{ matrix.roave-security-advisories }}
-        run: |
-          composer require --no-interaction --no-progress --with-dependencies --no-update --dev "roave/security-advisories:*"
-
       - name: Install dependencies for Magento version ${{ matrix.magento-version }}
         run: |
-          composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}"
+          composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }} ${{ matrix.roave-security-advisories && 'roave/security-advisories' || '' }}"
 
       - name: Check license
         run: |
