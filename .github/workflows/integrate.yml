@@ -36,7 +36,7 @@ jobs:
             laminas-code-version: "3.5.1"
           # Magento latest on PHP 8.1
           - operating-system: "ubuntu-latest"
-            php-versions: "8.1"
+            php-version: "8.1"
             magento-version: "2.4.4"
             framework-version: "103.0.4"
             laminas-code-version: "4.5.1"
