@@ -33,14 +33,14 @@ jobs:
           - magento-version: "2.4.3-p1"
             framework-version: "103.0.3-p1"
             laminas-code-version: "3.5.1"
-          # Magento latest on PHP 8.1
-          - operating-system: "ubuntu-latest"
-            php-version: "8.1"
-            magento-version: "2.4.4"
-            framework-version: "103.0.4"
-            laminas-code-version: "4.5.1"
-            roave-security-advisories: true
-            coveralls: true
+#          # Magento latest on PHP 8.1
+#          - operating-system: "ubuntu-latest"
+#            php-version: "8.1"
+#            magento-version: "2.4.4"
+#            framework-version: "103.0.4"
+#            laminas-code-version: "4.5.1"
+#            roave-security-advisories: true
+#            coveralls: true
     name: "PHP ${{ matrix.php-version }} Magento ${{ matrix.magento-version }} ${{ matrix.roave-security-advisories && '🔐' || '' }}"
     runs-on: ${{ matrix.operating-system }}
     steps:
