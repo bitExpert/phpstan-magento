@@ -1,25 +1,26 @@
 # bitexpert/phpstan-magento
 
-This package provides some additional features for PHPStan to make it work for Magento 2 projects.
-You can use this PHPStan extension for both Magento module projects and Magento application projects.
-
 [![Build Status](https://github.com/bitExpert/phpstan-magento/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/phpstan-magento/actions)
 [![Coverage Status](https://coveralls.io/repos/github/bitExpert/phpstan-magento/badge.svg?branch=master)](https://coveralls.io/github/bitExpert/phpstan-magento?branch=master)
 [![installs on Packagist](https://img.shields.io/packagist/dt/bitExpert/phpstan-magento)](https://packagist.org/packages/bitExpert/phpstan-magento/)
 
+Provides extensions for PHPStan to make it work for Magento 2 projects.
+
+You can use this PHPStan extension for both Magento module projects and Magento application projects.
+
 ## Requirements
 
-PHP: PHP 7.2 or higher
+- PHP 7.2 or higher
 
-Magento: Magento 2.3.0 or higher
+- Magento 2.3.0 or higher
 
-PHPStan: PHPStan 1.7
+- PHPStan 1.7
 
-If you are using a Magento version that requires an older version of PHPStan (e.g. 0.12.77),  you need to manually upgrade it before 
-installing this extension. in your composer.json Change the PHPStan version to `~1.7` and run:
+If you are using a Magento version that requires an older version of PHPStan (e.g. 0.12.77),  you need to manually downgrade it before 
+installing this extension. In your composer.json change PHPStan version constrain to `~0.12` and run the following command.
 
 ```
-composer update phpstan/phpstan --with-all-dependencies
+composer update --with-all-dependencies phpstan/phpstan
 ```
 
 ## Installation
