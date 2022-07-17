@@ -54,15 +54,13 @@ jobs:
           extensions: bcmath, gd
           coverage: xdebug
 
-      - name: Set Magento version to ${{ matrix.magento-version }}
-        run: composer update --no-interaction --with-dependencies --no-update magento/framework:${{ matrix.framework-version }} laminas/laminas-code:${{ matrix.laminas-code-version }}
-
       - name: Require roave/security-advisories
         if: ${{ matrix.roave-security-advisories }}
-        run: composer require --no-interaction --with-dependencies --no-update --dev roave/security-advisories
+        run: composer require --no-interaction --no-progress --with-dependencies --no-update --dev roave/security-advisories
 
-      - name: Install dependencies
-        run: composer install --no-interaction --no-progress
+      - name: Install dependencies for Magento version ${{ matrix.magento-version }}
+        run: |
+          composer update --no-interaction --no-progress --with-dependencies --with="magento/framework:${{ matrix.framework-version }}" --with="laminas/laminas-code:${{ matrix.laminas-code-version }}"
 
       - name: Check license
         run: composer run --no-interaction check-license
