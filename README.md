@@ -17,7 +17,7 @@ You can use this PHPStan extension for both Magento module projects and Magento 
 - PHPStan 1.7
 
 If you are using a Magento version that requires an older version of PHPStan (e.g. 0.12.77),  you need to manually downgrade it before 
-installing this extension. In your composer.json change PHPStan version constrain to `~0.12` and run the following command.
+installing this extension. In your composer.json change PHPStan version constraint to `~0.12` and run the following command.
 
 ```
 composer update --with-all-dependencies phpstan/phpstan
