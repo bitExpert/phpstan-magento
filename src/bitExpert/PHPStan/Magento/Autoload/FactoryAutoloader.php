@@ -57,7 +57,7 @@ class FactoryAutoloader implements Autoloader
         $namespace = explode('\\', ltrim($class, '\\'));
         /** @var string $factoryClassname */
         $factoryClassname = array_pop($namespace);
-        $originalClassname = str_replace('Factory', '', $factoryClassname);
+        $originalClassname = preg_replace('#Factory$#', '', $factoryClassname);
         $namespace = implode('\\', $namespace);
 
         $template = "<?php\n";
