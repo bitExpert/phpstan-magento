@@ -73,4 +73,29 @@ class FactoryAutoloaderUnitTest extends TestCase
 
         self::assertTrue(class_exists(HelperFactory::class, false));
     }
+
+    /**
+     * @test
+     */
+    public function autoloaderGeneratesFactoryForCorrectClassname(): void
+    {
+        $this->storage->expects(self::atMost(2))
+            ->method('load')
+            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/FactoryThingFactory.php');
+        $this->storage->expects(self::once())
+            ->method('save')
+            ->with(
+                'bitExpert\PHPStan\Magento\Autoload\FactoryThingFactory',
+                static::isType('string'),
+                static::stringContains(<<<DOC
+/**
+ * Factory class for @see \bitExpert\PHPStan\Magento\Autoload\FactoryThing
+ */
+DOC
+                )
+            )
+        ;
+
+        $this->autoloader->autoload(FactoryThingFactory::class);
+    }
 }
