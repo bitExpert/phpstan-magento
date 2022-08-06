@@ -18,6 +18,7 @@ use Laminas\Code\Generator\DocBlock\Tag\ParamTag;
 use Laminas\Code\Generator\DocBlock\Tag\ReturnTag;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\MethodGenerator;
+use Laminas\Code\Generator\ParameterGenerator;
 use PHPStan\Cache\Cache;
 
 class ExtensionAutoloader implements Autoloader
@@ -88,6 +89,13 @@ class ExtensionAutoloader implements Autoloader
              * @see \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator::_getClassMethods
              */
 
+            // treat array types properly in the generated code. Similar to Magento core MyInterface[] type gets
+            // converted to just an array
+            $paramType = $type;
+            if (strpos($type, '[]') !== false) {
+                $paramType = '?array';
+            }
+
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'get' . ucfirst($propertyName),
@@ -101,7 +109,7 @@ class ExtensionAutoloader implements Autoloader
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'set' . ucfirst($propertyName),
-                    'parameters' => [$propertyName],
+                    'parameters' => [new ParameterGenerator($propertyName, $paramType)],
                     'docblock' => DocBlockGenerator::fromArray([
                         'tags' => [
                             new ParamTag($propertyName, [$type]),
