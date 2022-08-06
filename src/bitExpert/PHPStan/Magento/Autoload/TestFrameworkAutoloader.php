@@ -18,10 +18,22 @@ namespace bitExpert\PHPStan\Magento\Autoload;
  */
 class TestFrameworkAutoloader implements Autoloader
 {
+    private string $magentoRoot;
+
+    /**
+     * TestFrameworkAutoloader constructor.
+     *
+     * @param string $magentoRoot
+     */
+    public function __construct(string $magentoRoot)
+    {
+        $this->magentoRoot = $magentoRoot;
+    }
+
     public function autoload(string $class): void
     {
         $class = str_replace('\\', '/', $class);
-        $testsBaseDir = __DIR__ . '/../../../../../../../../dev/tests/static';
+        $testsBaseDir = $this->magentoRoot.'/dev/tests/static';
 
         $directories = [
             // try to find Magento\TestFramework classes...
