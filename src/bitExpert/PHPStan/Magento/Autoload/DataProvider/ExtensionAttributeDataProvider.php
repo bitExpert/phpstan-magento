@@ -113,7 +113,7 @@ class ExtensionAttributeDataProvider
         $cleanType = str_replace('[]', '', $type);
 
         $primitiveTypes = ['float', 'int', 'string', 'bool', 'boolean'];
-        return in_array(strtolower($cleanType), $primitiveTypes, true) ? $cleanType : '\\'.$cleanType;
+        return in_array(strtolower($cleanType), $primitiveTypes, true) ? $type : '\\'.$type;
     }
 
     /**
