@@ -2,9 +2,29 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.23.1
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#266](https://github.com/bitExpert/phpstan-magento/pull/266) Allow arrays in extension attributes
+- [#264](https://github.com/bitExpert/phpstan-magento/pull/264) Fix factory generation for "FactoryThing" classes
+
 ## 0.23.0
 
 ### Added
+
 - [#243](https://github.com/bitExpert/phpstan-magento/pull/243) Upgrade to PHPStan 1.7
 
 ### Deprecated
@@ -22,6 +42,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ## 0.22.0
 
 ### Added
+
 - [#246](https://github.com/bitExpert/phpstan-magento/pull/246) Do not yet require PHPStan 1.7
 - [#242](https://github.com/bitExpert/phpstan-magento/pull/242) Add link to related blog post
 - [#239](https://github.com/bitExpert/phpstan-magento/pull/239) Update madewithlove/license-checker requirement from to ^1.2
