@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.24.0
+
+### Added
+
+- [#269](https://github.com/bitExpert/phpstan-magento/pull/269) Add Magento 2.4.5 to CI pipeline
+- [#267](https://github.com/bitExpert/phpstan-magento/pull/267) Use Magento root for TestFrameworkAutoloader
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#268](https://github.com/bitExpert/phpstan-magento/pull/268) Autoloaders prefer local classes
+- [#261](https://github.com/bitExpert/phpstan-magento/pull/261) Update phpstan/phpstan requirement from ~1.7.2 to ~1.8.2
+
 ## 0.23.1
 
 ### Added
