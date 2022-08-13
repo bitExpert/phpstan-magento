@@ -52,6 +52,14 @@ services:
 		class: PHPStan\Cache\Cache
 		arguments:
 			storage: @fileCacheStorage
+	extensionAttributeDataProvider:
+		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider
+		arguments:
+			magentoRoot: %magento.magentoRoot%
+	classLoaderProvider:
+		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider
+		arguments:
+			magentoRoot: %magento.magentoRoot%
 	mockAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\MockAutoloader
 		tags:
@@ -64,22 +72,16 @@ services:
 		class: bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader
 		arguments:
 			cache: @autoloaderCache
+			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader
 	proxyAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader
 		arguments:
 			cache: @autoloaderCache
+			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader
-	extensionAttributeDataProvider:
-		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider
-		arguments:
-			magentoRoot: %magento.magentoRoot%
-	classLoaderProvider:
-		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider
-		arguments:
-			magentoRoot: %magento.magentoRoot%
 	extensionInterfaceAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
 		arguments:

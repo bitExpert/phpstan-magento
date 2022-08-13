@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use PHPStan\Cache\Cache;
 use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
@@ -26,11 +27,17 @@ class FactoryAutoloaderUnitTest extends TestCase
      * @var FactoryAutoloader
      */
     private $autoloader;
+    /**
+     * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $classLoader;
 
     public function setUp(): void
     {
         $this->storage = $this->createMock(CacheStorage::class);
-        $this->autoloader = new FactoryAutoloader(new Cache($this->storage));
+        $this->classLoader = $this->createMock(ClassLoaderProvider::class);
+
+        $this->autoloader = new FactoryAutoloader(new Cache($this->storage), $this->classLoader);
     }
 
     /**
@@ -38,6 +45,8 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutFactoryPostfix(): void
     {
+        $this->classLoader->expects(self::never())
+            ->method('findFile');
         $this->storage->expects(self::never())
             ->method('load');
 
@@ -47,8 +56,27 @@ class FactoryAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
+    public function autoloaderPrefersLocalFile(): void
+    {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(__DIR__ . '/HelperFactory.php');
+        $this->storage->expects(self::never())
+            ->method('load');
+
+        $this->autoloader->autoload(HelperFactory::class);
+
+        self::assertTrue(class_exists(HelperFactory::class, false));
+    }
+
+    /**
+     * @test
+     */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->storage->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperFactory.php');
@@ -63,6 +91,9 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderGeneratesCacheFileWhenNotFoundInCache(): void
     {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->storage->expects(self::atMost(2))
             ->method('load')
             ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperFactory.php');
@@ -79,6 +110,9 @@ class FactoryAutoloaderUnitTest extends TestCase
      */
     public function autoloaderGeneratesFactoryForCorrectClassname(): void
     {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->storage->expects(self::atMost(2))
             ->method('load')
             ->willReturnOnConsecutiveCalls(null, __DIR__ . '/FactoryThingFactory.php');

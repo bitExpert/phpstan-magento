@@ -27,8 +27,8 @@ class ClassLoaderProvider
      */
     public function __construct(string $magentoRoot)
     {
-        $this->composer = new ClassLoader($magentoRoot.'/vendor');
-        $autoloadFile = $magentoRoot.'/vendor/composer/autoload_namespaces.php';
+        $this->composer = new ClassLoader($magentoRoot . '/vendor');
+        $autoloadFile = $magentoRoot . '/vendor/composer/autoload_namespaces.php';
         if (is_file($autoloadFile)) {
             $map = require $autoloadFile;
             foreach ($map as $namespace => $path) {
@@ -36,7 +36,7 @@ class ClassLoaderProvider
             }
         }
 
-        $autoloadFile = $magentoRoot.'/vendor/composer/autoload_psr4.php';
+        $autoloadFile = $magentoRoot . '/vendor/composer/autoload_psr4.php';
         if (is_file($autoloadFile)) {
             $map = require $autoloadFile;
             foreach ($map as $namespace => $path) {
@@ -44,7 +44,7 @@ class ClassLoaderProvider
             }
         }
 
-        $autoloadFile = $magentoRoot.'/vendor/composer/autoload_classmap.php';
+        $autoloadFile = $magentoRoot . '/vendor/composer/autoload_classmap.php';
         if (is_file($autoloadFile)) {
             $classMap = require $autoloadFile;
             if (is_array($classMap)) {
@@ -62,5 +62,16 @@ class ClassLoaderProvider
     public function exists(string $classyConstructName): bool
     {
         return $this->composer->findFile($classyConstructName) !== false;
+    }
+
+    /**
+     * Finds the path to the file where the class is defined.
+     *
+     * @param string $class The name of the class
+     * @return string|false The path if found, false otherwise
+     */
+    public function findFile($class)
+    {
+        return $this->composer->findFile($class);
     }
 }
