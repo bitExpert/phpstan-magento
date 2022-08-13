@@ -45,11 +45,12 @@ class RegistrationUnitTest extends TestCase
     public function provideAutoloaders(): array
     {
         $cache = new Cache($this->getMockBuilder(\PHPStan\Cache\CacheStorage::class)->getMock());
+        $classLoader = $this->createMock(ClassLoaderProvider::class);
 
         return [
-            [new FactoryAutoloader($cache)],
+            [new FactoryAutoloader($cache, $classLoader)],
             [new MockAutoloader()],
-            [new ProxyAutoloader($cache)],
+            [new ProxyAutoloader($cache, $classLoader)],
             [new TestFrameworkAutoloader()],
             [new ExtensionInterfaceAutoloader(
                 $cache,
