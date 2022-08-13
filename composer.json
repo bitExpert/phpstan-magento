@@ -30,18 +30,18 @@
     "magento/framework": "<102.0.0"
   },
   "require-dev": {
-    "captainhook/captainhook": "^5.10.8",
+    "captainhook/captainhook": "^5.10.9",
     "captainhook/plugin-composer": "^5.3.3",
-    "league/commonmark": "^2.2.3",
-    "madewithlove/license-checker": "^0.10.0 || ^1.2",
+    "league/commonmark": "^2.3.1",
+    "madewithlove/license-checker": "^0.10.0 || ^1.4",
     "magento/framework": ">=102.0.0",
     "mikey179/vfsstream": "^1.6.10",
     "nette/neon": "^3.3.3",
     "nikic/php-parser": "^4.13.2",
     "phpstan/extension-installer": "^1.1.0",
     "phpstan/phpstan-phpunit": "^1.1.1",
-    "phpstan/phpstan-strict-rules": "^1.2.0",
-    "phpunit/phpunit": "^9.5.19",
+    "phpstan/phpstan-strict-rules": "^1.2.3",
+    "phpunit/phpunit": "^9.5.20",
     "squizlabs/php_codesniffer": "^3.6.2"
   },
   "autoload": {
