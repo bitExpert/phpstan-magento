@@ -66,6 +66,8 @@ services:
 			- phpstan.magento.autoloader
 	testFrameworkAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\TestFrameworkAutoloader
+		arguments:
+			magentoRoot: %magento.magentoRoot%
 		tags:
 			- phpstan.magento.autoloader
 	factoryAutoloader:
