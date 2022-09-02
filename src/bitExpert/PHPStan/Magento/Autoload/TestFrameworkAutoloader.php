@@ -18,7 +18,10 @@ namespace bitExpert\PHPStan\Magento\Autoload;
  */
 class TestFrameworkAutoloader implements Autoloader
 {
-    private string $magentoRoot;
+    /**
+     * @var string
+     */
+    private $magentoRoot;
 
     /**
      * TestFrameworkAutoloader constructor.
