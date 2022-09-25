@@ -93,7 +93,7 @@ class ExtensionAutoloader implements Autoloader
             // converted to just an array
             $paramType = $type;
             if (strpos($type, '[]') !== false) {
-                $paramType = '?array';
+                $paramType = null;
             }
 
             $generator->addMethodFromGenerator(
