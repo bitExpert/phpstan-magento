@@ -105,13 +105,6 @@ class ExtensionInterfaceAutoloader implements Autoloader
              * @see \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator::_getClassMethods
              */
 
-            // treat array types properly in the generated code. Similar to Magento core MyInterface[] type gets
-            // converted to just an array
-            $paramType = $type;
-            if (strpos($type, '[]') !== false) {
-                $paramType = null;
-            }
-
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'get' . ucfirst($propertyName),
@@ -125,7 +118,7 @@ class ExtensionInterfaceAutoloader implements Autoloader
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'set' . ucfirst($propertyName),
-                    'parameters' => [new ParameterGenerator($propertyName, $paramType)],
+                    'parameters' => [$propertyName],
                     'docblock' => DocBlockGenerator::fromArray([
                         'tags' => [
                             new ParamTag($propertyName, [$type]),
