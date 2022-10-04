@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.25.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#275](https://github.com/bitExpert/phpstan-magento/pull/275) Restructure the docs
+- [#274](https://github.com/bitExpert/phpstan-magento/pull/274) Don't use ?array type hint in ext attributes
+- [#273](https://github.com/bitExpert/phpstan-magento/pull/273) Make code compatible with PHP 7.2
+
 ## 0.24.0
 
 ### Added
