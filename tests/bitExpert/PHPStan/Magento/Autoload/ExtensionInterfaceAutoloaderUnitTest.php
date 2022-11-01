@@ -5,6 +5,7 @@ namespace bitExpert\PHPStan\Magento\Autoload;
 use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
+use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use PHPStan\Cache\Cache;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +46,8 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutExtensionInterfacePostfix(): void
     {
+        $this->classyDataProvider->expects(self::never())
+            ->method('findFile');
         $this->cache->expects(self::never())
             ->method('load');
 
@@ -54,8 +57,27 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
+    public function autoloaderPrefersLocalFile(): void
+    {
+        $this->classyDataProvider->expects(self::once())
+            ->method('findFile')
+            ->willReturn(__DIR__ . '/HelperExtensionInterface.php');
+        $this->cache->expects(self::never())
+            ->method('load');
+
+        $this->autoloader->autoload(HelperExtensionInterface::class);
+
+        self::assertTrue(interface_exists(HelperExtensionInterface::class, false));
+    }
+
+    /**
+     * @test
+     */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
+        $this->classyDataProvider->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->cache->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperExtensionInterface.php');
@@ -73,8 +95,13 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloadDoesNotGenerateInterfaceWhenNoAttributesExist(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $interfaceName = 'NonExistentExtensionInterface';
 
+        $this->classyDataProvider->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->cache->expects(self::once())
             ->method('load')
             ->willReturn(null);
@@ -84,7 +111,6 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
             ->willReturn(false);
 
         $this->autoloader->autoload($interfaceName);
-        static::assertFalse(interface_exists($interfaceName));
     }
 
     /**
@@ -99,6 +125,10 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
         $autoloader = new ExtensionInterfaceAutoloader($cache, $this->extAttrDataProvider, $this->classyDataProvider);
 
         $this->classyDataProvider->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
+
+        $this->classyDataProvider->expects(self::once())
             ->method('exists')
             ->willReturn(true);
 
@@ -108,6 +138,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 
         $autoloader->autoload($interfaceName);
         static::assertTrue(interface_exists($interfaceName));
+
         $interfaceReflection = new \ReflectionClass($interfaceName);
         try {
             $getAttrReflection = $interfaceReflection->getMethod('getAttr');

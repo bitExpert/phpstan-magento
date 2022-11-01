@@ -20,6 +20,7 @@ use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
 use PHPStan\Cache\Cache;
+use ReflectionClass;
 
 class ExtensionAutoloader implements Autoloader
 {
@@ -67,11 +68,14 @@ class ExtensionAutoloader implements Autoloader
 
     /**
      * Given an extension attributes interface name, generate that interface (if possible)
+     *
+     * @throws \ReflectionException
      */
     public function getFileContents(string $className): string
     {
         /** @var class-string $sourceInterface */
         $sourceInterface = rtrim(substr($className, 0, -1 * strlen('Extension')), '\\') . 'ExtensionInterface';
+        $sourceInterfaceReflection = new ReflectionClass($sourceInterface);
         /** @var class-string $attrInterface */
         $attrInterface = rtrim(substr($sourceInterface, 0, -1 * strlen('ExtensionInterface')), '\\') . 'Interface';
 
@@ -89,9 +93,18 @@ class ExtensionAutoloader implements Autoloader
              * @see \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator::_getClassMethods
              */
 
+            // check return type of method in interface and reuse it in the generated class
+            $returnType = null;
+            try {
+                $reflectionMethod = $sourceInterfaceReflection->getMethod('get' . ucfirst($propertyName));
+                $returnType = $reflectionMethod->getReturnType();
+            } catch (\Exception $e) {
+            }
+
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'get' . ucfirst($propertyName),
+                    'returntype' => $returnType,
                     'docblock' => DocBlockGenerator::fromArray([
                         'tags' => [
                             new ReturnTag([$type, 'null']),
@@ -99,10 +112,38 @@ class ExtensionAutoloader implements Autoloader
                     ]),
                 ])
             );
+
+            // check param type of method in interface and reuse it in the generated class
+            $paramType = null;
+            try {
+                $reflectionMethod = $sourceInterfaceReflection->getMethod('set' . ucfirst($propertyName));
+                $reflectionParams = $reflectionMethod->getParameters();
+                if (isset($reflectionParams[0])) {
+                    $paramType = $reflectionParams[0]->getType();
+                    if (($paramType !== null) && $reflectionParams[0]->isOptional()) {
+                        $paramType = '?'.$paramType;
+                    }
+                }
+
+                if ($paramType !== null) {
+                    $paramType = (string) $paramType;
+                }
+            } catch (\Exception $e) {
+            }
+
+            // check return type of method in interface and reuse it in the generated class
+            $returnType = null;
+            try {
+                $reflectionMethod = $sourceInterfaceReflection->getMethod('set' . ucfirst($propertyName));
+                $returnType = $reflectionMethod->getReturnType();
+            } catch (\Exception $e) {
+            }
+
             $generator->addMethodFromGenerator(
                 MethodGenerator::fromArray([
                     'name' => 'set' . ucfirst($propertyName),
-                    'parameters' => [$propertyName],
+                    'parameters' => [new ParameterGenerator($propertyName, $paramType)],
+                    'returntype' => $returnType,
                     'docblock' => DocBlockGenerator::fromArray([
                         'tags' => [
                             new ParamTag($propertyName, [$type]),
