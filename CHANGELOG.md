@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.26.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#276](https://github.com/bitExpert/phpstan-magento/pull/276) Check existing extension interface for types
+
 ## 0.25.0
 
 ### Added
