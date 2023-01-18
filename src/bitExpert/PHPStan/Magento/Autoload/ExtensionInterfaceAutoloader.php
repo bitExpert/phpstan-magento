@@ -90,7 +90,9 @@ class ExtensionInterfaceAutoloader implements Autoloader
 
         // Magento only creates extension attribute interfaces for existing interfaces; retain that logic
         if (!$this->classLoaderProvider->exists($sourceInterface)) {
-            throw new \InvalidArgumentException("${sourceInterface} does not exist and has no extension interface");
+            throw new \InvalidArgumentException(
+                sprintf('%s does not exist and has no extension interface', $sourceInterface)
+            );
         }
 
         $generator = new InterfaceGenerator();

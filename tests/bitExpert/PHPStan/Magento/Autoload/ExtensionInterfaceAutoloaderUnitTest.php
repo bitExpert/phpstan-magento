@@ -96,6 +96,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     public function autoloadDoesNotGenerateInterfaceWhenNoAttributesExist(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('NonExistentInterface does not exist and has no extension interface');
 
         $interfaceName = 'NonExistentExtensionInterface';
 
