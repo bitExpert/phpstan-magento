@@ -88,14 +88,15 @@ services:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
 		arguments:
 			cache: @autoloaderCache
-			attributeDataProvider: @extensionAttributeDataProvider
 			classLoaderProvider: @classLoaderProvider
+			attributeDataProvider: @extensionAttributeDataProvider
 		tags:
 			- phpstan.magento.autoloader
 	extensionAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionAutoloader
 		arguments:
 			cache: @autoloaderCache
+			classLoaderProvider: @classLoaderProvider
 			attributeDataProvider: @extensionAttributeDataProvider
 		tags:
 			- phpstan.magento.autoloader
