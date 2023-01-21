@@ -50,7 +50,7 @@ class ExtensionAttributeDataProvider
         foreach ($this->getExtensionAttributesXmlDocs() as $doc) {
             $xpath = new DOMXPath($doc);
             $attrs = $xpath->query(
-                "//extension_attributes[@for=\"${sourceInterface}\"]/attribute",
+                sprintf('//extension_attributes[@for="%s"]/attribute', $sourceInterface),
                 $doc->documentElement
             );
 
