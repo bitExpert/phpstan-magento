@@ -3,6 +3,7 @@
 namespace bitExpert\PHPStan\Magento\Autoload;
 
 use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
+use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use org\bovigo\vfs\vfsStream;
 use PHPStan\Cache\Cache;
@@ -15,6 +16,10 @@ class ExtensionAutoloaderUnitTest extends TestCase
      */
     private $cache;
     /**
+     * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $classLoader;
+    /**
      * @var ExtensionAttributeDataProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     private $extAttrDataProvider;
@@ -26,9 +31,11 @@ class ExtensionAutoloaderUnitTest extends TestCase
     protected function setUp(): void
     {
         $this->cache = $this->createMock(Cache::class);
+        $this->classLoader = $this->createMock(ClassLoaderProvider::class);
         $this->extAttrDataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
         $this->autoloader = new ExtensionAutoloader(
             $this->cache,
+            $this->classLoader,
             $this->extAttrDataProvider
         );
     }
@@ -38,6 +45,8 @@ class ExtensionAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutExtensionInterfacePostfix(): void
     {
+        $this->classLoader->expects(self::never())
+            ->method('findFile');
         $this->cache->expects(self::never())
             ->method('load');
 
@@ -47,8 +56,27 @@ class ExtensionAutoloaderUnitTest extends TestCase
     /**
      * @test
      */
+    public function autoloaderPrefersLocalFile(): void
+    {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(__DIR__ . '/HelperExtension.php');
+        $this->cache->expects(self::never())
+            ->method('load');
+
+        $this->autoloader->autoload(HelperExtension::class);
+
+        self::assertTrue(class_exists(HelperExtension::class, false));
+    }
+
+    /**
+     * @test
+     */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
         $this->cache->expects(self::once())
             ->method('load')
             ->willReturn(__DIR__ . '/HelperExtension.php');
@@ -66,6 +94,13 @@ class ExtensionAutoloaderUnitTest extends TestCase
      */
     public function autoloadGeneratesInterfaceWhenNotCached(): void
     {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
+        $this->extAttrDataProvider->expects(self::once())
+            ->method('getAttributesForInterface')
+            ->willReturn(['attr' => 'string']);
+
         $className = 'MyUncachedExtension';
         // since the generated class implements an interface, we need to make it available here, otherwise
         // the autoloader will fail with an exception that the interface can't be found!
@@ -73,11 +108,7 @@ class ExtensionAutoloaderUnitTest extends TestCase
 
         $root = vfsStream::setup('test');
         $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
-        $autoloader = new ExtensionAutoloader($cache, $this->extAttrDataProvider);
-
-        $this->extAttrDataProvider->expects(self::once())
-            ->method('getAttributesForInterface')
-            ->willReturn(['attr' => 'string']);
+        $autoloader = new ExtensionAutoloader($cache, $this->classLoader, $this->extAttrDataProvider);
 
         $autoloader->autoload($className);
         static::assertTrue(class_exists($className));

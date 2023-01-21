@@ -29,13 +29,13 @@ class ExtensionInterfaceAutoloader implements Autoloader
      */
     private $cache;
     /**
-     * @var ExtensionAttributeDataProvider
-     */
-    private $attributeDataProvider;
-    /**
      * @var ClassLoaderProvider
      */
     private $classLoaderProvider;
+    /**
+     * @var ExtensionAttributeDataProvider
+     */
+    private $attributeDataProvider;
 
     /**
      * ExtensionInterfaceAutoloader constructor.
@@ -46,12 +46,12 @@ class ExtensionInterfaceAutoloader implements Autoloader
      */
     public function __construct(
         Cache $cache,
-        ExtensionAttributeDataProvider $attributeDataProvider,
-        ClassLoaderProvider $classLoaderProvider
+        ClassLoaderProvider $classLoaderProvider,
+        ExtensionAttributeDataProvider $attributeDataProvider
     ) {
         $this->cache = $cache;
-        $this->attributeDataProvider = $attributeDataProvider;
         $this->classLoaderProvider = $classLoaderProvider;
+        $this->attributeDataProvider = $attributeDataProvider;
     }
 
     public function autoload(string $interfaceName): void

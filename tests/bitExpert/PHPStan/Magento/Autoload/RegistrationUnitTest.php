@@ -52,10 +52,15 @@ class RegistrationUnitTest extends TestCase
             [new MockAutoloader()],
             [new ProxyAutoloader($cache, $classLoader)],
             [new TestFrameworkAutoloader(__DIR__)],
+            [new ExtensionAutoloader(
+                $cache,
+                new ClassLoaderProvider(__DIR__),
+                new ExtensionAttributeDataProvider(__DIR__)
+            )],
             [new ExtensionInterfaceAutoloader(
                 $cache,
-                new ExtensionAttributeDataProvider(__DIR__),
-                new ClassLoaderProvider(__DIR__)
+                new ClassLoaderProvider(__DIR__),
+                new ExtensionAttributeDataProvider(__DIR__)
             )]
         ];
     }

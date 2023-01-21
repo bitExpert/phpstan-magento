@@ -23,7 +23,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     /**
      * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $classyDataProvider;
+    private $classLoader;
     /**
      * @var ExtensionInterfaceAutoloader
      */
@@ -32,12 +32,12 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
     protected function setUp(): void
     {
         $this->cache = $this->createMock(Cache::class);
+        $this->classLoader = $this->createMock(ClassLoaderProvider::class);
         $this->extAttrDataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
-        $this->classyDataProvider = $this->createMock(ClassLoaderProvider::class);
         $this->autoloader = new ExtensionInterfaceAutoloader(
             $this->cache,
-            $this->extAttrDataProvider,
-            $this->classyDataProvider
+            $this->classLoader,
+            $this->extAttrDataProvider
         );
     }
 
@@ -46,7 +46,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderIgnoresClassesWithoutExtensionInterfacePostfix(): void
     {
-        $this->classyDataProvider->expects(self::never())
+        $this->classLoader->expects(self::never())
             ->method('findFile');
         $this->cache->expects(self::never())
             ->method('load');
@@ -59,7 +59,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderPrefersLocalFile(): void
     {
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(__DIR__ . '/HelperExtensionInterface.php');
         $this->cache->expects(self::never())
@@ -75,7 +75,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
      */
     public function autoloaderUsesCachedFileWhenFound(): void
     {
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
         $this->cache->expects(self::once())
@@ -100,14 +100,14 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 
         $interfaceName = 'NonExistentExtensionInterface';
 
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
         $this->cache->expects(self::once())
             ->method('load')
             ->willReturn(null);
 
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('exists')
             ->willReturn(false);
 
@@ -123,13 +123,13 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
 
         $root = vfsStream::setup('test');
         $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
-        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->extAttrDataProvider, $this->classyDataProvider);
+        $autoloader = new ExtensionInterfaceAutoloader($cache, $this->classLoader, $this->extAttrDataProvider);
 
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
 
-        $this->classyDataProvider->expects(self::once())
+        $this->classLoader->expects(self::once())
             ->method('exists')
             ->willReturn(true);
 
