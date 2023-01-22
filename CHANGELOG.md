@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.28.0
+
+### Added
+
+- [#283](https://github.com/bitExpert/phpstan-magento/pull/283) Adds PHP 8.2 / Magento 2.4.6 support
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#284](https://github.com/bitExpert/phpstan-magento/pull/284) Ignore ext autoloader for local classes
+
 ## 0.27.0
 
 ### Added
