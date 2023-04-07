@@ -12,7 +12,11 @@ parametersSchema:
 	magento: structure([
 		checkCollectionViaFactory: bool()
 		checkServiceContracts: bool()
+		checkResourceModelsUsedDirectly: bool()
 		magentoRoot: string()
+	])
+	extdn: structure([
+		setTemplateDisallowedForBlockClasses: bool()
 	])
 
 conditionalTags:
