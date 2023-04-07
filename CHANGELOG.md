@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.30.0
+
+### Added
+
+- [#300](https://github.com/bitExpert/phpstan-magento/pull/300) Add rule "Disallow setTemplate() in Block classes"
+- [#299](https://github.com/bitExpert/phpstan-magento/pull/299) Add rule "resource models should be used directly"
+- [#298](https://github.com/bitExpert/phpstan-magento/pull/298) Add Magento 2.4.6 to CI pipeline
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.29.0
 
 ### Added
