@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.30.1
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#302](https://github.com/bitExpert/phpstan-magento/pull/302) Fix problem with parametersSchema
+
 ## 0.30.0
 
 ### Added
