@@ -53,5 +53,8 @@ parameters:
             message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php
         -
+            message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleBlock::__construct\(\) does not call parent constructor~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleBlock.php
+        -
             message: '~Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf~'
             path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
