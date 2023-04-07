@@ -61,6 +61,17 @@ parameters:
         checkServiceContracts: false
 ```
 
+### Resource Models should be used directly
+
+Since Magento framework version 100.1.0 it is no longer recommended to use `\Magento\Framework\Model\AbtractModel::getResource()` for retrieving the model resource. Use [service contracts](https://devdocs.magento.com/guides/v2.4/extension-dev-guide/service-contracts/service-contracts.html) instead.
+
+To disable this rule add the following code to your `phpstan.neon` configuration file:
+```neon
+parameters:
+    magento:
+        checkResourceModelsUsedDirectly: false
+```
+
 ### Collections should be used directly via factory
 
 Since Magento framework version 101.0.0 Collections should be used directly via factory instead of calling
