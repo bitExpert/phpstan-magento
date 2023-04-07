@@ -2,6 +2,7 @@ parameters:
 	magento:
 		checkCollectionViaFactory: true
 		checkServiceContracts: true
+		checkResourceModelsUsedDirectly: true
 		magentoRoot: %currentWorkingDirectory%
 	bootstrapFiles:
 		- magento-autoloader.php
@@ -17,7 +18,8 @@ conditionalTags:
 		phpstan.rules.rule: %magento.checkCollectionViaFactory%
 	bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule:
 		phpstan.rules.rule: %magento.checkServiceContracts%
-
+	bitExpert\PHPStan\Magento\Rules\ResourceModelsShouldBeUsedDirectlyRule:
+		phpstan.rules.rule: %magento.checkResourceModelsUsedDirectly%
 services:
 	-
 		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
@@ -43,6 +45,8 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelRetrieveCollectionViaFactoryRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
+	-
+		class: bitExpert\PHPStan\Magento\Rules\ResourceModelsShouldBeUsedDirectlyRule
 	fileCacheStorage:
 		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
 		arguments:
