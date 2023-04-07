@@ -73,7 +73,9 @@ This PHPStan extension works for both Magento module projects and Magento applic
 - Extension attributes
 - PHPStan rules
   - Service contracts
+  - Resource Models should be used directly
   - Collections should be used directly via factory
+  - Do not use setTemplate in Block classes
   
 For a detailed overview, check the feature documentation [here](docs/features.md).
 
