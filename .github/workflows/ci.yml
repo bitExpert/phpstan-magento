@@ -21,6 +21,9 @@ jobs:
           - php-versions: '8.1'
             magento: '2.4.5'
             operating-system: 'ubuntu-latest'
+          - php-versions: '8.1'
+            magento: '2.4.6'
+            operating-system: 'ubuntu-latest'
             coveralls: true
     steps:
       - name: Checkout repo
@@ -76,6 +79,10 @@ jobs:
       - name: Install Magento 2.4.5
         if: matrix.magento == '2.4.5'
         run: composer update --with-dependencies magento/framework:103.0.5 laminas/laminas-code:4.5.2 roave/security-advisories
+
+      - name: Install Magento 2.4.6
+        if: matrix.magento == '2.4.6'
+        run: composer update --with-dependencies magento/framework:103.0.6 laminas/laminas-code:4.10.0 roave/security-advisories
 
       - name: Composer license check
         run: composer check-license
