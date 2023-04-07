@@ -83,3 +83,14 @@ parameters:
     magento:
         checkCollectionViaFactory: false
 ```
+
+### Do not use setTemplate in Block classes
+
+As the [ExtDN](https://github.com/extdn/extdn-phpcs/blob/master/Extdn/Sniffs/Blocks/SetTemplateInBlockSniff.md) folks have put it: Setters are deprecated in Block classes, because constructor arguments should be preferred instead. Any call to `$this->setTemplate()` after calling upon the parent constructor would undo the configuration via XML layout.
+
+To disable this rule add the following code to your `phpstan.neon` configuration file:
+```neon
+parameters:
+    extdn:
+        setTemplateDisallowedForBlockClasses: false
+```

@@ -4,6 +4,8 @@ parameters:
 		checkServiceContracts: true
 		checkResourceModelsUsedDirectly: true
 		magentoRoot: %currentWorkingDirectory%
+	extdn:
+		setTemplateDisallowedForBlockClasses: true
 	bootstrapFiles:
 		- magento-autoloader.php
 parametersSchema:
@@ -20,6 +22,8 @@ conditionalTags:
 		phpstan.rules.rule: %magento.checkServiceContracts%
 	bitExpert\PHPStan\Magento\Rules\ResourceModelsShouldBeUsedDirectlyRule:
 		phpstan.rules.rule: %magento.checkResourceModelsUsedDirectly%
+	bitExpert\PHPStan\Magento\Rules\SetTemplateDisallowedForBlockRule:
+		phpstan.rules.rule: %extdn.setTemplateDisallowedForBlockClasses%
 services:
 	-
 		class: bitExpert\PHPStan\Magento\Type\ObjectManagerDynamicReturnTypeExtension
@@ -47,6 +51,8 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\AbstractModelUseServiceContractRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\ResourceModelsShouldBeUsedDirectlyRule
+	-
+		class: bitExpert\PHPStan\Magento\Rules\SetTemplateDisallowedForBlockRule
 	fileCacheStorage:
 		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
 		arguments:
