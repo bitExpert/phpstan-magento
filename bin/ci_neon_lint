@@ -13,6 +13,31 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+function convertToNetteSchemaElement($entity)
+{
+    $schema = [];
+
+    if ($entity instanceof \Nette\Neon\Entity) {
+        if (count($entity->attributes) === 0) {
+            return new \Nette\Schema\Elements\Type((string)$entity->value);
+        }
+
+        foreach($entity->attributes as $key => $value) {
+            if (is_array($value)) {
+                return convertToNetteSchemaElement($value);
+            } else {
+                $schema[$key] = new \Nette\Schema\Elements\Type($value);
+            }
+        }
+    } else if (is_array($entity)) {
+        foreach ($entity as $key => $value) {
+            $schema[$key] = convertToNetteSchemaElement($value);
+        }
+    }
+
+    return new \Nette\Schema\Elements\Structure($schema);
+}
+
 // this CLI script will lint all the .neon files in the repository
 
 $path = realpath(__DIR__ . '/../');
@@ -34,7 +59,24 @@ foreach ($it as $file) {
                 throw new \RuntimeException(sprintf('Class "%s" does not exist', $value));
             }
         });
-    } catch (Nette\Neon\Exception $e) {
+
+        if(isset($neon['parameters']) && isset($neon['parametersSchema'])) {
+            $schema = [];
+            foreach($neon['parametersSchema'] as $key => $item) {
+               $schema[$key] = convertToNetteSchemaElement($item);
+            }
+            $schema = new \Nette\Schema\Elements\Structure($schema);
+
+            // remove phpstam parameters to not trigger a failed schema validation
+            unset($neon['parameters']['bootstrapFiles']);
+
+            $processor = new \Nette\Schema\Processor();
+            $processor->process($schema, $neon['parameters']);
+        }
+    } catch (\Nette\Schema\ValidationException $e) {
+        $success = false;
+        echo sprintf("Schema validation failed: %s", $e->getMessage())."\n";
+    } catch (\Nette\Neon\Exception $e) {
         $success = false;
         $relPath = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getRealPath());
         echo sprintf('Failed parsing file "%s"', $relPath)."\n";
