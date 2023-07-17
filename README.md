@@ -30,7 +30,7 @@ composer.phar require --dev phpstan/extension-installer
 ```
 
 <details>
-  <summary>Composer Allow-PLugins configuration</summary>
+  <summary>Composer Allow-Plugins configuration</summary>
 
 If you're using Composer >= 2.2.0 you have to allow the execution of composer plugins ([see allow-plugins section](https://getcomposer.org/doc/06-config.md#allow-plugins)) as follows:
 
