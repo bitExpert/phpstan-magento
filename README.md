@@ -6,6 +6,7 @@ You can use this PHPStan extension for both Magento module projects and Magento 
 [![Build Status](https://github.com/bitExpert/phpstan-magento/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/phpstan-magento/actions)
 [![Coverage Status](https://coveralls.io/repos/github/bitExpert/phpstan-magento/badge.svg?branch=master)](https://coveralls.io/github/bitExpert/phpstan-magento?branch=master)
 [![installs on Packagist](https://img.shields.io/packagist/dt/bitExpert/phpstan-magento)](https://packagist.org/packages/bitExpert/phpstan-magento/)
+![Mastodon Follow](https://img.shields.io/mastodon/follow/109408681246972700?domain=https://rheinneckar.social)
 
 ## Requirements
 
