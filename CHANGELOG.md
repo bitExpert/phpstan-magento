@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.31
+
+### Added
+
+- [#318](https://github.com/bitExpert/phpstan-magento/pull/318) Update phpstan/phpstan requirement to ~1.11.1
+- [#308](https://github.com/bitExpert/phpstan-magento/pull/308) Update nikic/php-parser requirement to ^5.0.1
+- [#304](https://github.com/bitExpert/phpstan-magento/pull/304) Extend Neon validation logic for CI
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#306](https://github.com/bitExpert/phpstan-magento/pull/306) Fix typo
+
 ## 0.30.1
 
 ### Added
