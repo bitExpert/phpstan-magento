@@ -18,7 +18,6 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\ShouldNotHappenException;
 use PHPStan\Testing\RuleTestCase;
 
 /**
@@ -62,19 +61,6 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
         $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
 
         self::assertSame(MethodCall::class, $rule->getNodeType());
-    }
-    /**
-     * @test
-     */
-    public function processNodeThrowsExceptionForNonMethodCallNodes(): void
-    {
-        $this->expectException(ShouldNotHappenException::class);
-
-        $node = new Variable('var');
-        $scope = $this->createMock(Scope::class);
-
-        $rule = new GetCollectionMockMethodNeedsCollectionSubclassRule();
-        $rule->processNode($node, $scope);
     }
 
     /**

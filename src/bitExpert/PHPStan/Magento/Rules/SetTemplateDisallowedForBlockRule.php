@@ -16,7 +16,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\ShouldNotHappenException;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
 
@@ -37,18 +38,8 @@ class SetTemplateDisallowedForBlockRule implements Rule
         return MethodCall::class;
     }
 
-    /**
-     * @param Node $node
-     * @param Scope $scope
-     * @return (string|\PHPStan\Rules\RuleError)[] errors
-     * @throws ShouldNotHappenException
-     */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node instanceof MethodCall) {
-            throw new ShouldNotHappenException();
-        }
-
         if (!$node->name instanceof Node\Identifier) {
             return [];
         }
@@ -64,11 +55,15 @@ class SetTemplateDisallowedForBlockRule implements Rule
         }
 
         return [
-            sprintf(
-                'Setter methods like %s::%s() are deprecated in Block classes, use constructor arguments instead',
-                $type->describe(VerbosityLevel::typeOnly()),
-                $node->name->name
+            RuleErrorBuilder::message(
+                sprintf(
+                    'Setter methods like %s::%s() are deprecated in Block classes, use constructor arguments instead',
+                    $type->describe(VerbosityLevel::typeOnly()),
+                    $node->name->name
+                )
             )
+            ->identifier('bitExpertMagento.setTemplateDisallowedForBlock')
+            ->build()
         ];
     }
 }

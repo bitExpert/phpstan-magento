@@ -17,7 +17,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\ShouldNotHappenException;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\ObjectType;
@@ -38,18 +39,8 @@ class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
         return MethodCall::class;
     }
 
-    /**
-     * @param Node $node
-     * @param Scope $scope
-     * @return (string|\PHPStan\Rules\RuleError)[] errors
-     * @throws ShouldNotHappenException
-     */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node instanceof MethodCall) {
-            throw new ShouldNotHappenException();
-        }
-
         if (!$node->name instanceof Node\Identifier) {
             return [];
         }
@@ -78,11 +69,16 @@ class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
         $args = $node->args;
         /** @var ConstantStringType $argType */
         $argType = $scope->getType($args[0]->value);
+
         return [
-            sprintf(
-                '%s does not extend \Magento\Framework\Data\Collection as required!',
-                $argType->getValue()
+            RuleErrorBuilder::message(
+                sprintf(
+                    '%s does not extend \Magento\Framework\Data\Collection as required!',
+                    $argType->getValue()
+                )
             )
+            ->identifier('bitExpertMagento.getCollectionMockMethodNeedsCollectionSubclass')
+            ->build()
         ];
     }
 }

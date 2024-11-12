@@ -16,7 +16,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\ShouldNotHappenException;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
 
@@ -36,18 +37,8 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
         return MethodCall::class;
     }
 
-    /**
-     * @param Node $node
-     * @param Scope $scope
-     * @return (string|\PHPStan\Rules\RuleError)[] errors
-     * @throws ShouldNotHappenException
-     */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node instanceof MethodCall) {
-            throw new ShouldNotHappenException();
-        }
-
         if (!$node->name instanceof Node\Identifier) {
             return [];
         }
@@ -63,11 +54,15 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
         }
 
         return [
-            sprintf(
-                'Collections should be used directly via factory, not via %s::%s() method',
-                $type->describe(VerbosityLevel::typeOnly()),
-                $node->name->name
+            RuleErrorBuilder::message(
+                sprintf(
+                    'Collections should be used directly via factory, not via %s::%s() method',
+                    $type->describe(VerbosityLevel::typeOnly()),
+                    $node->name->name
+                )
             )
+            ->identifier('bitExpertMagento.abstractModelRetrieveCollectionViaFactory')
+            ->build()
         ];
     }
 }
