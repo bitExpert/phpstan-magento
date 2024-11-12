@@ -92,10 +92,16 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtension implements DynamicMet
         /** @var \PhpParser\Node\Arg[] $args */
         $args = $methodCall->args;
         $argType = $scope->getType($args[0]->value);
-        if (!$argType instanceof ConstantStringType) {
+        if ($argType->getConstantStrings() === []) {
             return $mixedType;
         }
-        return TypeCombinator::addNull(new ObjectType($argType->getValue()));
+
+        $types = [];
+        foreach ($argType->getConstantStrings() as $constantString) {
+            $types[] = TypeCombinator::addNull(new ObjectType($constantString->getValue()));
+        }
+
+        return TypeCombinator::union(...$types);
     }
 
     /**
