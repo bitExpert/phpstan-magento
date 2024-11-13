@@ -110,7 +110,9 @@ class ProxyAutoloader implements Autoloader
                                 $defaultValue = ' = false';
                                 break;
                             default:
-                                $defaultValue = ' = ' . $parameter->getDefaultValue();
+                                if (is_string($parameter->getDefaultValue())) {
+                                    $defaultValue = ' = ' . $parameter->getDefaultValue();
+                                }
                                 break;
                         }
                     }

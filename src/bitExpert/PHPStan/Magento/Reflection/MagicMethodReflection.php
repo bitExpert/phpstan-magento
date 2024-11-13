@@ -28,7 +28,7 @@ class MagicMethodReflection implements MethodReflection
      */
     private $declaringClass;
     /**
-     * @var ParametersAcceptor[]
+     * @var list<ParametersAcceptor>
      */
     private $variants;
 
@@ -37,7 +37,7 @@ class MagicMethodReflection implements MethodReflection
      *
      * @param string $name
      * @param ClassReflection $declaringClass
-     * @param ParametersAcceptor[] $variants
+     * @param list<ParametersAcceptor> $variants
      */
     public function __construct(string $name, ClassReflection $declaringClass, array $variants = [])
     {

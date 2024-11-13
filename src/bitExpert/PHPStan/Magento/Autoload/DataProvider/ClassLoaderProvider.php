@@ -30,6 +30,7 @@ class ClassLoaderProvider
         $this->composer = new ClassLoader($magentoRoot . '/vendor');
         $autoloadFile = $magentoRoot . '/vendor/composer/autoload_namespaces.php';
         if (is_file($autoloadFile)) {
+            /** @var array<string, string> $map */
             $map = require $autoloadFile;
             foreach ($map as $namespace => $path) {
                 $this->composer->set($namespace, $path);
@@ -38,6 +39,7 @@ class ClassLoaderProvider
 
         $autoloadFile = $magentoRoot . '/vendor/composer/autoload_psr4.php';
         if (is_file($autoloadFile)) {
+            /** @var array<string, string> $map */
             $map = require $autoloadFile;
             foreach ($map as $namespace => $path) {
                 $this->composer->setPsr4($namespace, $path);
@@ -46,6 +48,7 @@ class ClassLoaderProvider
 
         $autoloadFile = $magentoRoot . '/vendor/composer/autoload_classmap.php';
         if (is_file($autoloadFile)) {
+            /** @var ?array<string, string> $classMap */
             $classMap = require $autoloadFile;
             if (is_array($classMap)) {
                 $this->composer->addClassMap($classMap);
