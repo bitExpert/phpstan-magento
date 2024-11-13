@@ -79,6 +79,7 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends PHPSt
         $scope = $this->createMock(Scope::class);
         $methodCall = $this->createMock(MethodCall::class);
         $methodCall->args = [];
+        $methodCall->name = new \PhpParser\Node\Identifier('somethingUnknown');
 
         $resultType = $this->extension->getTypeFromMethodCall($methodReflection, $methodCall, $scope);
 
