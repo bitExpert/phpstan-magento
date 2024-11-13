@@ -37,7 +37,7 @@
     "magento/framework": ">=102.0.0",
     "mikey179/vfsstream": "^1.6.10",
     "nette/neon": "^3.3.3",
-    "nikic/php-parser": "^4.13.2",
+    "nikic/php-parser": "^5.3",
     "phpstan/extension-installer": "^1.1.0",
     "phpstan/phpstan-phpunit": "^2.0",
     "phpstan/phpstan-strict-rules": "^2.0",
