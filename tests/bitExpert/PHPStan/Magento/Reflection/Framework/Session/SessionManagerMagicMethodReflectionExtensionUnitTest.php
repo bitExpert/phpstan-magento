@@ -33,7 +33,7 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->markTestSkipped('TODO: solve issue with final class ClassReflection');
+        self::markTestSkipped('TODO: solve issue with final class ClassReflection');
 
         $this->extension = new SessionManagerMagicMethodReflectionExtension();
         $this->classReflection = $this->createMock(ClassReflection::class);

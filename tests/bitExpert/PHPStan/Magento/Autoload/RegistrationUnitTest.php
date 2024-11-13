@@ -21,20 +21,19 @@ class RegistrationUnitTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider provideAutoloaders()
+     * @dataProvider provideAutoloaders
      */
     public function autoloadersCanRegisterAndUnregister(Autoloader $autoloader): void
     {
-        /** @var array<callable> $initialAutoloadFunctions */
         $initialAutoloadFunctions = spl_autoload_functions();
 
         $autoloader->register();
-        /** @var array<callable> $registerAutoloadFunctions */
+
         $registerAutoloadFunctions = spl_autoload_functions();
         static::assertCount(count($initialAutoloadFunctions) + 1, $registerAutoloadFunctions);
 
         $autoloader->unregister();
-        /** @var array<callable> $unregisterAutoloadFunctions */
+
         $unregisterAutoloadFunctions = spl_autoload_functions();
         static::assertCount(count($initialAutoloadFunctions), $unregisterAutoloadFunctions);
     }

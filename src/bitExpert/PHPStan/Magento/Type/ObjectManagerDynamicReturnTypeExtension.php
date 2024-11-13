@@ -24,9 +24,6 @@ use PHPStan\Type\TypeCombinator;
 
 class ObjectManagerDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
-    /**
-     * @return string
-     */
     public function getClass(): string
     {
         return 'Magento\Framework\App\ObjectManager';

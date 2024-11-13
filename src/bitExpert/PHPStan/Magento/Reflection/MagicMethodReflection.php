@@ -76,9 +76,6 @@ class MagicMethodReflection implements MethodReflection
         return $this;
     }
 
-    /**
-     * @return ParametersAcceptor[]
-     */
     public function getVariants(): array
     {
         return $this->variants;
