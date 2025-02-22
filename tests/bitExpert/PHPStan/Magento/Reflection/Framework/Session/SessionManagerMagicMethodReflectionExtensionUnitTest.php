@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace bitExpert\PHPStan\Magento\Reflection\Framework\Session;
 
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\StringType;
-use PHPUnit\Framework\TestCase;
 
-class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
+class SessionManagerMagicMethodReflectionExtensionUnitTest extends PHPStanTestCase
 {
 
     /**
@@ -27,14 +28,16 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
     private $extension;
 
     /**
-     * @var ClassReflection|\PHPUnit\Framework\MockObject\MockObject
+     * @var ClassReflection
      */
     private $classReflection;
 
     protected function setUp(): void
     {
+        /** @var ReflectionProvider $reflectionProvider */
+        $reflectionProvider = $this->getContainer()->getService('reflectionProvider');
+        $this->classReflection = $reflectionProvider->getClass(SessionManagerHelper::class);
         $this->extension = new SessionManagerMagicMethodReflectionExtension();
-        $this->classReflection = $this->createMock(ClassReflection::class);
     }
 
     /**
@@ -78,10 +81,6 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends TestCase
      */
     public function hasMethodDetectSessionManager(string $method, bool $expectedResult): void
     {
-        $this->classReflection->expects(self::once())
-            ->method('isSubclassOf')
-            ->willReturn(true);
-
         self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
     }
 

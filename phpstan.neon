@@ -29,6 +29,15 @@ parameters:
             message: '~is not covered by backward compatibility promise.~'
             path: src/bitExpert/PHPStan/Magento/Reflection/AbstractMagicMethodReflectionExtension.php
         -
+            message: '~PHPDoc tag @var assumes the expression with type~'
+            path: 'src/bitExpert/PHPStan/Magento/Rules/GetCollectionMockMethodNeedsCollectionSubclassRule.php'
+        -
+            message: '~PHPDoc tag @var assumes the expression with type~'
+            path: 'src/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtension.php'
+        -
+            message: '~Function is_subclass_of\(\) is a runtime reflection concept that might not work in PHPStan~'
+            path: 'src/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtension.php'
+        -
             message: '~is not covered by backward compatibility promise.~'
             path: tests/bitExpert/PHPStan/Magento/Autoload/FactoryAutoloaderUnitTest.php
         -
@@ -57,4 +66,7 @@ parameters:
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleBlock.php
         -
             message: '~Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf~'
+            path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
+        -
+            message: '~PHPDoc tag @var assumes the expression with type~'
             path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
