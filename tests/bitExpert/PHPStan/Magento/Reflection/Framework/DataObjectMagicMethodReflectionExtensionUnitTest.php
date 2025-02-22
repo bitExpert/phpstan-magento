@@ -13,15 +13,16 @@ declare(strict_types=1);
 namespace bitExpert\PHPStan\Magento\Reflection\Framework;
 
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\ShouldNotHappenException;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\UnionType;
-use PHPUnit\Framework\TestCase;
 
-class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
+class DataObjectMagicMethodReflectionExtensionUnitTest extends PHPStanTestCase
 {
     /**
      * @var DataObjectMagicMethodReflectionExtension
@@ -29,16 +30,17 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
     private $extension;
 
     /**
-     * @var ClassReflection|\PHPUnit\Framework\MockObject\MockObject
+     * @var ClassReflection
      */
     private $classReflection;
 
     protected function setUp(): void
     {
-        self::markTestSkipped('TODO: solve issue with final class ClassReflection');
+        /** @var ReflectionProvider $reflectionProvider */
+        $reflectionProvider = $this->getContainer()->getService('reflectionProvider');
+        $this->classReflection = $reflectionProvider->getClass(DataObjectHelper::class);
 
         $this->extension = new DataObjectMagicMethodReflectionExtension();
-        $this->classReflection = $this->createMock(ClassReflection::class);
     }
 
     /**
@@ -172,13 +174,6 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
      */
     public function hasMethodDetectsDataObjectClass(string $method, bool $expectedResult): void
     {
-        $this->classReflection->expects(self::once())
-            ->method('getParentClassesNames')
-            ->willReturn([]);
-        $this->classReflection->expects(self::once())
-            ->method('getName')
-            ->willReturn('Magento\Framework\DataObject');
-
         self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
     }
 
@@ -190,13 +185,6 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends TestCase
      */
     public function hasMethodDetectsDataObjectParentClass(string $method, bool $expectedResult): void
     {
-        $this->classReflection->expects(self::once())
-            ->method('getParentClassesNames')
-            ->willReturn(['Magento\Framework\DataObject']);
-        $this->classReflection->expects(self::once())
-            ->method('getName')
-            ->willReturn('Magento\Framework\Shell\Response');
-
         self::assertSame($expectedResult, $this->extension->hasMethod($this->classReflection, $method));
     }
 

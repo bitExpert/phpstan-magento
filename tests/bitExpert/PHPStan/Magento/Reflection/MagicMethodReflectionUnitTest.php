@@ -12,19 +12,20 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Reflection;
 
-use PHPStan\Reflection\ClassReflection;
-use PHPUnit\Framework\TestCase;
+use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Testing\PHPStanTestCase;
+use PHPStan\TrinaryLogic;
 
-class MagicMethodReflectionUnitTest extends TestCase
+class MagicMethodReflectionUnitTest extends PHPStanTestCase
 {
     /**
      * @test
      */
     public function magicMethodReflectionCreation(): void
     {
-        self::markTestSkipped('TODO: solve issue with final class ClassReflection');
-
-        $classReflection = $this->createMock(ClassReflection::class);
+        /** @var ReflectionProvider $reflectionProvider */
+        $reflectionProvider = $this->getContainer()->getService('reflectionProvider');
+        $classReflection = $reflectionProvider->getClass('Magento\Framework\App\RequestInterface');
         $methodName = 'myTestMethod';
         $variants = [];
 
@@ -38,10 +39,10 @@ class MagicMethodReflectionUnitTest extends TestCase
         self::assertSame($reflection, $reflection->getPrototype());
         self::assertSame($variants, $reflection->getVariants());
         self::assertNull($reflection->getDocComment());
-        self::assertSame(\PHPStan\TrinaryLogic::createNo(), $reflection->isDeprecated());
+        self::assertSame(TrinaryLogic::createNo(), $reflection->isDeprecated());
         self::assertSame('', $reflection->getDeprecatedDescription());
-        self::assertSame(\PHPStan\TrinaryLogic::createNo(), $reflection->isFinal());
-        self::assertSame(\PHPStan\TrinaryLogic::createNo(), $reflection->isInternal());
+        self::assertSame(TrinaryLogic::createNo(), $reflection->isFinal());
+        self::assertSame(TrinaryLogic::createNo(), $reflection->isInternal());
         self::assertNull($reflection->getThrowType());
     }
 
@@ -49,15 +50,15 @@ class MagicMethodReflectionUnitTest extends TestCase
      * @test
      * @dataProvider sideeffectsDataprovider
      * @param string $methodName
-     * @param \PHPStan\TrinaryLogic $expectedResult
+     * @param TrinaryLogic $expectedResult
      */
     public function magicMethodReflectionCreationSideeffects(
         string $methodName,
-        \PHPStan\TrinaryLogic $expectedResult
+        TrinaryLogic $expectedResult
     ): void {
-        self::markTestSkipped('TODO: solve issue with final class ClassReflection');
-
-        $classReflection = $this->createMock(ClassReflection::class);
+        /** @var ReflectionProvider $reflectionProvider */
+        $reflectionProvider = $this->getContainer()->getService('reflectionProvider');
+        $classReflection = $reflectionProvider->getClass('Magento\Framework\App\RequestInterface');
         $variants = [];
 
         $reflection = new MagicMethodReflection($methodName, $classReflection, $variants);
@@ -70,11 +71,11 @@ class MagicMethodReflectionUnitTest extends TestCase
     public function sideeffectsDataprovider(): array
     {
         return [
-            ['getTest', \PHPStan\TrinaryLogic::createNo()],
-            ['setTest', \PHPStan\TrinaryLogic::createYes()],
-            ['unsetTest', \PHPStan\TrinaryLogic::createYes()],
-            ['hasText', \PHPStan\TrinaryLogic::createNo()],
-            ['someOtherMethod', \PHPStan\TrinaryLogic::createNo()],
+            ['getTest', TrinaryLogic::createNo()],
+            ['setTest', TrinaryLogic::createYes()],
+            ['unsetTest', TrinaryLogic::createYes()],
+            ['hasText', TrinaryLogic::createNo()],
+            ['someOtherMethod', TrinaryLogic::createNo()],
         ];
     }
 }
