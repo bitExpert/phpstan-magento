@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.40
+
+### Added
+
+- [#334](https://github.com/bitExpert/phpstan-magento/pull/334) PHPStan 2.0 compatibility
+- [#332](https://github.com/bitExpert/phpstan-magento/pull/332) Add support for symfony/finder 7+
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 0.32
 
 ### Added
