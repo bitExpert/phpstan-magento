@@ -38,6 +38,10 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
+	    class: bitExpert\PHPStan\Magento\Type\ControllerResultFactoryReturnTypeExtension
+	    tags:
+	        - phpstan.broker.dynamicMethodReturnTypeExtension
+	-
 		class: bitExpert\PHPStan\Magento\Reflection\Framework\Session\SessionManagerMagicMethodReflectionExtension
 		tags:
 			- phpstan.broker.methodsClassReflectionExtension
