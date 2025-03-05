@@ -24,6 +24,9 @@ Additionally, a PHPStan rule checks that only `Magento\Framework\Data\Collection
 ### ObjectManager type hints
 A type extension is provided so that `Magento\Framework\App\ObjectManager` method calls do return the correct return type.
 
+### ResultFactory type hints
+Correct type is returned from `Magento\Framework\Controller\ResultFactory` based on passed parameter.
+
 ## Magic method calls
 For some classes like `Magento\Framework\DataObject` or `Magento\Framework\Session\SessionManager` PHPStan logic is provided
 to be able to let the magic method calls return proper types.

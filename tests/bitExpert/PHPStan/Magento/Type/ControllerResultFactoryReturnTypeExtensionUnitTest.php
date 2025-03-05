@@ -40,7 +40,7 @@ class ControllerResultFactoryReturnTypeExtensionUnitTest extends PHPStanTestCase
     {
         return [
             ['TYPE_JSON', 'Magento\Framework\Controller\Result\Json'],
-            ['TYPE_PAGE', 'Magento\Framework\View\Result\Page'],
+            ['TYPE_PAGE', 'Magento\Framework\View\Result\Page']
         ];
     }
 
