@@ -2,7 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 0.40
+## 0.41.0
+
+### Added
+
+- [#338](https://github.com/bitExpert/phpstan-magento/pull/338) Feature/type for controller result factory
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
+## 0.40.0
 
 ### Added
 
@@ -21,7 +39,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 0.32
+## 0.32.0
 
 ### Added
 
@@ -39,7 +57,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 0.31
+## 0.31.0
 
 ### Added
 
