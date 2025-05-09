@@ -111,7 +111,7 @@ class ProxyAutoloader implements Autoloader
                                 break;
                             default:
                                 if (is_string($parameter->getDefaultValue())) {
-                                    $defaultValue = ' = ' . $parameter->getDefaultValue();
+                                    $defaultValue = ' = \'' . $parameter->getDefaultValue() . '\'';
                                 }
                                 break;
                         }
