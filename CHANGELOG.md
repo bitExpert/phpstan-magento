@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.42.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#340](https://github.com/bitExpert/phpstan-magento/pull/340) fix: error where scopeConfig proxy would get $scopeType = default
+
 ## 0.41.0
 
 ### Added
