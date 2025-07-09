@@ -29,8 +29,7 @@ use ReflectionUnionType;
  */
 class InterceptorAutoloader implements Autoloader
 {
-    use GetParameterClassTrait,
-        GetReflectionMethodReturnTypeValueTrait;
+    use GetParameterClassTrait;
 
     public function __construct(private Cache $cache, private ClassLoaderProvider $classLoaderProvider)
     {
@@ -272,6 +271,45 @@ METHOD_BODY
     protected function _getFullyQualifiedClassName(string $className): string
     {
         return $className !== '' ? '\\' . ltrim($className, '\\') : '';
+    }
+
+    private function getReturnTypeValue(\ReflectionMethod $method): ?string
+    {
+        $returnTypeValue = null;
+        $returnType = $method->getReturnType();
+        if ($returnType !== null) {
+            if ($returnType instanceof ReflectionUnionType || $returnType instanceof ReflectionIntersectionType) {
+                return $this->getReturnTypeValues($returnType);
+            }
+            if (!$returnType instanceof \ReflectionNamedType) {
+                return null;
+            }
+
+            $className = $method->getDeclaringClass()->getName();
+            $returnTypeValue = ($returnType->allowsNull() && $returnType->getName() !== 'mixed' ? '?' : '');
+            $returnTypeValue .= ($returnType->getName() === 'self')
+                ? ltrim($className, '\\')
+                : $returnType->getName();
+        }
+
+        return $returnTypeValue;
+    }
+
+    private function getReturnTypeValues(
+        ReflectionIntersectionType|ReflectionUnionType $returnType,
+    ): string {
+        $returnTypeValue = [];
+
+        foreach ($returnType->getTypes() as $type) {
+            if ($type instanceof ReflectionNamedType) {
+                $returnTypeValue[] = $type->getName();
+            }
+        }
+
+        return implode(
+            $returnType instanceof ReflectionUnionType ? '|' : '&',
+            $returnTypeValue
+        );
     }
 
     public function register(): void
