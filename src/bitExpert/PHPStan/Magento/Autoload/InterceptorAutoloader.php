@@ -7,6 +7,10 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * This file uses modified excerpts from the Magento Framework.  That code
+ * is Copyright Magento, Inc.  which is licensed under OSL 3.0. You can
+ * contact license@magentocommerce.com for a copy.
  */
 declare(strict_types=1);
 
@@ -16,7 +20,6 @@ use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use Laminas\Code\Generator\ValueGenerator;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Magento\Framework\GetParameterClassTrait;
-use Magento\Framework\GetReflectionMethodReturnTypeValueTrait;
 use PHPStan\Cache\Cache;
 use ReflectionClass;
 use ReflectionIntersectionType;
