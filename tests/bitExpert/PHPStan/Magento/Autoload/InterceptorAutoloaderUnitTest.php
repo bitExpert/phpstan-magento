@@ -15,35 +15,27 @@ namespace bitExpert\PHPStan\Magento\Autoload;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use PHPStan\Cache\Cache;
 use PHPStan\Cache\CacheStorage;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ProxyAutoloaderUnitTest extends TestCase
+class InterceptorAutoloaderUnitTest extends TestCase
 {
-    /**
-     * @var CacheStorage|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $storage;
-    /**
-     * @var ProxyAutoloader
-     */
-    private $autoloader;
-    /**
-     * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $classLoader;
+    private CacheStorage&MockObject $storage;
+    private ClassLoaderProvider&MockObject $classLoader;
+    private InterceptorAutoloader $autoloader;
 
     public function setUp(): void
     {
         $this->storage = $this->createMock(CacheStorage::class);
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
 
-        $this->autoloader = new ProxyAutoloader(new Cache($this->storage), $this->classLoader);
+        $this->autoloader = new InterceptorAutoloader(new Cache($this->storage), $this->classLoader);
     }
 
     /**
      * @test
      */
-    public function autoloaderIgnoresClassesWithoutProxyPostfix(): void
+    public function autoloaderIgnoresClassesWithoutInterceptorPostfix(): void
     {
         $this->classLoader->expects(self::never())
             ->method('findFile');
@@ -60,13 +52,13 @@ class ProxyAutoloaderUnitTest extends TestCase
     {
         $this->classLoader->expects(self::once())
             ->method('findFile')
-            ->willReturn(__DIR__ . '/HelperProxy.php');
+            ->willReturn(__DIR__ . '/HelperInterceptor.php');
         $this->storage->expects(self::never())
             ->method('load');
 
-        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
+        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Interceptor');
 
-        self::assertTrue(class_exists(HelperProxy::class, false));
+        self::assertTrue(class_exists(HelperInterceptor::class, false));
     }
 
     /**
@@ -79,11 +71,11 @@ class ProxyAutoloaderUnitTest extends TestCase
             ->willReturn(false);
         $this->storage->expects(self::once())
             ->method('load')
-            ->willReturn(__DIR__ . '/HelperProxy.php');
+            ->willReturn(__DIR__ . '/HelperInterceptor.php');
 
-        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
+        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Interceptor');
 
-        self::assertTrue(class_exists(HelperProxy::class, false));
+        self::assertTrue(class_exists(HelperInterceptor::class, false));
     }
 
     /**
@@ -96,12 +88,12 @@ class ProxyAutoloaderUnitTest extends TestCase
             ->willReturn(false);
         $this->storage->expects(self::atMost(2))
             ->method('load')
-            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperProxy.php');
+            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperInterceptor.php');
         $this->storage->expects(self::once())
             ->method('save');
 
-        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
+        $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Interceptor');
 
-        self::assertTrue(class_exists(HelperProxy::class, false));
+        self::assertTrue(class_exists(HelperInterceptor::class, false));
     }
 }
