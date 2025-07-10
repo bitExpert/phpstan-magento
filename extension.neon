@@ -102,6 +102,13 @@ services:
 			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader
+	interceptorAutoloader:
+		class: bitExpert\PHPStan\Magento\Autoload\InterceptorAutoloader
+		arguments:
+			cache: @autoloaderCache
+			classLoaderProvider: @classLoaderProvider
+		tags:
+			- phpstan.magento.autoloader
 	extensionInterfaceAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
 		arguments:
