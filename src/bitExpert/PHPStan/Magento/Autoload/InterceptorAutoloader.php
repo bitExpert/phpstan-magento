@@ -76,7 +76,7 @@ class InterceptorAutoloader implements Autoloader
         $originalClassname = implode('\\', $namespace);
 
         if (!class_exists($originalClassname)) {
-            throw new \RuntimeException("Class ${class} for Interceptor does not exist");
+            throw new \RuntimeException("Class ${originalClassname} for Interceptor does not exist");
         }
         $reflectionClass = new ReflectionClass($originalClassname);
 
@@ -90,12 +90,20 @@ class InterceptorAutoloader implements Autoloader
 
         $generator = new ClassGenerator();
         $generator->setName($class)
-            ->setExtendedClass($originalClassname)
-            ->addProperties([])
             ->addMethods($methods);
 
+        $interfaces = [];
+        if ($reflectionClass->isInterface()) {
+            $interfaces[] = $originalClassname;
+        } else {
+            $generator->setExtendedClass($originalClassname);
+        }
+        $generator->addTrait('\\' . \Magento\Framework\Interception\Interceptor::class);
+        $interfaces[] = '\\' . \Magento\Framework\Interception\InterceptorInterface::class;
+        $generator->setImplementedInterfaces($interfaces);
+
         $code = $generator->generate();
-        return $this->_fixCodeStyle($code);
+        return '<?php'.PHP_EOL.PHP_EOL.$this->_fixCodeStyle($code);
     }
 
     protected function _fixCodeStyle(string $sourceCode): string
