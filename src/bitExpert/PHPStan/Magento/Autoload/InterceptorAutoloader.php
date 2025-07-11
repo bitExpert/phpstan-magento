@@ -90,6 +90,7 @@ class InterceptorAutoloader implements Autoloader
 
         $generator = new ClassGenerator();
         $generator->setName($class)
+            ->setExtendedClass($originalClassname)
             ->addProperties([])
             ->addMethods($methods);
 
@@ -213,7 +214,7 @@ METHOD_BODY
             array_map(
                 function ($item) {
                     $output = '';
-                    if (!isset($item['variadic'])) {
+                    if (isset($item['variadic']) && $item['variadic']) {
                         $output .= '... ';
                     }
 
