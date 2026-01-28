@@ -65,6 +65,7 @@ services:
 		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
 		arguments:
 			directory: %tmpDir%/cache/PHPStan
+			magentoRoot: %magento.magentoRoot%
 	autoloaderCache:
 		autowired: false
 		class: PHPStan\Cache\Cache
