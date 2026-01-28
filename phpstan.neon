@@ -70,3 +70,15 @@ parameters:
         -
             message: '~PHPDoc tag @var assumes the expression with type~'
             path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
+        -
+            message: '~Parameter \#1 \$key of method PHPStan\\Cache\\Cache\:\:(?:load|save)\(\) expects non\-empty\-string, string given\.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ExtensionAutoloader.php
+        -
+            message: '~Parameter \#1 \$key of method PHPStan\\Cache\\Cache\:\:(?:load|save)\(\) expects non\-empty\-string, string given\.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ExtensionInterfaceAutoloader.php
+        -
+            message: '~Parameter \#1 \$key of method PHPStan\\Cache\\Cache\:\:(?:load|save)\(\) expects non\-empty\-string, string given\.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/FactoryAutoloader.php
+        -
+            message: '~Parameter \#1 \$key of method PHPStan\\Cache\\Cache\:\:(?:load|save)\(\) expects non\-empty\-string, string given\.~'
+            path: src/bitExpert/PHPStan/Magento/Autoload/ProxyAutoloader.php
