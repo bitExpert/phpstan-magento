@@ -1,3 +1,4 @@
+---
 name: ci
 on:
   pull_request:
@@ -11,12 +12,12 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['8.1']
-        magento: ['2.4.4', '2.4.5']
-        coveralls: [ false ]
+        php-versions: ['8.2']
+        magento: ['2.4.6', '2.4.7']
+        coveralls: [false]
         include:
-          - php-versions: '8.1'
-            magento: '2.4.6'
+          - php-versions: '8.2'
+            magento: '2.4.8'
             operating-system: 'ubuntu-latest'
             coveralls: true
     steps:
@@ -34,17 +35,17 @@ jobs:
       - name: Install Composer dependencies
         run: composer install
 
-      - name: Install Magento 2.4.4
-        if: matrix.magento == '2.4.4'
-        run: composer update --no-security-blocking --with-dependencies magento/framework:103.0.4 laminas/laminas-code:4.5.1 symfony/yaml symfony/console madewithlove/license-checker
-
-      - name: Install Magento 2.4.5
-        if: matrix.magento == '2.4.5'
-        run: composer update --no-security-blocking --with-dependencies magento/framework:103.0.5 laminas/laminas-code:4.5.2 roave/security-advisories symfony/yaml symfony/console madewithlove/license-checker
-
       - name: Install Magento 2.4.6
         if: matrix.magento == '2.4.6'
-        run: composer update --no-security-blocking --with-dependencies magento/framework:103.0.6 laminas/laminas-code:4.10.0 roave/security-advisories symfony/yaml symfony/console madewithlove/license-checker
+        run: composer update --with-dependencies magento/framework:103.0.6-p13 laminas/laminas-code:4.17.0 roave/security-advisories symfony/yaml symfony/console madewithlove/license-checker
+
+      - name: Install Magento 2.4.7
+        if: matrix.magento == '2.4.7'
+        run: composer update --with-dependencies magento/framework:103.0.7-p8 laminas/laminas-code:4.17.0 roave/security-advisories symfony/yaml symfony/console madewithlove/license-checker
+
+      - name: Install Magento 2.4.8
+        if: matrix.magento == '2.4.8'
+        run: composer update --with-dependencies magento/framework:103.0.8-p3 laminas/laminas-code:4.17.0 roave/security-advisories symfony/yaml symfony/console madewithlove/license-checker
 
       - name: Composer license check
         run: composer check-license
