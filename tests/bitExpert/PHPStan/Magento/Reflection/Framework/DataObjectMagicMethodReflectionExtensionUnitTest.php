@@ -41,6 +41,8 @@ class DataObjectMagicMethodReflectionExtensionUnitTest extends PHPStanTestCase
         $this->classReflection = $reflectionProvider->getClass(DataObjectHelper::class);
 
         $this->extension = new DataObjectMagicMethodReflectionExtension();
+
+        parent::setUp();
     }
 
     /**

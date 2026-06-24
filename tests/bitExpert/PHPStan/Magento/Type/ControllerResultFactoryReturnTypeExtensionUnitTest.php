@@ -31,6 +31,8 @@ class ControllerResultFactoryReturnTypeExtensionUnitTest extends PHPStanTestCase
     protected function setUp(): void
     {
         $this->extension = new ControllerResultFactoryReturnTypeExtension();
+
+        parent::setUp();
     }
 
     /**
