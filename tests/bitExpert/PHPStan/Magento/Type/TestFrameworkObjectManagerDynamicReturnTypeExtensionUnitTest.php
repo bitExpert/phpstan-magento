@@ -42,6 +42,8 @@ class TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest extends PHPSt
     protected function setUp(): void
     {
         $this->extension = new TestFrameworkObjectManagerDynamicReturnTypeExtension();
+
+        parent::setUp();
     }
 
     /**

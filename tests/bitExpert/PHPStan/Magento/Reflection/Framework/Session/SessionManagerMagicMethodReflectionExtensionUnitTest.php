@@ -38,6 +38,8 @@ class SessionManagerMagicMethodReflectionExtensionUnitTest extends PHPStanTestCa
         $reflectionProvider = $this->getContainer()->getService('reflectionProvider');
         $this->classReflection = $reflectionProvider->getClass(SessionManagerHelper::class);
         $this->extension = new SessionManagerMagicMethodReflectionExtension();
+
+        parent::setUp();
     }
 
     /**
