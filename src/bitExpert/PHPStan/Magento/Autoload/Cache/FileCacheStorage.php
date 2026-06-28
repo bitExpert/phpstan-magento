@@ -22,13 +22,19 @@ class FileCacheStorage implements CacheStorage
     private $directory;
 
     /**
+     * @var string
+     */
+    private $magentoRoot;
+
+    /**
      * FileCacheStorage constructor.
      *
      * @param string $directory
      */
-    public function __construct(string $directory)
+    public function __construct(string $directory, string $magentoRoot)
     {
         $this->directory = $directory;
+        $this->magentoRoot = $magentoRoot;
     }
 
     /**
@@ -73,7 +79,7 @@ class FileCacheStorage implements CacheStorage
      */
     private function getCacheDir(string $key): string
     {
-        $keyHash = sha1($key);
+        $keyHash = sha1(sprintf('%s/%s', $this->magentoRoot, $key));
         $firstDirectory = sprintf('%s/%s', $this->directory, substr($keyHash, 0, 2));
         return sprintf('%s/%s', $firstDirectory, substr($keyHash, 2, 2));
     }
