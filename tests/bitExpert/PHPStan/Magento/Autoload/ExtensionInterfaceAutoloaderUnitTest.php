@@ -128,7 +128,7 @@ class ExtensionInterfaceAutoloaderUnitTest extends TestCase
         $interfaceName = 'UncachedExtensionInterface';
 
         $root = vfsStream::setup('test');
-        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
+        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan', 'mage249'));
         $autoloader = new ExtensionInterfaceAutoloader($cache, $this->classLoader, $this->extAttrDataProvider);
 
         $this->classLoader->expects(self::once())

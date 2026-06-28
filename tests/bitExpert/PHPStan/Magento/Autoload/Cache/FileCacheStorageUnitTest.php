@@ -31,7 +31,7 @@ class FileCacheStorageUnitTest extends TestCase
     public function setUp(): void
     {
         $this->root = vfsStream::setup('tmp');
-        $this->storage = new FileCacheStorage($this->root->url());
+        $this->storage = new FileCacheStorage($this->root->url(), 'mage249');
     }
 
     /**
@@ -50,13 +50,13 @@ class FileCacheStorageUnitTest extends TestCase
     public function absoluteFilenameReturnedWhenLookingUpExistentFileInCache(): void
     {
         vfsStream::create(
-            ['4b' => ['6f' => ['4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php' => 'Lorem ipsum']]],
+            ['03' => ['ef' => ['4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php' => 'Lorem ipsum']]],
             $this->root
         );
 
         $absFilename = $this->storage->load('test.txt', '');
 
-        self::assertSame($absFilename, vfsStream::url('tmp/4b/6f/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
+        self::assertSame($absFilename, vfsStream::url('tmp/03/ef/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
     }
 
     /**
@@ -67,7 +67,7 @@ class FileCacheStorageUnitTest extends TestCase
         $this->storage->save('test.txt', '', 'Lorem ipsum');
         $absFilename = $this->storage->load('test.txt', '');
 
-        self::assertSame($absFilename, vfsStream::url('tmp/4b/6f/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
+        self::assertSame($absFilename, vfsStream::url('tmp/03/ef/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
     }
 
     /**
