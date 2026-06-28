@@ -29,7 +29,7 @@ class ObjectManagerDynamicReturnTypeExtensionUnitTest extends PHPStanTestCase
     {
         $this->extension = new ObjectManagerDynamicReturnTypeExtension();
 
-        parent::setup();
+        parent::setUp();
     }
 
     /**
