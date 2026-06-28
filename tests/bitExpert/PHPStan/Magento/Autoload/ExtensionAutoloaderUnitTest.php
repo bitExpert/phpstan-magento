@@ -113,7 +113,7 @@ class ExtensionAutoloaderUnitTest extends TestCase
         class_alias(HelperExtensionInterface::class, 'MyUncachedExtensionInterface');
 
         $root = vfsStream::setup('test');
-        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan'));
+        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan', 'mage249'));
         $autoloader = new ExtensionAutoloader($cache, $this->classLoader, $this->extAttrDataProvider);
 
         $autoloader->autoload($className);
