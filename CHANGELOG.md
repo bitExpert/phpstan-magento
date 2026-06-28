@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.43.0
+
+### Added
+
+- [#347](https://github.com/bitExpert/phpstan-magento/pull/347) Make cache key unique per project (so per current working directory).
+- [#346](https://github.com/bitExpert/phpstan-magento/pull/346) Add Stubs for Magento's loosey-string behavior
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#352](https://github.com/bitExpert/phpstan-magento/pull/352) Fix CI pipeline by upgrading to more recent Magento versions
+- [#351](https://github.com/bitExpert/phpstan-magento/pull/351) Fix build on PHPStan 2.2.3
+- [#348](https://github.com/bitExpert/phpstan-magento/pull/348) Normalises the indentations to tabs and not a mix of spaces and tabs.
+
 ## 0.42.0
 
 ### Added
