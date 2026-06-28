@@ -70,3 +70,18 @@ parameters:
         -
             message: '~PHPDoc tag @var assumes the expression with type~'
             path: tests/bitExpert/PHPStan/Magento/Type/TestFrameworkObjectManagerDynamicReturnTypeExtensionUnitTest.php
+        -
+            message: '~Parameter #2 \$scope of method~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/AbstractModelRetrieveCollectionViaFactoryRuleUnitTest.php
+        -
+            message: '~Parameter #2 \$scope of method~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/AbstractModelUseServiceContractRuleUnitTest.php
+        -
+            message: '~Parameter #2 \$scope of method~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest.php
+        -
+            message: '~Parameter #2 \$scope of method~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/ResourceModelsShouldBeUsedDirectlyRuleUnitTest.php
+        -
+            message: '~Parameter #2 \$scope of method~'
+            path: tests/bitExpert/PHPStan/Magento/Rules/SetTemplateDisallowedForBlockRuleUnitTest.php
