@@ -14,6 +14,7 @@ namespace bitExpert\PHPStan\Magento\Autoload\Cache;
 
 use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamContent;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
@@ -82,5 +83,40 @@ class FileCacheStorageUnitTest extends TestCase
 
         $this->storage->save('test.txt', '', 'Lorem ipsum');
         $this->storage->load('test.txt', '');
+    }
+
+    /**
+     * @test
+     */
+    public function emptyCacheFileIsTreatedAsCacheMiss(): void
+    {
+        vfsStream::create(
+            ['03' => ['ef' => ['4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php' => '']]],
+            $this->root
+        );
+
+        $absFilename = $this->storage->load('test.txt', '');
+
+        self::assertNull($absFilename);
+    }
+
+    /**
+     * @test
+     */
+    public function noTemporaryFileIsLeftBehindWhenAddingFileToCache(): void
+    {
+        $this->storage->save('test.txt', '', 'Lorem ipsum');
+
+        $cacheDir = $this->root->getChild('03/ef');
+        self::assertInstanceOf(vfsStreamDirectory::class, $cacheDir);
+
+        $filenames = array_map(
+            static function (vfsStreamContent $child): string {
+                return $child->getName();
+            },
+            $cacheDir->getChildren()
+        );
+
+        self::assertSame(['4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'], $filenames);
     }
 }
