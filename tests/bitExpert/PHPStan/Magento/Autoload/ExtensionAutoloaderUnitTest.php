@@ -2,24 +2,18 @@
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
-use bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage;
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use org\bovigo\vfs\vfsStream;
-use PHPStan\Cache\Cache;
-use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
 
 class ExtensionAutoloaderUnitTest extends TestCase
 {
     /**
-     * @var Cache
+     * @var GeneratedFileCache&\PHPUnit\Framework\MockObject\MockObject
      */
     private $cache;
-    /**
-     * @var CacheStorage&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $cacheStorage;
     /**
      * @var ClassLoaderProvider&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -35,8 +29,7 @@ class ExtensionAutoloaderUnitTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cacheStorage = $this->createMock(CacheStorage::class);
-        $this->cache = new Cache($this->cacheStorage);
+        $this->cache = $this->createMock(GeneratedFileCache::class);
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
         $this->extAttrDataProvider = $this->createMock(ExtensionAttributeDataProvider::class);
         $this->autoloader = new ExtensionAutoloader(
@@ -53,8 +46,8 @@ class ExtensionAutoloaderUnitTest extends TestCase
     {
         $this->classLoader->expects(self::never())
             ->method('findFile');
-        $this->cacheStorage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload('SomeClass');
     }
@@ -67,8 +60,8 @@ class ExtensionAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(__DIR__ . '/HelperExtension.php');
-        $this->cacheStorage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload(HelperExtension::class);
 
@@ -83,12 +76,12 @@ class ExtensionAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->cacheStorage->expects(self::once())
-            ->method('load')
+        $this->cache->expects(self::once())
+            ->method('getFile')
             ->willReturn(__DIR__ . '/HelperExtension.php');
 
-        $this->cacheStorage->expects(self::never())
-            ->method('save');
+        $this->cache->expects(self::never())
+            ->method('putFile');
 
         $this->autoloader->autoload(HelperExtension::class);
 
@@ -113,7 +106,7 @@ class ExtensionAutoloaderUnitTest extends TestCase
         class_alias(HelperExtensionInterface::class, 'MyUncachedExtensionInterface');
 
         $root = vfsStream::setup('test');
-        $cache = new Cache(new FileCacheStorage($root->url() . '/tmp/cache/PHPStan', 'mage249'));
+        $cache = new GeneratedFileCache($root->url() . '/tmp/cache/bitExpert/PHPStanMagento', 'mage249');
         $autoloader = new ExtensionAutoloader($cache, $this->classLoader, $this->extAttrDataProvider);
 
         $autoloader->autoload($className);

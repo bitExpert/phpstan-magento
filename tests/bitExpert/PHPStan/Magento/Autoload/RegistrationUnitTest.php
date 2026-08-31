@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
-use PHPStan\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 
 class RegistrationUnitTest extends TestCase
@@ -43,7 +43,7 @@ class RegistrationUnitTest extends TestCase
      */
     public function provideAutoloaders(): array
     {
-        $cache = new Cache($this->getMockBuilder(\PHPStan\Cache\CacheStorage::class)->getMock());
+        $cache = $this->createMock(GeneratedFileCache::class);
         $classLoader = $this->createMock(ClassLoaderProvider::class);
 
         return [

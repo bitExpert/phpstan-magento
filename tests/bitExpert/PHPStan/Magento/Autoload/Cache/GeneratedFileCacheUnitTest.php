@@ -17,21 +17,21 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
-class FileCacheStorageUnitTest extends TestCase
+class GeneratedFileCacheUnitTest extends TestCase
 {
     /**
      * @var vfsStreamDirectory
      */
     private $root;
     /**
-     * @var FileCacheStorage
+     * @var GeneratedFileCache
      */
-    private $storage;
+    private $cache;
 
     public function setUp(): void
     {
         $this->root = vfsStream::setup('tmp');
-        $this->storage = new FileCacheStorage($this->root->url(), 'mage249');
+        $this->cache = new GeneratedFileCache($this->root->url(), 'mage249');
     }
 
     /**
@@ -39,7 +39,7 @@ class FileCacheStorageUnitTest extends TestCase
      */
     public function nullReturnedWhenLookingUpNonExistentFileInCache(): void
     {
-        $absFilename = $this->storage->load('test.txt', '');
+        $absFilename = $this->cache->getFile('test.txt');
 
         self::assertNull($absFilename);
     }
@@ -54,7 +54,7 @@ class FileCacheStorageUnitTest extends TestCase
             $this->root
         );
 
-        $absFilename = $this->storage->load('test.txt', '');
+        $absFilename = $this->cache->getFile('test.txt');
 
         self::assertSame($absFilename, vfsStream::url('tmp/03/ef/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
     }
@@ -64,10 +64,21 @@ class FileCacheStorageUnitTest extends TestCase
      */
     public function addingFileToCacheSucceeds(): void
     {
-        $this->storage->save('test.txt', '', 'Lorem ipsum');
-        $absFilename = $this->storage->load('test.txt', '');
+        $writtenFilename = $this->cache->putFile('test.txt', 'Lorem ipsum');
+        $absFilename = $this->cache->getFile('test.txt');
 
         self::assertSame($absFilename, vfsStream::url('tmp/03/ef/4b6fcb2d521ef0fd442a5301e7932d16cc9f375a.php'));
+        self::assertSame($absFilename, $writtenFilename);
+    }
+
+    /**
+     * @test
+     */
+    public function contentsAreWrittenToTheReturnedFile(): void
+    {
+        $writtenFilename = $this->cache->putFile('test.txt', 'Lorem ipsum');
+
+        self::assertSame('Lorem ipsum', file_get_contents($writtenFilename));
     }
 
     /**
@@ -80,7 +91,6 @@ class FileCacheStorageUnitTest extends TestCase
         // simulate full disk
         vfsStream::setQuota(1);
 
-        $this->storage->save('test.txt', '', 'Lorem ipsum');
-        $this->storage->load('test.txt', '');
+        $this->cache->putFile('test.txt', 'Lorem ipsum');
     }
 }

@@ -56,6 +56,11 @@ jobs:
       - name: Static code analysis
         run: composer analyze
 
+      - name: Autoloader smoke test
+        env:
+          REQUIRE_TURBO: '1'
+        run: composer smoke-test
+
       - name: Unittests
         if: matrix.coveralls == false
         run: composer test

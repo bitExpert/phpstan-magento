@@ -63,6 +63,7 @@
     "cs-fix": "vendor/bin/phpcbf",
     "check-license": "vendor/bin/license-checker check",
     "analyze": "vendor/bin/phpstan analyze",
+    "smoke-test": "@php bin/ci_autoloader_smoke",
     "test": "vendor/bin/phpunit",
     "coverage": "vendor/bin/phpunit --coverage-clover clover.xml"
   },

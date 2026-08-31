@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
-use PHPStan\Cache\Cache;
 
 class ProxyAutoloader implements Autoloader
 {
     /**
-     * @var Cache
+     * @var GeneratedFileCache
      */
     private $cache;
     /**
@@ -29,10 +29,10 @@ class ProxyAutoloader implements Autoloader
     /**
      * ProxyAutoloader constructor.
      *
-     * @param Cache $cache
+     * @param GeneratedFileCache $cache
      * @param ClassLoaderProvider $classLoaderProvider
      */
-    public function __construct(Cache $cache, ClassLoaderProvider $classLoaderProvider)
+    public function __construct(GeneratedFileCache $cache, ClassLoaderProvider $classLoaderProvider)
     {
         $this->cache = $cache;
         $this->classLoaderProvider = $classLoaderProvider;
@@ -48,10 +48,9 @@ class ProxyAutoloader implements Autoloader
         // local classes in your project. We need to check first if classes exists locally before generating them!
         $pathToLocalClass = $this->classLoaderProvider->findFile($class);
         if ($pathToLocalClass === false) {
-            $pathToLocalClass = $this->cache->load($class, '');
+            $pathToLocalClass = $this->cache->getFile($class);
             if ($pathToLocalClass === null) {
-                $this->cache->save($class, '', $this->getFileContents($class));
-                $pathToLocalClass = $this->cache->load($class, '');
+                $pathToLocalClass = $this->cache->putFile($class, $this->getFileContents($class));
             }
         }
 
