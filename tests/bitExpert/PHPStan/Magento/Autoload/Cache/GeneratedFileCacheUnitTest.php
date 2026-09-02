@@ -93,4 +93,28 @@ class GeneratedFileCacheUnitTest extends TestCase
 
         $this->cache->putFile('test.txt', 'Lorem ipsum');
     }
+
+    /**
+     * @test
+     */
+    public function existingCacheDirectoryIsReused(): void
+    {
+        $this->cache->putFile('test.txt', 'Lorem ipsum');
+        $writtenFilename = $this->cache->putFile('test.txt', 'Dolor sit amet');
+
+        self::assertSame('Dolor sit amet', file_get_contents($writtenFilename));
+    }
+
+    /**
+     * @test
+     */
+    public function addingFileToCacheFailsWhenCacheDirectoryCannotBeCreated(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('#^Failed to create directory#');
+
+        $this->root->chmod(0000);
+
+        $this->cache->putFile('test.txt', 'Lorem ipsum');
+    }
 }
