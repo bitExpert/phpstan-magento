@@ -63,6 +63,8 @@
     "cs-fix": "vendor/bin/phpcbf",
     "check-license": "vendor/bin/license-checker check",
     "analyze": "vendor/bin/phpstan analyze",
+    "analyze-stubs": "vendor/bin/phpstan analyze -c phpstan-stubs.neon",
+    "lint": "./bin/ci_php_lint",
     "test": "vendor/bin/phpunit",
     "coverage": "vendor/bin/phpunit --coverage-clover clover.xml"
   },

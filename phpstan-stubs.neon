@@ -1,0 +1,22 @@
+parameters:
+    level: 0
+    # The stubs below src/Magento shadow real Magento classes and are require()d
+    # by the MockAutoloader inside the process running PHPStan. They therefore
+    # have to be valid on every PHP version composer.json claims to support.
+    phpVersion:
+        min: 70200
+        max: 80500
+    fileExtensions:
+        - php
+    paths:
+        - src/Magento
+    ignoreErrors:
+        # The stubs deliberately declare signatures without a body.
+        -
+            identifier: return.missing
+        -
+            identifier: constructor.missingParentCall
+        # The stubs reference classes from Magento modules that are not pulled
+        # in by require-dev; only magento/framework is.
+        -
+            identifier: class.notFound

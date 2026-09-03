@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## Unreleased
+
+### Added
+
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Lint `src/` on the lowest supported PHP version in CI and analyse the `src/Magento` stubs against the PHP version range declared in composer.json.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Drop the PHP 8 union type from the `Escaper` stub. It is `require()`d by the MockAutoloader, so it made every analysis run on PHP 7 fail with an internal error.
+
 ## 0.43.0
 
 ### Added
