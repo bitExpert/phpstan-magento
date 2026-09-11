@@ -4,7 +4,7 @@ parameters:
     # by the MockAutoloader inside the process running PHPStan. They therefore
     # have to be valid on every PHP version composer.json claims to support.
     phpVersion:
-        min: 70200
+        min: 70400
         max: 80500
     fileExtensions:
         - php

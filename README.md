@@ -10,7 +10,7 @@ You can use this PHPStan extension for both Magento module projects and Magento 
 
 ## Requirements
 
-PHP: PHP 7.2 or higher
+PHP: PHP 7.4 or higher
 
 Magento: Magento 2.3.0 or higher
 

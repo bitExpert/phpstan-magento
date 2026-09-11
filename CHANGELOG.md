@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Drop PHP 7.2 and 7.3 from the composer.json constraint. They could not install the package anyway since 0.43.0 requires phpstan/phpstan ^2.0, which needs PHP 7.4.
 
 ### Fixed
 
