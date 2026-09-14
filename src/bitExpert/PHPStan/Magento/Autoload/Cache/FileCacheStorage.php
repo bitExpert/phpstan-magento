@@ -47,11 +47,18 @@ class FileCacheStorage implements CacheStorage
         return (function (string $key): ?string {
             $cacheDir = $this->getCacheDir($key);
             $cacheFile = $this->getCacheFile($key);
-            if (!is_file($cacheDir . '/' . $cacheFile)) {
+            $targetFile = $cacheDir . '/' . $cacheFile;
+            if (!is_file($targetFile)) {
                 return null;
             }
 
-            return $cacheDir . '/' . $cacheFile;
+            // An empty file can only be a leftover from an interrupted write. Treat it as a miss so that it
+            // gets regenerated, instead of handing back a file that would define nothing when included.
+            if (filesize($targetFile) === 0) {
+                return null;
+            }
+
+            return $targetFile;
         })($key);
     }
 
@@ -65,10 +72,20 @@ class FileCacheStorage implements CacheStorage
         $cacheDir = $this->getCacheDir($key);
         $cacheFile = $this->getCacheFile($key);
         $this->makeDir($cacheDir);
-        $tmpSuccess = @file_put_contents($cacheDir . '/' . $cacheFile, $data);
-        if ($tmpSuccess === false) {
+
+        // Write to a unique temporary file and move it into place. This prevents parallel workers from writing to the
+        // same file simultaneously. Writing straight to the cache file could cause parallel workers to load an empty or
+        // incomplete cache file.
+        //
+        // rename() within a directory is atomic, parallel workers either sees a complete file or no file at all.
+        $targetFile = $cacheDir . '/' . $cacheFile;
+        $tmpFile = $targetFile . '.' . bin2hex(random_bytes(8)) . '.tmp';
+
+        $tmpSuccess = @file_put_contents($tmpFile, $data);
+        if ($tmpSuccess === false || !@rename($tmpFile, $targetFile)) {
+            @unlink($tmpFile);
             throw new \InvalidArgumentException(
-                sprintf('Could not write data to cache file %s.', $cacheDir . '/' . $cacheFile)
+                sprintf('Could not write data to cache file %s.', $targetFile)
             );
         }
     }
