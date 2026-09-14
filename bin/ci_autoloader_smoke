@@ -1,0 +1,161 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the phpstan-magento package.
+ *
+ * (c) bitExpert AG
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+declare(strict_types=1);
+
+/*
+ * Runs a real PHPStan analysis against a generated fixture project and fails when the autoloaders
+ * report an internal error.
+ *
+ * The fixture only asks for factories, which is enough: all four generated-class autoloaders
+ * share the store-then-require mechanism this guards.
+ *
+ * The autoloaders generate a class, store it and then require the stored file. Whenever PHPStan
+ * changes how it hands cached values back, that round trip can start to return the source code in
+ * place of the path, which turns every generated class into
+ * "Internal error: Failed opening required '<?php ...'". Unit tests cannot see this: it only shows
+ * with a cold cache, more than one analysis process, and PHPStan's turbo extension active.
+ *
+ * Set REQUIRE_TURBO=1 (the CI job does) to also fail when PHPStan's shared memory arena is not
+ * usable, so that the guard cannot pass without exercising the code path it protects.
+ */
+
+$repoRoot = dirname(__DIR__);
+$fixtureRoot = sys_get_temp_dir() . '/phpstan-magento-smoke-' . uniqid();
+$numberOfFiles = 100;
+
+function removeDirectory(string $directory): void
+{
+    if (!is_dir($directory)) {
+        return;
+    }
+
+    $entries = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($entries as $entry) {
+        /** @var SplFileInfo $entry */
+        $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
+    }
+
+    rmdir($directory);
+}
+
+function run(string $repoRoot, string $command, string $config): array
+{
+    $commandLine = sprintf(
+        '%s %s %s --configuration=%s 2>&1',
+        escapeshellarg(PHP_BINARY),
+        escapeshellarg($repoRoot . '/vendor/bin/phpstan'),
+        $command,
+        escapeshellarg($config)
+    );
+
+    $output = [];
+    $exitCode = 0;
+    exec($commandLine, $output, $exitCode);
+
+    return [implode(PHP_EOL, $output), $exitCode];
+}
+
+/*
+ * The arena is what makes the cache round trip observable, and the extension being loaded does not
+ * mean the arena works: on macOS the extension loads but never hands out an arena. Probe it the way
+ * PHPStan does, with the binary PHPStan itself reports.
+ */
+function arenaIsUsable(string $diagnoseOutput): bool
+{
+    if (preg_match('#^Turbo worker binary: (\S+)#m', $diagnoseOutput, $matches) !== 1) {
+        return false;
+    }
+
+    $probe = sprintf(
+        '%s -d %s -r %s 2>&1',
+        escapeshellarg(PHP_BINARY),
+        escapeshellarg('extension=' . $matches[1]),
+        escapeshellarg('echo \PHPStanTurbo\ArenaCache::create("probe") === null ? "no" : "yes";')
+    );
+
+    $output = [];
+    $exitCode = 0;
+    exec($probe, $output, $exitCode);
+
+    return $exitCode === 0 && in_array('yes', $output, true);
+}
+
+mkdir($fixtureRoot . '/src', 0777, true);
+
+for ($i = 1; $i <= $numberOfFiles; $i++) {
+    file_put_contents(
+        sprintf('%s/src/Consumer%d.php', $fixtureRoot, $i),
+        <<<PHP
+        <?php declare(strict_types=1);
+
+        namespace Smoke;
+
+        class Consumer{$i}
+        {
+            public function useFactory(\\Smoke\\Thing{$i}Factory \$factory): void
+            {
+                \$factory->create();
+            }
+        }
+
+        PHP
+    );
+}
+
+// A cold tmpDir matters: with a warm cache the autoloaders find the generated file before they
+// ever ask PHPStan to store anything, which hides the very problem this guard looks for.
+file_put_contents($fixtureRoot . '/phpstan.neon', <<<NEON
+includes:
+    - {$repoRoot}/extension.neon
+
+parameters:
+    tmpDir: {$fixtureRoot}/tmp
+    level: 2
+    paths:
+        - {$fixtureRoot}/src
+    magento:
+        magentoRoot: {$fixtureRoot}
+    parallel:
+        jobSize: 5
+        minimumNumberOfJobsPerProcess: 1
+        maximumNumberOfProcesses: 4
+
+NEON);
+
+[$diagnoseOutput] = run($repoRoot, 'diagnose', $fixtureRoot . '/phpstan.neon');
+$arenaIsUsable = strpos($diagnoseOutput, 'Turbo extension: enabled (') !== false
+    && arenaIsUsable($diagnoseOutput);
+
+echo 'PHPStan shared memory arena usable: ' . ($arenaIsUsable ? 'yes' : 'no') . PHP_EOL;
+
+if (!$arenaIsUsable && getenv('REQUIRE_TURBO') === '1') {
+    fwrite(STDERR, PHP_EOL . 'The shared memory arena is not usable, thus this guard would pass' . PHP_EOL);
+    fwrite(STDERR, 'without exercising the code path it protects. PHPStan reported:' . PHP_EOL . PHP_EOL);
+    fwrite(STDERR, $diagnoseOutput . PHP_EOL);
+    removeDirectory($fixtureRoot);
+    exit(1);
+}
+
+[$analyseOutput, $exitCode] = run($repoRoot, 'analyse --no-progress', $fixtureRoot . '/phpstan.neon');
+removeDirectory($fixtureRoot);
+
+if (strpos($analyseOutput, 'Internal error') !== false || $exitCode !== 0) {
+    fwrite(STDERR, PHP_EOL . 'The generated-class autoloaders did not survive a real analysis run:' . PHP_EOL . PHP_EOL);
+    fwrite(STDERR, $analyseOutput . PHP_EOL);
+    exit(1);
+}
+
+echo 'Autoloader smoke test passed.' . PHP_EOL;

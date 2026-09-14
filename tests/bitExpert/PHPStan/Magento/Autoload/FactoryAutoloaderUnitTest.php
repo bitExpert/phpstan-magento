@@ -12,17 +12,16 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
-use PHPStan\Cache\Cache;
-use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
 
 class FactoryAutoloaderUnitTest extends TestCase
 {
     /**
-     * @var CacheStorage|\PHPUnit\Framework\MockObject\MockObject
+     * @var GeneratedFileCache|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $storage;
+    private $cache;
     /**
      * @var FactoryAutoloader
      */
@@ -31,13 +30,26 @@ class FactoryAutoloaderUnitTest extends TestCase
      * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     private $classLoader;
+    /**
+     * @var string[]
+     */
+    private $tempFiles = [];
 
     public function setUp(): void
     {
-        $this->storage = $this->createMock(CacheStorage::class);
+        $this->cache = $this->createMock(GeneratedFileCache::class);
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
 
-        $this->autoloader = new FactoryAutoloader(new Cache($this->storage), $this->classLoader);
+        $this->autoloader = new FactoryAutoloader($this->cache, $this->classLoader);
+    }
+
+    public function tearDown(): void
+    {
+        foreach ($this->tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
+
+        $this->tempFiles = [];
     }
 
     /**
@@ -47,8 +59,8 @@ class FactoryAutoloaderUnitTest extends TestCase
     {
         $this->classLoader->expects(self::never())
             ->method('findFile');
-        $this->storage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload('SomeClass');
     }
@@ -61,8 +73,8 @@ class FactoryAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(__DIR__ . '/HelperFactory.php');
-        $this->storage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload(HelperFactory::class);
 
@@ -77,9 +89,11 @@ class FactoryAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->storage->expects(self::once())
-            ->method('load')
+        $this->cache->expects(self::once())
+            ->method('getFile')
             ->willReturn(__DIR__ . '/HelperFactory.php');
+        $this->cache->expects(self::never())
+            ->method('putFile');
 
         $this->autoloader->autoload(HelperFactory::class);
 
@@ -94,15 +108,44 @@ class FactoryAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->storage->expects(self::atMost(2))
-            ->method('load')
-            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperFactory.php');
-        $this->storage->expects(self::once())
-            ->method('save');
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $this->cache->expects(self::once())
+            ->method('putFile')
+            ->willReturn(__DIR__ . '/HelperFactory.php');
 
         $this->autoloader->autoload(HelperFactory::class);
 
         self::assertTrue(class_exists(HelperFactory::class, false));
+    }
+
+    /**
+     * @test
+     */
+    public function autoloaderRequiresTheGeneratedFileAndNotTheGeneratedSource(): void
+    {
+        $className = 'bitExpert\PHPStan\Magento\Autoload\PathNotSourceThingFactory';
+
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $this->cache->expects(self::once())
+            ->method('putFile')
+            ->willReturnCallback(function (string $key, string $contents): string {
+                $file = sys_get_temp_dir() . '/phpstan-magento-' . uniqid() . '.php';
+                file_put_contents($file, $contents);
+                $this->tempFiles[] = $file;
+
+                return $file;
+            });
+
+        $this->autoloader->autoload($className);
+
+        self::assertTrue(class_exists($className, false));
     }
 
     /**
@@ -113,14 +156,13 @@ class FactoryAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->storage->expects(self::atMost(2))
-            ->method('load')
-            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/FactoryThingFactory.php');
-        $this->storage->expects(self::once())
-            ->method('save')
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $this->cache->expects(self::once())
+            ->method('putFile')
             ->with(
                 'bitExpert\PHPStan\Magento\Autoload\FactoryThingFactory',
-                static::isType('string'),
                 static::stringContains(<<<DOC
 /**
  * Factory class for @see \bitExpert\PHPStan\Magento\Autoload\FactoryThing
@@ -128,7 +170,7 @@ class FactoryAutoloaderUnitTest extends TestCase
 DOC
                 )
             )
-        ;
+            ->willReturn(__DIR__ . '/FactoryThingFactory.php');
 
         $this->autoloader->autoload(FactoryThingFactory::class);
     }

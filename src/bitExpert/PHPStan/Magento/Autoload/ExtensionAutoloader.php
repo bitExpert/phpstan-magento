@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use Laminas\Code\Generator\ClassGenerator;
@@ -20,13 +21,12 @@ use Laminas\Code\Generator\DocBlock\Tag\ReturnTag;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
-use PHPStan\Cache\Cache;
 use ReflectionClass;
 
 class ExtensionAutoloader implements Autoloader
 {
     /**
-     * @var Cache
+     * @var GeneratedFileCache
      */
     private $cache;
     /**
@@ -41,12 +41,12 @@ class ExtensionAutoloader implements Autoloader
     /**
      * ExtensionAutoloader constructor.
      *
-     * @param Cache $cache
+     * @param GeneratedFileCache $cache
      * @param ClassLoaderProvider $classLoaderProvider
      * @param ExtensionAttributeDataProvider $attributeDataProvider
      */
     public function __construct(
-        Cache $cache,
+        GeneratedFileCache $cache,
         ClassLoaderProvider $classLoaderProvider,
         ExtensionAttributeDataProvider $attributeDataProvider
     ) {
@@ -65,10 +65,9 @@ class ExtensionAutoloader implements Autoloader
         // local classes in your project. We need to check first if classes exists locally before generating them!
         $pathToLocalClass = $this->classLoaderProvider->findFile($class);
         if ($pathToLocalClass === false) {
-            $pathToLocalClass = $this->cache->load($class, '');
+            $pathToLocalClass = $this->cache->getFile($class);
             if ($pathToLocalClass === null) {
-                $this->cache->save($class, '', $this->getFileContents($class));
-                $pathToLocalClass = $this->cache->load($class, '');
+                $pathToLocalClass = $this->cache->putFile($class, $this->getFileContents($class));
             }
         }
 

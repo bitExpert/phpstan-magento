@@ -12,9 +12,15 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload\Cache;
 
-use PHPStan\Cache\CacheStorage;
-
-class FileCacheStorage implements CacheStorage
+/**
+ * Stores the source code the autoloaders generate and hands back the path of the file holding it.
+ *
+ * This deliberately is not a PHPStan\Cache\CacheStorage: the autoloaders need the path of the
+ * generated file to require it, while a CacheStorage has to return what was handed to save().
+ * Mixing the two made the autoloaders require the source code itself once PHPStan started to
+ * serve cache entries from its shared memory arena.
+ */
+class GeneratedFileCache
 {
     /**
      * @var string
@@ -27,9 +33,10 @@ class FileCacheStorage implements CacheStorage
     private $magentoRoot;
 
     /**
-     * FileCacheStorage constructor.
+     * GeneratedFileCache constructor.
      *
      * @param string $directory
+     * @param string $magentoRoot
      */
     public function __construct(string $directory, string $magentoRoot)
     {
@@ -38,39 +45,38 @@ class FileCacheStorage implements CacheStorage
     }
 
     /**
+     * Returns the path of the file generated for the given key, null when nothing was generated yet.
+     *
      * @param string $key
-     * @param string $variableKey
-     * @return mixed
+     * @return string|null
      */
-    public function load(string $key, string $variableKey)
+    public function getFile(string $key): ?string
     {
-        return (function (string $key): ?string {
-            $cacheDir = $this->getCacheDir($key);
-            $cacheFile = $this->getCacheFile($key);
-            $targetFile = $cacheDir . '/' . $cacheFile;
-            if (!is_file($targetFile)) {
-                return null;
-            }
+        $cacheFile = $this->getCacheDir($key) . '/' . $this->getCacheFile($key);
+        if (!is_file($cacheFile)) {
+            return null;
+        }
 
-            // An empty file can only be a leftover from an interrupted write. Treat it as a miss so that it
-            // gets regenerated, instead of handing back a file that would define nothing when included.
-            if (filesize($targetFile) === 0) {
-                return null;
-            }
+        // An empty file can only be a leftover from an interrupted write. Treat it as a miss so that it
+        // gets regenerated, instead of handing back a file that would define nothing when included.
+        if (filesize($cacheFile) === 0) {
+            return null;
+        }
 
-            return $targetFile;
-        })($key);
+        return $cacheFile;
     }
 
     /**
+     * Writes the given source code and returns the path of the file holding it.
+     *
      * @param string $key
-     * @param string $variableKey
-     * @param mixed $data
+     * @param string $contents
+     * @return string
      */
-    public function save(string $key, string $variableKey, $data): void
+    public function putFile(string $key, string $contents): string
     {
         $cacheDir = $this->getCacheDir($key);
-        $cacheFile = $this->getCacheFile($key);
+        $cacheFile = $cacheDir . '/' . $this->getCacheFile($key);
         $this->makeDir($cacheDir);
 
         // Write to a unique temporary file and move it into place. This prevents parallel workers from writing to the
@@ -78,16 +84,17 @@ class FileCacheStorage implements CacheStorage
         // incomplete cache file.
         //
         // rename() within a directory is atomic, parallel workers either sees a complete file or no file at all.
-        $targetFile = $cacheDir . '/' . $cacheFile;
-        $tmpFile = $targetFile . '.' . bin2hex(random_bytes(8)) . '.tmp';
+        $tmpFile = $cacheFile . '.' . bin2hex(random_bytes(8)) . '.tmp';
 
-        $tmpSuccess = @file_put_contents($tmpFile, $data);
-        if ($tmpSuccess === false || !@rename($tmpFile, $targetFile)) {
+        $tmpSuccess = @file_put_contents($tmpFile, $contents);
+        if ($tmpSuccess === false || !@rename($tmpFile, $cacheFile)) {
             @unlink($tmpFile);
             throw new \InvalidArgumentException(
-                sprintf('Could not write data to cache file %s.', $targetFile)
+                sprintf('Could not write data to cache file %s.', $cacheFile)
             );
         }
+
+        return $cacheFile;
     }
 
     /**

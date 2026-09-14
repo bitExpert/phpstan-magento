@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider;
 use Laminas\Code\Generator\DocBlock\Tag\ParamTag;
@@ -20,12 +21,11 @@ use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\InterfaceGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
-use PHPStan\Cache\Cache;
 
 class ExtensionInterfaceAutoloader implements Autoloader
 {
     /**
-     * @var Cache
+     * @var GeneratedFileCache
      */
     private $cache;
     /**
@@ -40,12 +40,12 @@ class ExtensionInterfaceAutoloader implements Autoloader
     /**
      * ExtensionInterfaceAutoloader constructor.
      *
-     * @param Cache $cache
+     * @param GeneratedFileCache $cache
      * @param ExtensionAttributeDataProvider $attributeDataProvider
      * @param ClassLoaderProvider $classLoaderProvider
      */
     public function __construct(
-        Cache $cache,
+        GeneratedFileCache $cache,
         ClassLoaderProvider $classLoaderProvider,
         ExtensionAttributeDataProvider $attributeDataProvider
     ) {
@@ -64,10 +64,9 @@ class ExtensionInterfaceAutoloader implements Autoloader
         // local classes in your project. We need to check first if classes exists locally before generating them!
         $pathToLocalInterface = $this->classLoaderProvider->findFile($interfaceName);
         if ($pathToLocalInterface === false) {
-            $pathToLocalInterface = $this->cache->load($interfaceName, '');
+            $pathToLocalInterface = $this->cache->getFile($interfaceName);
             if ($pathToLocalInterface === null) {
-                $this->cache->save($interfaceName, '', $this->getFileContents($interfaceName));
-                $pathToLocalInterface = $this->cache->load($interfaceName, '');
+                $pathToLocalInterface = $this->cache->putFile($interfaceName, $this->getFileContents($interfaceName));
             }
         }
 

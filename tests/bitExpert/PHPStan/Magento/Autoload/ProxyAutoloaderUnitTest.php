@@ -12,17 +12,16 @@ declare(strict_types=1);
 
 namespace bitExpert\PHPStan\Magento\Autoload;
 
+use bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache;
 use bitExpert\PHPStan\Magento\Autoload\DataProvider\ClassLoaderProvider;
-use PHPStan\Cache\Cache;
-use PHPStan\Cache\CacheStorage;
 use PHPUnit\Framework\TestCase;
 
 class ProxyAutoloaderUnitTest extends TestCase
 {
     /**
-     * @var CacheStorage|\PHPUnit\Framework\MockObject\MockObject
+     * @var GeneratedFileCache|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $storage;
+    private $cache;
     /**
      * @var ProxyAutoloader
      */
@@ -34,10 +33,10 @@ class ProxyAutoloaderUnitTest extends TestCase
 
     public function setUp(): void
     {
-        $this->storage = $this->createMock(CacheStorage::class);
+        $this->cache = $this->createMock(GeneratedFileCache::class);
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
 
-        $this->autoloader = new ProxyAutoloader(new Cache($this->storage), $this->classLoader);
+        $this->autoloader = new ProxyAutoloader($this->cache, $this->classLoader);
     }
 
     /**
@@ -47,8 +46,8 @@ class ProxyAutoloaderUnitTest extends TestCase
     {
         $this->classLoader->expects(self::never())
             ->method('findFile');
-        $this->storage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload('SomeClass');
     }
@@ -61,8 +60,8 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(__DIR__ . '/HelperProxy.php');
-        $this->storage->expects(self::never())
-            ->method('load');
+        $this->cache->expects(self::never())
+            ->method('getFile');
 
         $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
 
@@ -77,8 +76,8 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->storage->expects(self::once())
-            ->method('load')
+        $this->cache->expects(self::once())
+            ->method('getFile')
             ->willReturn(__DIR__ . '/HelperProxy.php');
 
         $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
@@ -98,11 +97,12 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->classLoader->expects(self::once())
             ->method('findFile')
             ->willReturn(false);
-        $this->storage->expects(self::atMost(2))
-            ->method('load')
-            ->willReturnOnConsecutiveCalls(null, __DIR__ . '/HelperProxy.php');
-        $this->storage->expects(self::once())
-            ->method('save');
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $this->cache->expects(self::once())
+            ->method('putFile')
+            ->willReturn(__DIR__ . '/HelperProxy.php');
 
         $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
 

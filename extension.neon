@@ -61,16 +61,11 @@ services:
 		class: bitExpert\PHPStan\Magento\Rules\ResourceModelsShouldBeUsedDirectlyRule
 	-
 		class: bitExpert\PHPStan\Magento\Rules\SetTemplateDisallowedForBlockRule
-	fileCacheStorage:
-		class: bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage
+	generatedFileCache:
+		class: bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache
 		arguments:
-			directory: %tmpDir%/cache/PHPStan
+			directory: %tmpDir%/cache/bitExpert/PHPStanMagento
 			magentoRoot: %magento.magentoRoot%
-	autoloaderCache:
-		autowired: false
-		class: PHPStan\Cache\Cache
-		arguments:
-			storage: @fileCacheStorage
 	extensionAttributeDataProvider:
 		class: bitExpert\PHPStan\Magento\Autoload\DataProvider\ExtensionAttributeDataProvider
 		arguments:
@@ -92,21 +87,21 @@ services:
 	factoryAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\FactoryAutoloader
 		arguments:
-			cache: @autoloaderCache
+			cache: @generatedFileCache
 			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader
 	proxyAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ProxyAutoloader
 		arguments:
-			cache: @autoloaderCache
+			cache: @generatedFileCache
 			classLoaderProvider: @classLoaderProvider
 		tags:
 			- phpstan.magento.autoloader
 	extensionInterfaceAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionInterfaceAutoloader
 		arguments:
-			cache: @autoloaderCache
+			cache: @generatedFileCache
 			classLoaderProvider: @classLoaderProvider
 			attributeDataProvider: @extensionAttributeDataProvider
 		tags:
@@ -114,7 +109,7 @@ services:
 	extensionAutoloader:
 		class: bitExpert\PHPStan\Magento\Autoload\ExtensionAutoloader
 		arguments:
-			cache: @autoloaderCache
+			cache: @generatedFileCache
 			classLoaderProvider: @classLoaderProvider
 			attributeDataProvider: @extensionAttributeDataProvider
 		tags:

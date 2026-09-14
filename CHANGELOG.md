@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## Unreleased
+
+### Added
+
+- A CI smoke test (`composer smoke-test`) that runs a real analysis over a generated fixture project and fails when the generated-class autoloaders report an internal error.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- `bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage`, replaced by `bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache`. The autoloaders now take that class in place of `PHPStan\Cache\Cache`, and the generated classes move from `%tmpDir%/cache/PHPStan` to `%tmpDir%/cache/bitExpert/PHPStanMagento` so that they no longer share a directory with PHPStan's own cache.
+
+### Fixed
+
+- Fix "Internal error: Failed opening required '<?php ...'" for every generated Factory, Proxy, Extension and ExtensionInterface class on PHPStan 2.2.10 and PHP 8.3 or later. `FileCacheStorage` stored the generated source but returned a file path from `load()`, which a `PHPStan\Cache\CacheStorage` must not do. Once PHPStan served cache entries from its shared memory arena, `Cache::load()` returned the source code and the autoloaders required that in place of the file.
+
 ## 0.43.0
 
 ### Added
