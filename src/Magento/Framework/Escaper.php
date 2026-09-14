@@ -14,7 +14,7 @@ class Escaper
      * @param string[]|null $allowedTags
      * @return ($data is array ? string[] : string)
      */
-    public function escapeHtml($data, array|null $allowedTags = null) {}
+    public function escapeHtml($data, ?array $allowedTags = null) {}
 
     /**
      * @param CastableToString $string

@@ -6,6 +6,27 @@ on:
       - "master"
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Both ends of the composer.json "php" constraint: the lowest version
+        # of each supported range, plus the newest release.
+        php-versions: ['7.4', '8.1', '8.5']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Lint sources
+        run: ./bin/ci_php_lint
+
   run:
     runs-on: ${{ matrix.operating-system }}
     strategy:
@@ -55,6 +76,9 @@ jobs:
 
       - name: Static code analysis
         run: composer analyze
+
+      - name: Static code analysis of the Magento stubs
+        run: composer analyze-stubs
 
       - name: Autoloader smoke test
         env:

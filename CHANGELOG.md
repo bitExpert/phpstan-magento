@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## Unreleased
+## Unrelease
 
 ### Added
 
 - A CI smoke test (`composer smoke-test`) that runs a real analysis over a generated fixture project and fails when the generated-class autoloaders report an internal error.
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Lint `src/` on the lowest supported PHP version in CI and analyse the `src/Magento` stubs against the PHP version range declared in composer.json.
 
 ### Deprecated
 
@@ -15,10 +16,12 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Removed
 
 - `bitExpert\PHPStan\Magento\Autoload\Cache\FileCacheStorage`, replaced by `bitExpert\PHPStan\Magento\Autoload\Cache\GeneratedFileCache`. The autoloaders now take that class in place of `PHPStan\Cache\Cache`, and the generated classes move from `%tmpDir%/cache/PHPStan` to `%tmpDir%/cache/bitExpert/PHPStanMagento` so that they no longer share a directory with PHPStan's own cache.
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Drop PHP 7.2 and 7.3 from the composer.json constraint. They could not install the package anyway since 0.43.0 requires phpstan/phpstan ^2.0, which needs PHP 7.4.
 
 ### Fixed
 
 - Fix "Internal error: Failed opening required '<?php ...'" for every generated Factory, Proxy, Extension and ExtensionInterface class on PHPStan 2.2.10 and PHP 8.3 or later. `FileCacheStorage` stored the generated source but returned a file path from `load()`, which a `PHPStan\Cache\CacheStorage` must not do. Once PHPStan served cache entries from its shared memory arena, `Cache::load()` returned the source code and the autoloaders required that in place of the file.
+- [#359](https://github.com/bitExpert/phpstan-magento/pull/359) Drop the PHP 8 union type from the `Escaper` stub. It is `require()`d by the MockAutoloader, so it made every analysis run on PHP 7 fail with an internal error.
 
 ## 0.43.0
 

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+#
+# This file is part of the phpstan-magento package.
+#
+# (c) bitExpert AG
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
+
+# Lints every shipped source file with the PHP binary found on the PATH. Run it
+# on the lowest PHP version composer.json supports: the stubs below src/Magento
+# are require()d by the MockAutoloader inside the process running PHPStan, so a
+# parse error there aborts the analysis of any project using this package.
+
+set -uo pipefail
+
+cd "$(dirname "$0")/.."
+
+status=0
+while IFS= read -r -d '' file; do
+    if ! output="$(php -l "$file" 2>&1)"; then
+        echo "$output"
+        status=1
+    fi
+done < <(find src -name '*.php' -print0)
+
+if [ "$status" -eq 0 ]; then
+    echo "No syntax errors detected in src/ on PHP $(php -r 'echo PHP_VERSION;')."
+fi
+
+exit $status
