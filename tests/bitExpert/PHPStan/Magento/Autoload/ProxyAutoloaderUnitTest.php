@@ -30,6 +30,10 @@ class ProxyAutoloaderUnitTest extends TestCase
      * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     private $classLoader;
+    /**
+     * @var string[]
+     */
+    private $tempFiles = [];
 
     public function setUp(): void
     {
@@ -37,6 +41,15 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
 
         $this->autoloader = new ProxyAutoloader($this->cache, $this->classLoader);
+    }
+
+    public function tearDown(): void
+    {
+        foreach ($this->tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
+
+        $this->tempFiles = [];
     }
 
     /**
@@ -107,5 +120,58 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->autoloader->autoload('\bitExpert\PHPStan\Magento\Autoload\Helper\Proxy');
 
         self::assertTrue(class_exists(HelperProxy::class, false));
+    }
+
+    /**
+     * @test
+     */
+    public function generatedProxyKeepsTheParameterDefaultsOfAnInterface(): void
+    {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $file = (string) tempnam(sys_get_temp_dir(), 'phpstan-magento-proxy');
+        $this->tempFiles[] = $file;
+        $this->cache->expects(self::once())
+            ->method('putFile')
+            ->willReturnCallback(static function (string $class, string $content) use ($file): string {
+                file_put_contents($file, $content);
+                return $file;
+            });
+
+        $this->autoloader->autoload('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy');
+
+        $method = new \ReflectionMethod('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy', 'call');
+        $defaults = [];
+        $nullable = [];
+        foreach ($method->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            if ($type !== null) {
+                $nullable[$parameter->getName()] = $type->allowsNull();
+            }
+            $defaults[$parameter->getName()] = $parameter->isDefaultValueAvailable()
+                ? $parameter->getDefaultValue()
+                : 'none';
+        }
+        self::assertSame(
+            [
+                'null' => null,
+                'false' => false,
+                'true' => true,
+                'zero' => 0,
+                'one' => 1,
+                'quote' => "it's",
+                'empty' => [],
+                'list' => ['a' => 1],
+                'constant' => 10,
+                'nullableString' => '',
+                'nullableObject' => null,
+            ],
+            $defaults
+        );
+        self::assertSame(['nullableString' => true, 'nullableObject' => true], $nullable);
     }
 }
