@@ -101,19 +101,8 @@ class ProxyAutoloader implements Autoloader
 
                     $defaultValue = '';
                     if ($parameter->isDefaultValueAvailable()) {
-                        switch ($parameter->getDefaultValue()) {
-                            case null:
-                                $defaultValue = ' = NULL';
-                                break;
-                            case false:
-                                $defaultValue = ' = false';
-                                break;
-                            default:
-                                if (is_string($parameter->getDefaultValue())) {
-                                    $defaultValue = ' = \'' . $parameter->getDefaultValue() . '\'';
-                                }
-                                break;
-                        }
+                        // Every default has to be repeated, or the proxy is not compatible with the interface.
+                        $defaultValue = ' = ' . var_export($parameter->getDefaultValue(), true);
                     }
 
                     $params[] = $paramType . '$' . $parameter->getName() . $defaultValue;

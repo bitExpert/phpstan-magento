@@ -108,4 +108,49 @@ class ProxyAutoloaderUnitTest extends TestCase
 
         self::assertTrue(class_exists(HelperProxy::class, false));
     }
+
+    /**
+     * @test
+     */
+    public function generatedProxyKeepsTheParameterDefaultsOfAnInterface(): void
+    {
+        $this->classLoader->expects(self::once())
+            ->method('findFile')
+            ->willReturn(false);
+        $this->cache->expects(self::once())
+            ->method('getFile')
+            ->willReturn(null);
+        $file = tempnam(sys_get_temp_dir(), 'phpstan-magento-proxy');
+        $this->cache->expects(self::once())
+            ->method('putFile')
+            ->willReturnCallback(static function (string $class, string $content) use ($file): string {
+                file_put_contents($file, $content);
+                return $file;
+            });
+
+        $this->autoloader->autoload('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy');
+        unlink($file);
+
+        $method = new \ReflectionMethod('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy', 'call');
+        $defaults = [];
+        foreach ($method->getParameters() as $parameter) {
+            $defaults[$parameter->getName()] = $parameter->isDefaultValueAvailable()
+                ? $parameter->getDefaultValue()
+                : 'none';
+        }
+        self::assertSame(
+            [
+                'null' => null,
+                'false' => false,
+                'true' => true,
+                'zero' => 0,
+                'one' => 1,
+                'quote' => "it's",
+                'empty' => [],
+                'list' => ['a' => 1],
+                'constant' => 10,
+            ],
+            $defaults
+        );
+    }
 }
