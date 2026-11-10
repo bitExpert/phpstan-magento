@@ -90,10 +90,13 @@ class ProxyAutoloader implements Autoloader
                 foreach ($method->getParameters() as $parameter) {
                     $paramType = $parameter->getType();
                     if ($paramType instanceof \ReflectionNamedType) {
+                        // A default other than null no longer makes the type nullable, so keep the "?".
+                        $nullable = $paramType->allowsNull()
+                            && !in_array($paramType->getName(), ['mixed', 'null'], true) ? '?' : '';
                         if ($paramType->isBuiltin()) {
-                            $paramType = $paramType->getName() . ' ';
+                            $paramType = $nullable . $paramType->getName() . ' ';
                         } else {
-                            $paramType = '\\' . $paramType->getName() . ' ';
+                            $paramType = $nullable . '\\' . $paramType->getName() . ' ';
                         }
                     } else {
                         $paramType = '';

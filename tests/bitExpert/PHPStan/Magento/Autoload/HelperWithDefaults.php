@@ -29,6 +29,8 @@ interface HelperWithDefaults
      * @param mixed $empty
      * @param mixed $list
      * @param mixed $constant
+     * @param string|null $nullableString
+     * @param \DateTimeInterface|null $nullableObject
      */
     public function call(
         $null = null,
@@ -39,6 +41,8 @@ interface HelperWithDefaults
         $quote = "it's",
         $empty = [],
         $list = ['a' => 1],
-        $constant = self::SIZE
+        $constant = self::SIZE,
+        ?string $nullableString = '',
+        ?\DateTimeInterface $nullableObject = null
     ): void;
 }

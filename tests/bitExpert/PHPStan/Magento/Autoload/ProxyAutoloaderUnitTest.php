@@ -30,6 +30,10 @@ class ProxyAutoloaderUnitTest extends TestCase
      * @var ClassLoaderProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     private $classLoader;
+    /**
+     * @var string[]
+     */
+    private $tempFiles = [];
 
     public function setUp(): void
     {
@@ -37,6 +41,15 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->classLoader = $this->createMock(ClassLoaderProvider::class);
 
         $this->autoloader = new ProxyAutoloader($this->cache, $this->classLoader);
+    }
+
+    public function tearDown(): void
+    {
+        foreach ($this->tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
+
+        $this->tempFiles = [];
     }
 
     /**
@@ -120,7 +133,8 @@ class ProxyAutoloaderUnitTest extends TestCase
         $this->cache->expects(self::once())
             ->method('getFile')
             ->willReturn(null);
-        $file = tempnam(sys_get_temp_dir(), 'phpstan-magento-proxy');
+        $file = (string) tempnam(sys_get_temp_dir(), 'phpstan-magento-proxy');
+        $this->tempFiles[] = $file;
         $this->cache->expects(self::once())
             ->method('putFile')
             ->willReturnCallback(static function (string $class, string $content) use ($file): string {
@@ -129,11 +143,15 @@ class ProxyAutoloaderUnitTest extends TestCase
             });
 
         $this->autoloader->autoload('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy');
-        unlink($file);
 
         $method = new \ReflectionMethod('\\bitExpert\\PHPStan\\Magento\\Autoload\\HelperWithDefaults\\Proxy', 'call');
         $defaults = [];
+        $nullable = [];
         foreach ($method->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            if ($type !== null) {
+                $nullable[$parameter->getName()] = $type->allowsNull();
+            }
             $defaults[$parameter->getName()] = $parameter->isDefaultValueAvailable()
                 ? $parameter->getDefaultValue()
                 : 'none';
@@ -149,8 +167,11 @@ class ProxyAutoloaderUnitTest extends TestCase
                 'empty' => [],
                 'list' => ['a' => 1],
                 'constant' => 10,
+                'nullableString' => '',
+                'nullableObject' => null,
             ],
             $defaults
         );
+        self::assertSame(['nullableString' => true, 'nullableObject' => true], $nullable);
     }
 }
