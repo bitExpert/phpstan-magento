@@ -41,8 +41,8 @@ class ClassLoaderProvider
         if (is_file($autoloadFile)) {
             /** @var array<string, string> $map */
             $map = require $autoloadFile;
-            foreach ($map as $namespace => $path) {
-                $this->composer->setPsr4($namespace, $path);
+            foreach ($map as $psr4Namespace => $psr4Path) {
+                $this->composer->setPsr4($psr4Namespace, $psr4Path);
             }
         }
 
