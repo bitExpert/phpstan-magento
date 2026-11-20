@@ -16,7 +16,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
-use PHPStan\Analyser\Scope;
+use PHPStan\Analyser\MutatingScope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ObjectType;
@@ -80,7 +80,7 @@ class ControllerResultFactoryReturnTypeExtensionUnitTest extends PHPStanTestCase
     public function returnValidResultType(string $param, string $expectedResult): void
     {
         $methodReflection = $this->createMock(MethodReflection::class);
-        $scope = $this->createMock(Scope::class);
+        $scope = $this->createMock(MutatingScope::class);
 
         $identifier = $this->createConfiguredMock(Identifier::class, ['toString' => $param]);
 

@@ -71,7 +71,9 @@ function run(string $repoRoot, string $command, string $config): array
 /*
  * The arena is what makes the cache round trip observable, and the extension being loaded does not
  * mean the arena works: on macOS the extension loads but never hands out an arena. Probe it the way
- * PHPStan does, with the binary PHPStan itself reports.
+ * PHPStan does, with the binary PHPStan itself reports. \PHPStanTurbo\ArenaCache exists up to
+ * PHPStan 2.2 only, so this probe is exclusively for the "Turbo extension: enabled" wording of
+ * those versions.
  */
 function arenaIsUsable(string $diagnoseOutput): bool
 {
@@ -135,11 +137,34 @@ parameters:
 
 NEON);
 
-[$diagnoseOutput] = run($repoRoot, 'diagnose', $fixtureRoot . '/phpstan.neon');
-$arenaIsUsable = strpos($diagnoseOutput, 'Turbo extension: enabled (') !== false
-    && arenaIsUsable($diagnoseOutput);
+/*
+ * Since PHPStan 2.3 "diagnose" runs without the turbo extension and reports it as "not loaded
+ * here, loaded by the restart an analyse run performs", and the arena no longer has an API a
+ * script can probe. The worker binary PHPStan names, provided it exists on disk, is the closest
+ * remaining signal that an analyse run will load turbo and exercise the arena; the direct macOS
+ * arena probe is only possible on the 2.2 wording.
+ */
+function turboIsExercised(string $diagnoseOutput): bool
+{
+    if (strpos($diagnoseOutput, 'Turbo extension: enabled (') !== false) {
+        return arenaIsUsable($diagnoseOutput);
+    }
 
-echo 'PHPStan shared memory arena usable: ' . ($arenaIsUsable ? 'yes' : 'no') . PHP_EOL;
+    if (strpos($diagnoseOutput, 'loaded by the restart an analyse run performs') === false) {
+        return false;
+    }
+
+    if (preg_match('#^Turbo worker binary: (\S+)#m', $diagnoseOutput, $matches) !== 1) {
+        return false;
+    }
+
+    return is_file($matches[1]);
+}
+
+[$diagnoseOutput] = run($repoRoot, 'diagnose', $fixtureRoot . '/phpstan.neon');
+$arenaIsUsable = turboIsExercised($diagnoseOutput);
+
+echo 'PHPStan turbo arena exercised by the analysis: ' . ($arenaIsUsable ? 'yes' : 'no') . PHP_EOL;
 
 if (!$arenaIsUsable && getenv('REQUIRE_TURBO') === '1') {
     fwrite(STDERR, PHP_EOL . 'The shared memory arena is not usable, thus this guard would pass' . PHP_EOL);
