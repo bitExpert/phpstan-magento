@@ -90,10 +90,13 @@ class ProxyAutoloader implements Autoloader
                 foreach ($method->getParameters() as $parameter) {
                     $paramType = $parameter->getType();
                     if ($paramType instanceof \ReflectionNamedType) {
+                        // A default other than null no longer makes the type nullable, so keep the "?".
+                        $nullable = $paramType->allowsNull()
+                            && !in_array($paramType->getName(), ['mixed', 'null'], true) ? '?' : '';
                         if ($paramType->isBuiltin()) {
-                            $paramType = $paramType->getName() . ' ';
+                            $paramType = $nullable . $paramType->getName() . ' ';
                         } else {
-                            $paramType = '\\' . $paramType->getName() . ' ';
+                            $paramType = $nullable . '\\' . $paramType->getName() . ' ';
                         }
                     } else {
                         $paramType = '';
@@ -101,19 +104,8 @@ class ProxyAutoloader implements Autoloader
 
                     $defaultValue = '';
                     if ($parameter->isDefaultValueAvailable()) {
-                        switch ($parameter->getDefaultValue()) {
-                            case null:
-                                $defaultValue = ' = NULL';
-                                break;
-                            case false:
-                                $defaultValue = ' = false';
-                                break;
-                            default:
-                                if (is_string($parameter->getDefaultValue())) {
-                                    $defaultValue = ' = \'' . $parameter->getDefaultValue() . '\'';
-                                }
-                                break;
-                        }
+                        // Every default has to be repeated, or the proxy is not compatible with the interface.
+                        $defaultValue = ' = ' . var_export($parameter->getDefaultValue(), true);
                     }
 
                     $params[] = $paramType . '$' . $parameter->getName() . $defaultValue;
