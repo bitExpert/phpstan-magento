@@ -62,6 +62,10 @@ class ResourceModelsShouldBeUsedDirectlyRule implements Rule
                 )
             )
             ->identifier('bitExpertMagento.resourceModelsShouldBeUsedDirectly')
+            ->tip(
+                'Inject the model\'s resource model via the constructor and use it directly, e.g. ' .
+                '$this->resource->save($model). getResource() is deprecated since Magento 101.0.0.'
+            )
             ->build()
         ];
     }

@@ -49,6 +49,8 @@ class GetCollectionMockMethodNeedsCollectionSubclassRuleUnitTest extends RuleTes
             [
                 'DateTime does not extend \Magento\Framework\Data\Collection as required!',
                 7,
+                'Pass a class extending \Magento\Framework\Data\Collection to getCollectionMock(), or create ' .
+                    'the mock with PHPUnit\'s createMock() instead.',
             ],
         ]);
     }

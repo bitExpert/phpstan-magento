@@ -62,6 +62,10 @@ class AbstractModelUseServiceContractRule implements Rule
                 )
             )
             ->identifier('bitExpertMagento.abstractModelUseServiceContract')
+            ->tip(
+                'Inject the entity\'s repository (service contract) and let it load, save or delete the entity. ' .
+                'See https://developer.adobe.com/commerce/php/development/components/service-contracts/'
+            )
             ->build()
         ];
     }
