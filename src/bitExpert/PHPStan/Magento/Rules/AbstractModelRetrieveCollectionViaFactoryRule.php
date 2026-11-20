@@ -62,6 +62,10 @@ class AbstractModelRetrieveCollectionViaFactoryRule implements Rule
                 )
             )
             ->identifier('bitExpertMagento.abstractModelRetrieveCollectionViaFactory')
+            ->tip(
+                'Inject the generated collection factory (e.g. the entity\'s CollectionFactory) via the ' .
+                'constructor and call create() on it. getCollection() is deprecated since Magento 101.0.0.'
+            )
             ->build()
         ];
     }

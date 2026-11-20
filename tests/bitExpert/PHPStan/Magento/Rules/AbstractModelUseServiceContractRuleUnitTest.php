@@ -34,18 +34,24 @@ class AbstractModelUseServiceContractRuleUnitTest extends RuleTestCase
      */
     public function checkCaughtExceptions(): void
     {
+        $tip = 'Inject the entity\'s repository (service contract) and let it load, save or delete the entity. ' .
+            'See https://developer.adobe.com/commerce/php/development/components/service-contracts/';
+
         $this->analyse([__DIR__ . '/Helper/service_contract.php'], [
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::save() method',
                 4,
+                $tip,
             ],
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::delete() method',
                 5,
+                $tip,
             ],
             [
                 'Use service contracts to persist entities in favour of ' . SampleModel::class . '::load() method',
                 6,
+                $tip,
             ],
         ]);
     }

@@ -38,6 +38,8 @@ class ResourceModelsShouldBeUsedDirectlyRuleUnitTest extends RuleTestCase
             [
                 SampleModel::class . '::getResource() is deprecated. Use Resource Models directly',
                 4,
+                'Inject the model\'s resource model via the constructor and use it directly, e.g. ' .
+                    '$this->resource->save($model). getResource() is deprecated since Magento 101.0.0.',
             ],
         ]);
     }
