@@ -40,6 +40,15 @@ jobs:
         php-versions: ['7.4', '8.1', '8.6']
         phpstan: ['latest']
         include:
+          # The only magento/framework releases that run on PHP 7.4 (102.0.x)
+          # depend on composer/composer 1.x, which composer blocks over
+          # security advisories; the flag lets this compat leg install it.
+          - php-versions: '7.4'
+            install-options: '--no-security-blocking'
+          # No magento/framework release declares PHP 8.6 support yet; ignore
+          # only the upper bound of the platform requirement.
+          - php-versions: '8.6'
+            install-options: '--ignore-platform-req=php+'
           - php-versions: '8.4'
             phpstan: '2.2.0'
     steps:
@@ -55,11 +64,11 @@ jobs:
           extensions: bcmath, gd
 
       - name: Install Composer dependencies
-        run: composer install
+        run: composer install ${{ matrix.install-options }}
 
       - name: Pin PHPStan to the lowest supported release
         if: matrix.phpstan != 'latest'
-        run: composer update --with-dependencies phpstan/phpstan:${{ matrix.phpstan }}
+        run: composer update --with-all-dependencies phpstan/phpstan:${{ matrix.phpstan }}
 
       - name: Unittests
         run: composer test
