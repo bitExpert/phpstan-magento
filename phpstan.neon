@@ -28,6 +28,14 @@ parameters:
         -
             message: '~Parameter #1 \$argument of class ReflectionClass constructor expects class-string<UncachedExtensionInterface>|UncachedExtensionInterface, string given~'
             path: tests/bitExpert/PHPStan/Magento/Autoload/ExtensionInterfaceAutoloaderUnitTest.php
+        # PHPStan >= 2.3 documents the scope parameter of getTypeFromMethodCall() as
+        # Scope&DependencyTracker. The test mocks plain Scope because MutatingScope is
+        # final on PHPStan 2.0/2.1 and DependencyTracker does not exist there.
+        # reportUnmatched is off because the error only occurs on PHPStan >= 2.3.
+        -
+            message: '~expects PHPStan\\Analyser\\DependencyTracker&PHPStan\\Analyser\\Scope, PHPStan\\Analyser\\Scope&PHPUnit\\Framework\\MockObject\\MockObject given~'
+            path: tests/bitExpert/PHPStan/Magento/Type/ControllerResultFactoryReturnTypeExtensionUnitTest.php
+            reportUnmatched: false
         -
             message: '~bitExpert\\PHPStan\\Magento\\Rules\\Helper\\SampleModel::__construct\(\) does not call parent constructor~'
             path: tests/bitExpert/PHPStan/Magento/Rules/Helper/SampleModel.php
