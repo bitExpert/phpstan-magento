@@ -64,11 +64,17 @@ jobs:
           extensions: bcmath, gd
 
       - name: Install Composer dependencies
+        if: matrix.phpstan == 'latest'
         run: composer install ${{ matrix.install-options }}
 
-      - name: Pin PHPStan to the lowest supported release
+      # A partial downgrade cannot work here: composer/pcre, locked through
+      # magento/framework's composer dependency, conflicts with old PHPStan
+      # releases. Write the pin into composer.json and resolve fresh instead.
+      - name: Install with PHPStan pinned to the lowest supported release
         if: matrix.phpstan != 'latest'
-        run: composer update --with-all-dependencies phpstan/phpstan:${{ matrix.phpstan }}
+        run: |
+          composer require --no-update phpstan/phpstan:${{ matrix.phpstan }}
+          composer update
 
       - name: Unittests
         run: composer test
