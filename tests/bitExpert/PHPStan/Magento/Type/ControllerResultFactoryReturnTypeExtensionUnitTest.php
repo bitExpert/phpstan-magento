@@ -16,7 +16,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
-use PHPStan\Analyser\MutatingScope;
+use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ObjectType;
@@ -80,7 +80,10 @@ class ControllerResultFactoryReturnTypeExtensionUnitTest extends PHPStanTestCase
     public function returnValidResultType(string $param, string $expectedResult): void
     {
         $methodReflection = $this->createMock(MethodReflection::class);
-        $scope = $this->createMock(MutatingScope::class);
+        // A MutatingScope mock would satisfy PHPStan 2.3's Scope&DependencyTracker
+        // phpdoc, but MutatingScope is final on PHPStan 2.0/2.1, which this
+        // package supports; the analyze error is ignored in phpstan.neon instead.
+        $scope = $this->createMock(Scope::class);
 
         $identifier = $this->createConfiguredMock(Identifier::class, ['toString' => $param]);
 

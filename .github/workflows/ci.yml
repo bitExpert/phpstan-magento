@@ -50,7 +50,7 @@ jobs:
           - php-versions: '8.6'
             install-options: '--ignore-platform-req=php+'
           - php-versions: '8.4'
-            phpstan: '2.2.0'
+            phpstan: '2.0.0'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
