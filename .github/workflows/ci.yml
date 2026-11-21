@@ -13,7 +13,7 @@ jobs:
       matrix:
         # Both ends of the composer.json "php" constraint: the lowest version
         # of each supported range, plus the newest release.
-        php-versions: ['7.4', '8.1', '8.5']
+        php-versions: ['7.4', '8.1', '8.6']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -26,6 +26,43 @@ jobs:
 
       - name: Lint sources
         run: ./bin/ci_php_lint
+
+  compat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The lint job only syntax-checks the PHP range; this job executes the
+        # test suite on both ends of the composer.json "php" constraint and on
+        # the newest release. The extra include pins PHPStan to the lowest
+        # release the composer.json constraint allows, so the advertised
+        # dependency floor stays tested.
+        php-versions: ['7.4', '8.1', '8.6']
+        phpstan: ['latest']
+        include:
+          - php-versions: '8.4'
+            phpstan: '2.2.0'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+          coverage: none
+          extensions: bcmath, gd
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Pin PHPStan to the lowest supported release
+        if: matrix.phpstan != 'latest'
+        run: composer update --with-dependencies phpstan/phpstan:${{ matrix.phpstan }}
+
+      - name: Unittests
+        run: composer test
 
   run:
     runs-on: ${{ matrix.operating-system }}
