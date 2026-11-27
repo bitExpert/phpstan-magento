@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.45.0
+
+### Added
+
+- [#363](https://github.com/bitExpert/phpstan-magento/pull/363) Every rule error now carries a tip explaining why the rule fired and how to fix the code, with links to the relevant documentation where one exists.
+- [#364](https://github.com/bitExpert/phpstan-magento/pull/364) CI executes the test suite on both ends of the supported PHP range (7.4, 8.1 and the newest release) and on the lowest supported PHPStan release (2.0.0), so the composer.json constraints describe combinations that are actually tested.
+- [#365](https://github.com/bitExpert/phpstan-magento/pull/365) A CI guard that analyses a real Magento installation (via magento2-in-a-box) with the generated-class autoloaders on a cold cache, catching generation bugs that only real code shapes trigger. CI material (`fixtures/`, `.github/`) no longer ships in the composer dist.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#361](https://github.com/bitExpert/phpstan-magento/pull/361) Generated interface proxies keep every parameter default (`true`, integers, arrays, quoted strings) and the `?` of nullable parameter types. Defaults other than `null`, `false` and plain strings were dropped or mangled, which made PHP reject the proxy and killed the PHPStan worker with a fatal error (#360).
+- [#366](https://github.com/bitExpert/phpstan-magento/pull/366) The generated-class cache key now contains a generator version, so upgrading regenerates every class. Without it, the #361 fix never reached installations with a warm cache: the broken proxies written by an older release kept being served until `%tmpDir%/cache/bitExpert/PHPStanMagento` was deleted by hand.
+- [#362](https://github.com/bitExpert/phpstan-magento/pull/362) The repository's own static analysis and the autoloader smoke test work with PHPStan 2.3 again.
+
 ## 0.44.0
 
 The extension is now maintained by [Mage-OS](https://mage-os.org).
