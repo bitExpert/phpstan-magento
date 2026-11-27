@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+#
+# This file is part of the phpstan-magento package.
+#
+# (c) bitExpert AG
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
+
+set -euo pipefail
+
+# Runs PHPStan with this extension against a real Magento installation, on
+# fixture code that only resolves when the generated-class autoloaders and
+# type extensions work against the real framework interfaces. The unit tests
+# and the autoloader smoke test use synthetic fixtures; this guard is what
+# catches generation bugs that only real code shapes trigger, such as the
+# dropped parameter defaults of issue #360. It runs inside the Magento
+# container the real-codebase workflow starts, not on the runner.
+
+MAGENTO_ROOT=${MAGENTO_ROOT:-/data}
+FIXTURE_DIR="$(cd "$(dirname "$0")/../fixtures/real-codebase" && pwd)"
+TMP_DIR=$(mktemp -d)
+
+# A cold cache and no pre-generated classes: the autoloaders have to generate
+# every factory, proxy and extension-attribute class themselves.
+rm -rf "$MAGENTO_ROOT/generated/code" "$MAGENTO_ROOT/generated/metadata"
+
+# No explicit include of extension.neon: the Magento project's
+# phpstan/extension-installer already loads it, and a double include is an
+# error. Should the installer ever be missing, the generated-classes
+# assertion below fails the run.
+cat > "$TMP_DIR/phpstan.neon" <<NEON
+parameters:
+    level: 2
+    tmpDir: $TMP_DIR/tmp
+    paths:
+        - $FIXTURE_DIR/src
+    magento:
+        magentoRoot: $MAGENTO_ROOT
+NEON
+
+cd "$MAGENTO_ROOT"
+if ! OUTPUT=$(php vendor/bin/phpstan analyse --no-progress --configuration="$TMP_DIR/phpstan.neon" 2>&1); then
+    echo "$OUTPUT"
+    echo "PHPStan failed against the real Magento codebase." >&2
+    exit 1
+fi
+echo "$OUTPUT"
+
+if echo "$OUTPUT" | grep -q 'Internal error'; then
+    echo "PHPStan reported an internal error." >&2
+    exit 1
+fi
+
+# The || true keeps set -e and pipefail from aborting the script when the
+# cache directory does not exist (find then exits non-zero), which is exactly
+# the case the message below has to explain.
+GENERATED=$(find "$TMP_DIR/tmp/cache/bitExpert/PHPStanMagento" -type f 2>/dev/null | wc -l) || true
+echo "Generated classes written to the cache: $GENERATED"
+if [ "$GENERATED" -lt 1 ]; then
+    echo "The autoloaders generated nothing, so the fixture did not exercise them." >&2
+    exit 1
+fi
+
+echo "Real codebase analysis passed."

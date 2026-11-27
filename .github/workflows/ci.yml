@@ -13,7 +13,7 @@ jobs:
       matrix:
         # Both ends of the composer.json "php" constraint: the lowest version
         # of each supported range, plus the newest release.
-        php-versions: ['7.4', '8.1', '8.5']
+        php-versions: ['7.4', '8.1', '8.6']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -26,6 +26,58 @@ jobs:
 
       - name: Lint sources
         run: ./bin/ci_php_lint
+
+  compat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The lint job only syntax-checks the PHP range; this job executes the
+        # test suite on both ends of the composer.json "php" constraint and on
+        # the newest release. The extra include pins PHPStan to the lowest
+        # release the composer.json constraint allows, so the advertised
+        # dependency floor stays tested.
+        php-versions: ['7.4', '8.1', '8.6']
+        phpstan: ['latest']
+        include:
+          # The only magento/framework releases that run on PHP 7.4 (102.0.x)
+          # depend on composer/composer 1.x, which composer blocks over
+          # security advisories; the flag lets this compat leg install it.
+          - php-versions: '7.4'
+            install-options: '--no-security-blocking'
+          # No magento/framework release declares PHP 8.6 support yet; ignore
+          # only the upper bound of the platform requirement.
+          - php-versions: '8.6'
+            install-options: '--ignore-platform-req=php+'
+          - php-versions: '8.4'
+            phpstan: '2.0.0'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+          coverage: none
+          extensions: bcmath, gd
+
+      - name: Install Composer dependencies
+        if: matrix.phpstan == 'latest'
+        run: composer install ${{ matrix.install-options }}
+
+      # A partial downgrade cannot work here: composer/pcre, locked through
+      # magento/framework's composer dependency, conflicts with old PHPStan
+      # releases. Write the pin into composer.json and resolve fresh instead.
+      - name: Install with PHPStan pinned to the lowest supported release
+        if: matrix.phpstan != 'latest'
+        run: |
+          composer require --no-update phpstan/phpstan:${{ matrix.phpstan }}
+          composer update
+
+      - name: Unittests
+        run: composer test
 
   run:
     runs-on: ${{ matrix.operating-system }}
