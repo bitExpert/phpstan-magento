@@ -23,6 +23,14 @@ namespace bitExpert\PHPStan\Magento\Autoload\Cache;
 class GeneratedFileCache
 {
     /**
+     * Salt for the cache directory hash. Bump it whenever the generated output changes, so that an
+     * upgrade regenerates every class instead of serving files a previous version wrote. Without
+     * versioning, the proxy fix for issue #360 never reached users with a warm cache: the broken
+     * proxies from the old generator kept being served until the cache directory was deleted by hand.
+     */
+    private const GENERATOR_VERSION = '1';
+
+    /**
      * @var string
      */
     private $directory;
@@ -103,7 +111,7 @@ class GeneratedFileCache
      */
     private function getCacheDir(string $key): string
     {
-        $keyHash = sha1(sprintf('%s/%s', $this->magentoRoot, $key));
+        $keyHash = sha1(sprintf('%s/%s/%s', $this->magentoRoot, self::GENERATOR_VERSION, $key));
         $firstDirectory = sprintf('%s/%s', $this->directory, substr($keyHash, 0, 2));
         return sprintf('%s/%s', $firstDirectory, substr($keyHash, 2, 2));
     }
