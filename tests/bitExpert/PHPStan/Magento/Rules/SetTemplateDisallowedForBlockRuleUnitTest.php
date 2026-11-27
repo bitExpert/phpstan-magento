@@ -40,6 +40,8 @@ class SetTemplateDisallowedForBlockRuleUnitTest extends RuleTestCase
                 'Setter methods like '.SampleBlock::class.'::setTemplate() are deprecated in Block classes, '.
                 'use constructor arguments instead',
                 4,
+                'Set the template in layout XML or pass it in the constructor\'s $data array ("template" key). '.
+                'See https://github.com/extdn/extdn-phpcs/blob/master/Extdn/Sniffs/Blocks/SetTemplateInBlockSniff.md',
             ],
         ]);
     }

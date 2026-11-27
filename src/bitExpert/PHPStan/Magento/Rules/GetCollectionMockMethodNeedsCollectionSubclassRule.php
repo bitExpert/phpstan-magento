@@ -78,6 +78,10 @@ class GetCollectionMockMethodNeedsCollectionSubclassRule implements Rule
                 )
             )
             ->identifier('bitExpertMagento.getCollectionMockMethodNeedsCollectionSubclass')
+            ->tip(
+                'Pass a class extending \Magento\Framework\Data\Collection to getCollectionMock(), or create ' .
+                'the mock with PHPUnit\'s createMock() instead.'
+            )
             ->build()
         ];
     }

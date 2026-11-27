@@ -63,6 +63,10 @@ class SetTemplateDisallowedForBlockRule implements Rule
                 )
             )
             ->identifier('bitExpertMagento.setTemplateDisallowedForBlock')
+            ->tip(
+                'Set the template in layout XML or pass it in the constructor\'s $data array ("template" key). ' .
+                'See https://github.com/extdn/extdn-phpcs/blob/master/Extdn/Sniffs/Blocks/SetTemplateInBlockSniff.md'
+            )
             ->build()
         ];
     }
