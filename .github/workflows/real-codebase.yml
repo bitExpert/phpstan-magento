@@ -1,0 +1,33 @@
+name: real-codebase
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: php85-fpm
+            magento: '2.4.9'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Start a pre-installed Magento project
+        run: >
+          docker run --detach --name magento
+          ghcr.io/controlaltdelete-nl/magento2-in-a-box/magento-project-community-edition:${{ matrix.php }}-magento${{ matrix.magento }}
+
+      - name: Copy the extension into the container
+        run: docker cp $(pwd) magento:/data/extensions/phpstan-magento
+
+      - name: Install the extension in the Magento project
+        run: docker exec magento composer require bitexpert/phpstan-magento:@dev
+
+      - name: Analyse fixture code that needs generated classes, on a cold cache
+        run: docker exec magento bash /data/extensions/phpstan-magento/bin/ci_real_codebase
